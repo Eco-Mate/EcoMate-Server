@@ -14,7 +14,7 @@ import javax.persistence.*;
 public class Challenge extends BaseEntity {
 
     @Id @GeneratedValue
-    private Long ChallengeId;
+    private Long challengeId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -24,7 +24,7 @@ public class Challenge extends BaseEntity {
     private Boolean activeYn;
 
     @Column(name = "challenge_title", length = 30)
-    private String callengeTitle;
+    private String challengeTitle;
 
     @Column(name = "description", length = 100)
     private String description;
