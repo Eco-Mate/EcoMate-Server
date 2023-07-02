@@ -5,6 +5,9 @@ spring:
   datasource:
     url: jdbc:mysql://ecomate.crgoui2zsut0.ap-northeast-2.rds.amazonaws.com:3306/ecomate
     driver-class-name: com.mysql.cj.jdbc.Driver
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
 
 
   jpa:
