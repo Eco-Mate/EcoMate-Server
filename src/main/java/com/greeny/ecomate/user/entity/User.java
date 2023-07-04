@@ -2,9 +2,7 @@ package com.greeny.ecomate.user.entity;
 
 
 import com.greeny.ecomate.base.BaseEntity;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -13,7 +11,7 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends BaseEntity {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private Long userId;
 
@@ -25,8 +23,8 @@ public class User extends BaseEntity {
     @Column(name = "level")
     private Level level;
 
-    @Column(name = "open_yn")
-    private Boolean openYn;
+//    @Column(name = "open_yn")
+//    private Boolean openYn;
 
     @Column(name = "total_tree_point")
     private Long totalTreePoint;
@@ -43,7 +41,17 @@ public class User extends BaseEntity {
     @Column(name = "email", length = 30)
     private String email;
 
-    @Column(name = "phone_number")
-    private String phoneNumber;
+
+    @Builder
+    public User(Role role, Level level, Long totalTreePoint,
+                String nickname, String name, String password, String email) {
+        this.role = role;
+        this.level = level;
+        this.totalTreePoint = totalTreePoint;
+        this.nickname = nickname;
+        this.name = name;
+        this.password = password;
+        this.email = email;
+    }
 
 }
