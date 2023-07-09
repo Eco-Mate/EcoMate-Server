@@ -2,6 +2,7 @@ package com.greeny.ecomate.challenge.entity;
 
 import com.greeny.ecomate.base.BaseEntity;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -12,7 +13,7 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Challenge extends BaseEntity {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long challengeId;
 
     @Column(name = "active_yn")
@@ -26,5 +27,17 @@ public class Challenge extends BaseEntity {
 
     @Column(name = "tree_point")
     private Long treePoint;
+
+    @Builder
+    public Challenge(Boolean activeYn, String challengeTitle, String description, Long treePoint) {
+        this.activeYn = activeYn;
+        this.challengeTitle = challengeTitle;
+        this.description = description;
+        this.treePoint = treePoint;
+    }
+
+    public static Challenge of(Boolean activeYn, String challengeTitle, String description, Long treePoint) {
+        return new Challenge(activeYn, challengeTitle, description, treePoint);
+    }
 
 }
