@@ -21,3 +21,13 @@ spring:
 
 logging.level:
   org.hibernate.SQL: debug
+
+springdoc:
+  api-docs:
+    groups:
+      enabled: true
+  swagger-ui:
+    operations-sorter: method
+  paths-to-match: /**
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
