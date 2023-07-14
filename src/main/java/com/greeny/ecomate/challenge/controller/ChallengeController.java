@@ -53,4 +53,11 @@ public class ChallengeController {
         return challengeId;
     }
 
+    @DeleteMapping("/{challengeId}")
+    public String deleteChallenge(@PathVariable Long challengeId,
+                                  HttpServletRequest req) {
+        challengeService.deleteChallenge(challengeId);
+        return "삭제되었습니다.";
+    }
+
 }
