@@ -40,4 +40,20 @@ public class Challenge extends BaseEntity {
         return new Challenge(activeYn, challengeTitle, description, treePoint);
     }
 
+    public void updateActiveYn(boolean activeYn) {
+        this.activeYn = activeYn;
+    }
+
+    public void updateTitle(String challengeTitle) {
+        this.challengeTitle = challengeTitle;
+    }
+
+    public void updateDescription(String description) {
+        this.description = description;
+    }
+
+    public void updateTreePoint(Long treePoint) {
+        this.treePoint = treePoint;
+    }
+
 }
