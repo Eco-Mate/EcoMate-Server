@@ -5,14 +5,14 @@ import lombok.Data;
 
 @Data
 public class BoardDto {
-    //    private UserDto userDto;
+    private String nickname;
     private String boardTitle;
     private String boardContent;
     private String image;
     private Long likeCnt;
 
     public BoardDto(Board board) {
-//        this.userDto
+        this.nickname = board.getUser().getNickname();
         this.boardTitle = board.getBoardTitle();
         this.boardContent = board.getBoardContent();
         this.image = board.getImage();
