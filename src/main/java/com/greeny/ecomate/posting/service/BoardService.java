@@ -1,5 +1,6 @@
 package com.greeny.ecomate.posting.service;
 
+import com.greeny.ecomate.exception.NotFoundException;
 import com.greeny.ecomate.posting.dto.BoardDto;
 import com.greeny.ecomate.posting.dto.BoardListDto;
 import com.greeny.ecomate.posting.dto.CreateBoardRequestDto;
@@ -11,6 +12,7 @@ import com.greeny.ecomate.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.NotAcceptableStatusException;
 
 import java.util.List;
 
@@ -25,7 +27,7 @@ public class BoardService {
    @Transactional
    public Long createBoard(CreateBoardRequestDto createDto) {
       User user = userRepository.findByNickname(createDto.getNickname())
-              .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+              .orElseThrow(() -> new NotFoundException("존재하지 않는 사용자입니다."));
       Board board = createDto.toEntity(user);
       return boardRepository.save(board).getBoardId();
    }
@@ -45,7 +47,7 @@ public class BoardService {
    @Transactional
    public Long updateBoard(UpdateBoardRequestDto updateDto) {
       Board board = boardRepository.findById(updateDto.getBoardId())
-              .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다."));
+              .orElseThrow(() -> new NotFoundException("존재하지 않는 게시글입니다."));
       board.update(updateDto.getBoardTitle(), updateDto.getBoardContent());
       return board.getBoardId();
    }
