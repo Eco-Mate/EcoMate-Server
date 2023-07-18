@@ -51,6 +51,8 @@ public class MyChallenge {
         return new MyChallenge(user, challenge, achieveType, achieveCnt, achievePoint, doneCnt);
     }
 
+    public void updateAchieveType(AchieveType achieveType) { this.achieveType = achieveType; }
+
     public void updateAchieveCnt(Long achieveCnt) { this.achieveCnt = achieveCnt; }
     public void updateAchievePoint(Long achievePoint) {
         this.achievePoint = achievePoint;
