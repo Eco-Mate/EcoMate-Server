@@ -21,17 +21,17 @@ public class BoardController {
 
     @PostMapping
     public ApiUtil.ApiSuccessResult<Long> createBoard(@RequestBody CreateBoardRequestDto createDto) {
-        return ApiUtil.success("게시판 생성 성공", boardService.createBoard(createDto));
+        return ApiUtil.success("게시물 생성 성공", boardService.createBoard(createDto));
     }
 
     @GetMapping
     public ApiUtil.ApiSuccessResult<BoardListDto> getAllBoard() {
-        return ApiUtil.success("게시판 전체 조회 성공", new BoardListDto(boardService.getAllBoard()));
+        return ApiUtil.success("게시물 전체 조회 성공", new BoardListDto(boardService.getAllBoard()));
     }
 
     @PutMapping
     public ApiUtil.ApiSuccessResult<Long> updateBoard(@RequestBody UpdateBoardRequestDto updateDto) {
-        return ApiUtil.success("게시판 수정 성공", boardService.updateBoard(updateDto));
+        return ApiUtil.success("게시물 수정 성공", boardService.updateBoard(updateDto));
     }
 
 }
