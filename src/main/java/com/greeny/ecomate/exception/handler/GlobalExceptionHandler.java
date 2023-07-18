@@ -5,6 +5,9 @@ import com.greeny.ecomate.exception.NotFoundException;
 import com.greeny.ecomate.utils.api.ApiUtil;
 import com.greeny.ecomate.utils.api.ApiUtil.ApiErrorResult;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -18,6 +21,19 @@ public class GlobalExceptionHandler {
         ApiErrorResult<String> error = ApiUtil.error(HttpServletResponse.SC_NOT_FOUND, e.getMessage());
         return ResponseEntity.status(HttpServletResponse.SC_NOT_FOUND).body(error);
     }
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<?> handleMethodArgumentException(MethodArgumentNotValidException e) {
+        BindingResult bindingResult = e.getBindingResult();
 
+        StringBuilder sb = new StringBuilder();
+        for (FieldError fieldError: bindingResult.getFieldErrors()) {
+            sb.append(fieldError.getField());
+            sb.append(" (은)는 ");
+            sb.append(fieldError.getDefaultMessage());
+            sb.append(". ");
+        }
+        ApiErrorResult<String> error = ApiUtil.error(HttpServletResponse.SC_BAD_REQUEST, sb.toString());
+        return ResponseEntity.status(HttpServletResponse.SC_BAD_REQUEST).body(error);
+    }
 
 }
