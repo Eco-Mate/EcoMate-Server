@@ -9,16 +9,17 @@ public record ChallengeDto(
         Boolean activeYn,
         String challengeTitle,
         String description,
+        Long goalCnt,
         Long treePoint,
         LocalDateTime createdDate
 ) {
 
-    public static ChallengeDto of(boolean activeYn, String challengeTitle, String description, Long treePoint) {
-        return new ChallengeDto(null, activeYn, challengeTitle, description, treePoint, null);
+    public static ChallengeDto of(boolean activeYn, String challengeTitle, String description, Long goalCnt, Long treePoint) {
+        return new ChallengeDto(null, activeYn, challengeTitle, description, goalCnt, treePoint, null);
     }
 
-    public static ChallengeDto of(boolean activeYn, String challengeTitle, String description, Long treePoint, LocalDateTime createdDate) {
-        return new ChallengeDto(null, activeYn, challengeTitle, description, treePoint, createdDate);
+    public static ChallengeDto of(boolean activeYn, String challengeTitle, String description, Long goalCnt, Long treePoint, LocalDateTime createdDate) {
+        return new ChallengeDto(null, activeYn, challengeTitle, description, goalCnt, treePoint, createdDate);
     }
 
     public static ChallengeDto from(Challenge entity) {
@@ -27,6 +28,7 @@ public record ChallengeDto(
                 entity.getActiveYn(),
                 entity.getChallengeTitle(),
                 entity.getDescription(),
+                entity.getGoalCnt(),
                 entity.getTreePoint(),
                 entity.getCreatedDate()
         );
@@ -37,6 +39,7 @@ public record ChallengeDto(
                 activeYn,
                 challengeTitle,
                 description,
+                goalCnt,
                 treePoint
         );
     }

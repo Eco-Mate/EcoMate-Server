@@ -8,12 +8,13 @@ public record CreateChallengeRequestDto(
         Boolean activeYn,
         String challengeTitle,
         String description,
+        Long goalCnt,
         Long treePoint,
         LocalDateTime createdDate
 ) {
 
-    public static CreateChallengeRequestDto of(boolean activeYn, String challengeTitle, String description, Long treePoint) {
-        return new CreateChallengeRequestDto(activeYn, challengeTitle, description, treePoint, null);
+    public static CreateChallengeRequestDto of(boolean activeYn, String challengeTitle, String description, Long goalCnt, Long treePoint) {
+        return new CreateChallengeRequestDto(activeYn, challengeTitle, description, goalCnt, treePoint, null);
     }
 
     public static CreateChallengeRequestDto from(Challenge entity) {
@@ -21,6 +22,7 @@ public record CreateChallengeRequestDto(
                 entity.getActiveYn(),
                 entity.getChallengeTitle(),
                 entity.getDescription(),
+                entity.getGoalCnt(),
                 entity.getTreePoint(),
                 entity.getCreatedDate()
         );
@@ -31,6 +33,7 @@ public record CreateChallengeRequestDto(
                 activeYn,
                 challengeTitle,
                 description,
+                goalCnt,
                 treePoint
         );
     }

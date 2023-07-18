@@ -25,19 +25,23 @@ public class Challenge extends BaseEntity {
     @Column(name = "description", length = 100)
     private String description;
 
+    @Column(name = "goal_cnt")
+    private Long goalCnt;
+
     @Column(name = "tree_point")
     private Long treePoint;
 
     @Builder
-    public Challenge(Boolean activeYn, String challengeTitle, String description, Long treePoint) {
+    public Challenge(Boolean activeYn, String challengeTitle, String description, Long goalCnt, Long treePoint) {
         this.activeYn = activeYn;
         this.challengeTitle = challengeTitle;
         this.description = description;
+        this.goalCnt = goalCnt;
         this.treePoint = treePoint;
     }
 
-    public static Challenge of(Boolean activeYn, String challengeTitle, String description, Long treePoint) {
-        return new Challenge(activeYn, challengeTitle, description, treePoint);
+    public static Challenge of(Boolean activeYn, String challengeTitle, String description, Long goalCnt, Long treePoint) {
+        return new Challenge(activeYn, challengeTitle, description, goalCnt, treePoint);
     }
 
     public void updateActiveYn(boolean activeYn) {
@@ -51,6 +55,8 @@ public class Challenge extends BaseEntity {
     public void updateDescription(String description) {
         this.description = description;
     }
+
+    public void updateGoalCnt(Long goalCnt) { this.goalCnt = goalCnt;}
 
     public void updateTreePoint(Long treePoint) {
         this.treePoint = treePoint;

@@ -50,6 +50,7 @@ public class ChallengeService {
 
         challenge.updateTitle(challengeDto.challengeTitle());
         challenge.updateDescription(challengeDto.description());
+        challenge.updateGoalCnt(challengeDto.goalCnt());
         challenge.updateTreePoint(challengeDto.treePoint());
     }
 
