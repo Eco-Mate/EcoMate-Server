@@ -9,11 +9,12 @@ public record MyChallengeDto(
         Long challengeId,
         AchieveType achieveType,
         Long achieveCnt,
-        Long achievePoint
+        Long achievePoint,
+        Long doneCnt
 ) {
 
-    public static MyChallengeDto of(Long myChallengeId, String nickname, Long challengeId, AchieveType achieveType, Long achieveCnt, Long achievePoint) {
-        return new MyChallengeDto(myChallengeId, nickname, challengeId, achieveType, achieveCnt, achievePoint);
+    public static MyChallengeDto of(Long myChallengeId, String nickname, Long challengeId, AchieveType achieveType, Long achieveCnt, Long achievePoint, Long doneCnt) {
+        return new MyChallengeDto(myChallengeId, nickname, challengeId, achieveType, achieveCnt, achievePoint, doneCnt);
     }
 
     public static MyChallengeDto from(MyChallenge entity) {
@@ -23,7 +24,8 @@ public record MyChallengeDto(
                 entity.getChallenge().getChallengeId(),
                 entity.getAchieveType(),
                 entity.getAchieveCnt(),
-                entity.getAchievePoint());
+                entity.getAchievePoint(),
+                entity.getDoneCnt());
     }
 
 }

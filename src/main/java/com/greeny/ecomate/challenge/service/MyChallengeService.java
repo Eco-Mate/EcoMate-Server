@@ -41,6 +41,7 @@ public class MyChallengeService {
                     .achieveType(AchieveType.PROCEEDING)
                     .achieveCnt(1L)
                     .achievePoint(challenge.getTreePoint())
+                    .doneCnt(0L)
                     .build();
             return myChallengeRepository.save(myChallenge).getMyChallengeId();
         }
@@ -53,6 +54,7 @@ public class MyChallengeService {
              else {
                  myChallenge.updateAchieveCnt(myChallenge.getAchieveCnt() + 1);
                  myChallenge.updateAchievePoint(myChallenge.getAchievePoint() + challenge.getTreePoint());
+                 myChallenge.updateDoneCnt(0L);
                  return myChallenge.getMyChallengeId();
              }
         }
