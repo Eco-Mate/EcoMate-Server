@@ -43,7 +43,7 @@ public class Board extends BaseEntity {
         this.user = user;
         this.boardTitle = boardTitle;
         this.boardContent = boardContent;
-//        this.challengeId = challengeId;
+        this.challengeId = challengeId;
         this.image = image;
         this.likeCnt = likeCnt;
     }
