@@ -51,11 +51,14 @@ public class MyChallengeService {
              if(myChallenge.getAchieveType().equals(AchieveType.PROCEEDING)) {
                  throw new IllegalArgumentException("해당 도전은 진행 중입니다. 계속 도전해보세요!");
              }
-             else {
+             else if(myChallenge.getAchieveType().equals(AchieveType.FINISH)) {
                  myChallenge.updateAchieveCnt(myChallenge.getAchieveCnt() + 1);
                  myChallenge.updateAchievePoint(myChallenge.getAchievePoint() + challenge.getTreePoint());
                  myChallenge.updateDoneCnt(0L);
                  return myChallenge.getMyChallengeId();
+             }
+             else {
+                 throw new IllegalArgumentException("해당 도전을 시작하지 않았습니다.");
              }
         }
     }

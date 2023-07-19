@@ -3,6 +3,7 @@ package com.greeny.ecomate.challenge.service;
 
 import com.greeny.ecomate.challenge.dto.ChallengeDto;
 import com.greeny.ecomate.challenge.dto.CreateChallengeRequestDto;
+import com.greeny.ecomate.challenge.entity.AchieveType;
 import com.greeny.ecomate.challenge.entity.Challenge;
 import com.greeny.ecomate.challenge.repository.ChallengeRepository;
 import com.greeny.ecomate.challenge.repository.MyChallengeRepository;
@@ -37,8 +38,8 @@ public class ChallengeService {
         return challengeList.stream().map(ChallengeDto::from).toList();
     }
 
-    public Long getChallengeInCnt(Long challengeId) {
-        return myChallengeRepository.countMyChallengesByChallenge_ChallengeId(challengeId);
+    public Long getProceedingChallengeCnt(Long challengeId) {
+        return myChallengeRepository.countMyChallengesByChallenge_ChallengeIdAndAchieveType(challengeId, AchieveType.PROCEEDING);
     }
 
     @Transactional
