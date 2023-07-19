@@ -33,6 +33,9 @@ public class MyChallengeService {
         Challenge challenge = challengeRepository.findById(dto.challengeId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 챌린지입니다."));
 
+        if(!challenge.getActiveYn())
+            throw new IllegalArgumentException("활성화되지 않은 챌린지 입니다.");
+
         // 새도전
         if(!myChallengeRepository.findMyChallengeByUser_UserIdAndChallenge_ChallengeId(user.getUserId(), challenge.getChallengeId()).isPresent()) {
             MyChallenge myChallenge = MyChallenge.builder()
@@ -69,17 +72,22 @@ public class MyChallengeService {
         return myChallengeList.stream().map(MyChallengeDto::from).toList();
     }
 
-    public List<MyChallengeDto> getAllMyChallengeFinishByUserId(Long userId) {
-        List<MyChallenge> myChallengeDoneList = myChallengeRepository.findAllByUser_UserIdAndAchieveType(userId, AchieveType.FINISH);
-        return myChallengeDoneList.stream().map(MyChallengeDto::from).toList();
+    public List<MyChallengeDto> getAllMyChallengeProceedingByUserId(Long userId) {
+        List<MyChallenge> myChallengeProceedingList = myChallengeRepository.findAllByUser_UserIdAndAchieveType(userId, AchieveType.PROCEEDING);
+        return myChallengeProceedingList.stream().map(MyChallengeDto::from).toList();
     }
 
-    public Long getMyChallengeFinishCntByUserId(Long userId) {
-        return myChallengeRepository.countMyChallengesByUser_UserIdAndAchieveType(userId, AchieveType.FINISH);
+    public List<MyChallengeDto> getAllMyChallengeFinishByUserId(Long userId) {
+        List<MyChallenge> myChallengeFinishList = myChallengeRepository.findAllByUser_UserIdAndAchieveType(userId, AchieveType.FINISH);
+        return myChallengeFinishList.stream().map(MyChallengeDto::from).toList();
     }
 
     public Long getMyChallengeProceedingCntByUserId(Long userId) {
         return myChallengeRepository.countMyChallengesByUser_UserIdAndAchieveType(userId, AchieveType.PROCEEDING);
+    }
+
+    public Long getMyChallengeFinishCntByUserId(Long userId) {
+        return myChallengeRepository.countMyChallengesByUser_UserIdAndAchieveType(userId, AchieveType.FINISH);
     }
 
     public MyChallengeDto getMyChallengeById(Long myChallengeId) {
