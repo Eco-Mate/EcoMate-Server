@@ -63,9 +63,22 @@ public class MyChallengeService {
         }
     }
 
-    public List<MyChallengeDto> getMyChallengeByUserId(Long userId) {
+    public List<MyChallengeDto> getAllMyChallengeByUserId(Long userId) {
         List<MyChallenge> myChallengeList = myChallengeRepository.findAllByUser_UserId(userId);
         return myChallengeList.stream().map(MyChallengeDto::from).toList();
+    }
+
+    public List<MyChallengeDto> getAllMyChallengeDoneByUserId(Long userId) {
+        List<MyChallenge> myChallengeDoneList = myChallengeRepository.findAllByUser_UserIdAndAchieveType(userId, AchieveType.FINISH);
+        return myChallengeDoneList.stream().map(MyChallengeDto::from).toList();
+    }
+
+    public Long getMyChallengeDoneCntByUserId(Long userId) {
+        return myChallengeRepository.countMyChallengesByUser_UserIdAndAchieveType(userId, AchieveType.FINISH);
+    }
+
+    public Long getMyChallengeProceedingCntByUserId(Long userId) {
+        return myChallengeRepository.countMyChallengesByUser_UserIdAndAchieveType(userId, AchieveType.PROCEEDING);
     }
 
     public MyChallengeDto getMyChallengeById(Long myChallengeId) {

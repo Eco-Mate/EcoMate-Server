@@ -15,7 +15,11 @@ public interface MyChallengeRepository extends JpaRepository<MyChallenge, Long> 
 
     List<MyChallenge> findAllByUser_UserId(Long userId);
 
-    Optional<MyChallenge> findMyChallengeByUser_UserIdAndChallenge_ChallengeId(Long UserId, Long challengeId);
+    Optional<MyChallenge> findMyChallengeByUser_UserIdAndChallenge_ChallengeId(Long userId, Long challengeId);
+
+    List<MyChallenge> findAllByUser_UserIdAndAchieveType(Long userId, AchieveType achieveType);
+
+    Long countMyChallengesByUser_UserIdAndAchieveType(Long userId, AchieveType achieveType);
 
     @Query("SELECT mc from MyChallenge mc join fetch mc.user where mc.myChallengeId = :myChallengeId")
     Optional<MyChallenge> findMyChallengeByMyChallengeId(@Param(value = "myChallengeId") Long myChallengeId);

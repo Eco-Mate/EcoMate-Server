@@ -29,8 +29,26 @@ public class MyChallengeController {
 
     @ApiResponse(description = "userId 별 도전 챌린지 전체 조회")
     @GetMapping("/user/{userId}")
-    public ApiUtil.ApiSuccessResult<List<MyChallengeDto>> getMyChallengeByUserId(@PathVariable Long userId) {
-        return ApiUtil.success("사용자별 도전 챌린지 조회 성공", myChallengeService.getMyChallengeByUserId(userId));
+    public ApiUtil.ApiSuccessResult<List<MyChallengeDto>> getAllMyChallengeByUserId(@PathVariable Long userId) {
+        return ApiUtil.success("사용자별 도전 챌린지 조회 성공", myChallengeService.getAllMyChallengeByUserId(userId));
+    }
+
+    @ApiResponse(description = "userId 별 완료한 챌린지 전체 조회")
+    @GetMapping("/user/{userId}/finish")
+    public ApiUtil.ApiSuccessResult<List<MyChallengeDto>> getAllMyChallengeDoneByUserId(@PathVariable Long userId) {
+        return ApiUtil.success("사용자별 완료한 챌린지 전체 조회 성공", myChallengeService.getAllMyChallengeDoneByUserId(userId));
+    }
+
+    @ApiResponse(description = "userId에 해당하는 사용자가 완료한 챌린지 수 조회")
+    @GetMapping("/user/{userId}/finish/cnt")
+    public ApiUtil.ApiSuccessResult<Long> getMyChallengeDoneCntByUserId(@PathVariable Long userId) {
+        return ApiUtil.success("해당 사용자가 도전 완료한 챌린지 수 조회 성공", myChallengeService.getMyChallengeDoneCntByUserId(userId));
+    }
+
+    @ApiResponse(description = "userId에 해당하는 사용자가 진행 중인 챌린지 수 조회")
+    @GetMapping("/user/{userId}/proceeding/cnt")
+    public ApiUtil.ApiSuccessResult<Long> getMyChallengeProceedingCntByUserId(@PathVariable Long userId) {
+        return ApiUtil.success("해당 사용자가 도전 중인 챌린지 수 조회 성공", myChallengeService.getMyChallengeProceedingCntByUserId(userId));
     }
 
     @ApiResponse(description = "myChallengeId로 도전 챌린지 단일 조회")
