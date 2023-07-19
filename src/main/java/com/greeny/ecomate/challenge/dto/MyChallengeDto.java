@@ -3,6 +3,9 @@ package com.greeny.ecomate.challenge.dto;
 import com.greeny.ecomate.challenge.entity.AchieveType;
 import com.greeny.ecomate.challenge.entity.MyChallenge;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 public record MyChallengeDto(
         Long myChallengeId,
         String nickname,

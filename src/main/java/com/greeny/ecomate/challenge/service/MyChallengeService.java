@@ -51,24 +51,49 @@ public class MyChallengeService {
              if(myChallenge.getAchieveType().equals(AchieveType.PROCEEDING)) {
                  throw new IllegalArgumentException("해당 도전은 진행 중입니다. 계속 도전해보세요!");
              }
-             else {
+             else if(myChallenge.getAchieveType().equals(AchieveType.FINISH)) {
+                 myChallenge.updateAchieveType(AchieveType.PROCEEDING);
                  myChallenge.updateAchieveCnt(myChallenge.getAchieveCnt() + 1);
                  myChallenge.updateAchievePoint(myChallenge.getAchievePoint() + challenge.getTreePoint());
                  myChallenge.updateDoneCnt(0L);
                  return myChallenge.getMyChallengeId();
              }
+             else {
+                 throw new IllegalArgumentException("해당 도전을 시작하지 않았습니다.");
+             }
         }
     }
 
-    public List<MyChallengeDto> getMyChallengeByUserId(Long userId) {
+    public List<MyChallengeDto> getAllMyChallengeByUserId(Long userId) {
         List<MyChallenge> myChallengeList = myChallengeRepository.findAllByUser_UserId(userId);
         return myChallengeList.stream().map(MyChallengeDto::from).toList();
+    }
+
+    public List<MyChallengeDto> getAllMyChallengeDoneByUserId(Long userId) {
+        List<MyChallenge> myChallengeDoneList = myChallengeRepository.findAllByUser_UserIdAndAchieveType(userId, AchieveType.FINISH);
+        return myChallengeDoneList.stream().map(MyChallengeDto::from).toList();
+    }
+
+    public Long getMyChallengeDoneCntByUserId(Long userId) {
+        return myChallengeRepository.countMyChallengesByUser_UserIdAndAchieveType(userId, AchieveType.FINISH);
+    }
+
+    public Long getMyChallengeProceedingCntByUserId(Long userId) {
+        return myChallengeRepository.countMyChallengesByUser_UserIdAndAchieveType(userId, AchieveType.PROCEEDING);
+    }
+
+    public MyChallengeDto getMyChallengeById(Long myChallengeId) {
+        MyChallenge findMyChallenge = myChallengeRepository.findMyChallengeByMyChallengeId(myChallengeId)
+                .orElseThrow(() -> new IllegalArgumentException("도전하지 않은 챌린지입니다."));
+        return findMyChallenge.from(findMyChallenge);
     }
 
     @Transactional
     public String updateMyChallengeDoneCnt(Long myChallengeId) {
         MyChallenge myChallenge = myChallengeRepository.findById(myChallengeId)
                 .orElseThrow(() -> new IllegalArgumentException("도전하고 있지 않는 챌린지입니다."));
+
+        //TODO: 로그인된 사용자와 해당 챌린지를 도전하고 있는 사용자가 일치하는지 확인
 
         if(myChallenge.getAchieveType() == AchieveType.FINISH) {
             return "이미 달성한 챌린지 입니다.";
@@ -81,7 +106,12 @@ public class MyChallengeService {
         else {
             myChallenge.updateDoneCnt(myChallenge.getDoneCnt() + 1);
             myChallenge.updateAchieveType(AchieveType.FINISH);
-            return "챌린지를 달성하였습니다. 축하드립니다!";
+
+            Long userId = myChallenge.getUser().getUserId();
+            User user = userRepository.findById(userId).get();
+            user.updateTotalTreePoint(user.getTotalTreePoint() + myChallenge.getAchievePoint());
+
+            return "챌린지를 달성 완료하여 트리포인트가 적립되었습니다. 축하드립니다!";
         }
     }
 

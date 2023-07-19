@@ -3,8 +3,10 @@ package com.greeny.ecomate.challenge.service;
 
 import com.greeny.ecomate.challenge.dto.ChallengeDto;
 import com.greeny.ecomate.challenge.dto.CreateChallengeRequestDto;
+import com.greeny.ecomate.challenge.entity.AchieveType;
 import com.greeny.ecomate.challenge.entity.Challenge;
 import com.greeny.ecomate.challenge.repository.ChallengeRepository;
+import com.greeny.ecomate.challenge.repository.MyChallengeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +19,7 @@ import java.util.List;
 public class ChallengeService {
 
     private final ChallengeRepository challengeRepository;
+    private final MyChallengeRepository myChallengeRepository;
 
     @Transactional
     public Long createChallenge(CreateChallengeRequestDto dto) {
@@ -33,6 +36,10 @@ public class ChallengeService {
     public List<ChallengeDto> findAllChallenge() {
         List<Challenge> challengeList = challengeRepository.findAll();
         return challengeList.stream().map(ChallengeDto::from).toList();
+    }
+
+    public Long getProceedingChallengeCnt(Long challengeId) {
+        return myChallengeRepository.countMyChallengesByChallenge_ChallengeIdAndAchieveType(challengeId, AchieveType.PROCEEDING);
     }
 
     @Transactional
