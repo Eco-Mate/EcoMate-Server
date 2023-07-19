@@ -52,6 +52,7 @@ public class MyChallengeService {
                  throw new IllegalArgumentException("해당 도전은 진행 중입니다. 계속 도전해보세요!");
              }
              else if(myChallenge.getAchieveType().equals(AchieveType.FINISH)) {
+                 myChallenge.updateAchieveType(AchieveType.PROCEEDING);
                  myChallenge.updateAchieveCnt(myChallenge.getAchieveCnt() + 1);
                  myChallenge.updateAchievePoint(myChallenge.getAchievePoint() + challenge.getTreePoint());
                  myChallenge.updateDoneCnt(0L);
@@ -92,6 +93,8 @@ public class MyChallengeService {
         MyChallenge myChallenge = myChallengeRepository.findById(myChallengeId)
                 .orElseThrow(() -> new IllegalArgumentException("도전하고 있지 않는 챌린지입니다."));
 
+        //TODO: 로그인된 사용자와 해당 챌린지를 도전하고 있는 사용자가 일치하는지 확인
+
         if(myChallenge.getAchieveType() == AchieveType.FINISH) {
             return "이미 달성한 챌린지 입니다.";
         }
@@ -103,7 +106,12 @@ public class MyChallengeService {
         else {
             myChallenge.updateDoneCnt(myChallenge.getDoneCnt() + 1);
             myChallenge.updateAchieveType(AchieveType.FINISH);
-            return "챌린지를 달성하였습니다. 축하드립니다!";
+
+            Long userId = myChallenge.getUser().getUserId();
+            User user = userRepository.findById(userId).get();
+            user.updateTotalTreePoint(user.getTotalTreePoint() + myChallenge.getAchievePoint());
+
+            return "챌린지를 달성 완료하여 트리포인트가 적립되었습니다. 축하드립니다!";
         }
     }
 
