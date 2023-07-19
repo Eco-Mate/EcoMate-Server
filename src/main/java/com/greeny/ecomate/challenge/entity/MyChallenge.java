@@ -1,5 +1,6 @@
 package com.greeny.ecomate.challenge.entity;
 
+import com.greeny.ecomate.challenge.dto.MyChallengeDto;
 import com.greeny.ecomate.user.entity.User;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -41,7 +42,7 @@ public class MyChallenge {
     public MyChallenge(User user, Challenge challenge,AchieveType achieveType, Long achieveCnt, Long achievePoint, Long doneCnt) {
         this.user = user;
         this.challenge = challenge;
-        this.achieveType =achieveType;
+        this.achieveType = achieveType;
         this.achieveCnt = achieveCnt;
         this.achievePoint = achievePoint;
         this.doneCnt = doneCnt;
@@ -49,6 +50,18 @@ public class MyChallenge {
 
     public static MyChallenge of(User user, Challenge challenge, AchieveType achieveType, Long achieveCnt, Long achievePoint, Long doneCnt) {
         return new MyChallenge(user, challenge, achieveType, achieveCnt, achievePoint, doneCnt);
+    }
+
+    public static MyChallengeDto from(MyChallenge entity) {
+        return new MyChallengeDto(
+                entity.getMyChallengeId(),
+                entity.getUser().getNickname(),
+                entity.getChallenge().getChallengeId(),
+                entity.getAchieveType(),
+                entity.getAchieveCnt(),
+                entity.getAchievePoint(),
+                entity.getDoneCnt()
+        );
     }
 
     public void updateAchieveType(AchieveType achieveType) { this.achieveType = achieveType; }

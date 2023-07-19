@@ -2,6 +2,7 @@ package com.greeny.ecomate.challenge.controller;
 
 import com.greeny.ecomate.challenge.dto.CreateMyChallengeRequestDto;
 import com.greeny.ecomate.challenge.dto.MyChallengeDto;
+import com.greeny.ecomate.challenge.entity.MyChallenge;
 import com.greeny.ecomate.challenge.service.MyChallengeService;
 import com.greeny.ecomate.utils.api.ApiUtil;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -24,9 +25,14 @@ public class MyChallengeController {
         return ApiUtil.success("챌린지 도전 시작 성공", myChallengeService.createMyChallenge(dto));
     }
 
-    @GetMapping("/{userId}")
+    @GetMapping("/user/{userId}")
     public ApiUtil.ApiSuccessResult<List<MyChallengeDto>> getMyChallengeByUserId(@PathVariable Long userId) {
         return ApiUtil.success("사용자별 도전 챌린지 조회 성공", myChallengeService.getMyChallengeByUserId(userId));
+    }
+
+    @GetMapping("/{myChallengeId}")
+    public ApiUtil.ApiSuccessResult<MyChallengeDto> getMyChallengeById(@PathVariable Long myChallengeId) {
+        return ApiUtil.success("도전 챌린지 단일 조회 성공", myChallengeService.getMyChallengeById(myChallengeId));
     }
 
     @PutMapping("/{myChallengeId}")
