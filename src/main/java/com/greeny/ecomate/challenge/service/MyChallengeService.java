@@ -69,12 +69,12 @@ public class MyChallengeService {
         return myChallengeList.stream().map(MyChallengeDto::from).toList();
     }
 
-    public List<MyChallengeDto> getAllMyChallengeDoneByUserId(Long userId) {
+    public List<MyChallengeDto> getAllMyChallengeFinishByUserId(Long userId) {
         List<MyChallenge> myChallengeDoneList = myChallengeRepository.findAllByUser_UserIdAndAchieveType(userId, AchieveType.FINISH);
         return myChallengeDoneList.stream().map(MyChallengeDto::from).toList();
     }
 
-    public Long getMyChallengeDoneCntByUserId(Long userId) {
+    public Long getMyChallengeFinishCntByUserId(Long userId) {
         return myChallengeRepository.countMyChallengesByUser_UserIdAndAchieveType(userId, AchieveType.FINISH);
     }
 
@@ -113,6 +113,13 @@ public class MyChallengeService {
 
             return "챌린지를 달성 완료하여 트리포인트가 적립되었습니다. 축하드립니다!";
         }
+    }
+
+    @Transactional
+    public void deleteMyChallenge(Long myChallengeId) {
+        MyChallenge myChallenge = myChallengeRepository.findMyChallengeByMyChallengeId(myChallengeId)
+                .orElseThrow(() -> new IllegalArgumentException("도전하지 않은 챌린지입니다."));
+        myChallengeRepository.delete(myChallenge);
     }
 
 }
