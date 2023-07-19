@@ -29,7 +29,7 @@ public class MyChallengeController {
         return ApiUtil.success("사용자별 도전 챌린지 조회 성공", myChallengeService.getMyChallengeByUserId(userId));
     }
 
-    @PutMapping("")
+    @PutMapping("/{myChallengeId}")
     public ApiUtil.ApiSuccessResult<String> updateMyChallengeDoneCnt(@PathVariable Long myChallengeId) {
         return ApiUtil.success("챌린지 도전 횟수 수정 성공", myChallengeService.updateMyChallengeDoneCnt(myChallengeId));
     }

@@ -65,12 +65,13 @@ public class MyChallengeService {
         return myChallengeList.stream().map(MyChallengeDto::from).toList();
     }
 
+    @Transactional
     public String updateMyChallengeDoneCnt(Long myChallengeId) {
         MyChallenge myChallenge = myChallengeRepository.findById(myChallengeId)
                 .orElseThrow(() -> new IllegalArgumentException("도전하고 있지 않는 챌린지입니다."));
 
         if(myChallenge.getDoneCnt()+1 < myChallenge.getChallenge().getGoalCnt()) {
-            myChallenge.updateDoneCnt(myChallenge.getDoneCnt()+1);
+            myChallenge.updateDoneCnt(myChallenge.getDoneCnt() + 1);
             return "챌린지 도전 횟수가 1 증가했습니다.";
         }
         else {
