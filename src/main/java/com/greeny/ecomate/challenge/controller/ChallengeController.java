@@ -37,6 +37,11 @@ public class ChallengeController {
         return ApiUtil.success("챌린지 전체 조회 성공", challengeService.findAllChallenge());
     }
 
+    @GetMapping("/cnt/{challengeId}")
+    public ApiUtil.ApiSuccessResult<Long> getChallengeInCnt(@PathVariable Long challengeId) {
+        return ApiUtil.success("챌린지 도전 회원 수 조회 성공", challengeService.getChallengeInCnt(challengeId));
+    }
+
     @PutMapping("/activeYn/{challengeId}")
     public ApiUtil.ApiSuccessResult<Long> updateChallengeActiveYn(@PathVariable Long challengeId,
                                         @RequestBody boolean activeYn,

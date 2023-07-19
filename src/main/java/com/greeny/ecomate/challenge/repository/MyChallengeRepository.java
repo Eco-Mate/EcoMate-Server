@@ -11,7 +11,9 @@ import java.util.Optional;
 public interface MyChallengeRepository extends JpaRepository<MyChallenge, Long> {
 
     List<MyChallenge> findAllByUser_UserId(Long userId);
-    //Optional<MyChallenge> findByChallengeIdAndUserId(Long challengeId, Long UserId);
+
     Optional<MyChallenge> findMyChallengeByUser_UserIdAndChallenge_ChallengeId(Long UserId, Long challengeId);
+
+    Long countMyChallengesByChallenge_ChallengeId(Long challengeId);
 
 }
