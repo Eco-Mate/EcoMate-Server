@@ -57,9 +57,11 @@ public class BoardService {
    }
 
    private void validateChallenge(Long challengeId) {
-      challengeRepository.findById(challengeId)
-              .orElseThrow(() -> new NotFoundException("존재하지 않는 챌린지입니다."));
+      // challengeId == 0 : challenge 미등록
+      if (challengeId != 0) {
+         challengeRepository.findById(challengeId)
+                 .orElseThrow(() -> new NotFoundException("존재하지 않는 챌린지입니다."));
+      }
    }
-
 
 }
