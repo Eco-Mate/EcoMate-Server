@@ -15,7 +15,7 @@ import javax.persistence.*;
 public class Board extends BaseEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "board_id")
     private Long boardId;
 
@@ -32,7 +32,7 @@ public class Board extends BaseEntity {
     @Column(name = "board_content", length = 500)
     private String boardContent;
 
-    @Column(name = "image", length = 100)
+    @Column(name = "image", length = 200)
     private String image;
 
     @Column(name = "like_cnt")
