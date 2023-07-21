@@ -35,3 +35,11 @@ springdoc:
   paths-to-match: /**
   default-consumes-media-type: application/json
   default-produces-media-type: application/json
+cloud:
+  aws:
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+
+logging.level.com.amazonaws.util.EC2MetadataUtils: error
