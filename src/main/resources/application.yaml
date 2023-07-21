@@ -42,4 +42,9 @@ cloud:
     stack:
       auto: false
 
+s3-directory:
+  board: board
+  challenge: challenge
+  profile: profile
+
 logging.level.com.amazonaws.util.EC2MetadataUtils: error
