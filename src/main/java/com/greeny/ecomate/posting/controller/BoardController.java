@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.awt.print.Pageable;
 import java.util.List;
 
 @Tag(name = "Board(게시물)")

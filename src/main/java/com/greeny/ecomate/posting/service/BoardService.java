@@ -1,5 +1,6 @@
 package com.greeny.ecomate.posting.service;
 
+import com.greeny.ecomate.challenge.entity.Challenge;
 import com.greeny.ecomate.challenge.repository.ChallengeRepository;
 import com.greeny.ecomate.exception.NotFoundException;
 import com.greeny.ecomate.posting.dto.BoardDto;
@@ -56,18 +57,14 @@ public class BoardService {
 
    public List<BoardDto> getAllBoard() {
       List<Board> boardList = boardRepository.findAll();
-      return boardList.stream().map(
-              board -> new BoardDto(board, s3Url, boardDirectory
-              )).toList();
+      return boardList.stream().map(this::createBoardDto).toList();
    }
 
    public List<BoardDto> getBoardByNickname(String nickname) {
       List<Board> boardList = boardRepository.findAllByUser(
               userRepository.findByNickname(nickname).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다.")
       ));
-      return boardList.stream().map(
-              board -> new BoardDto(board, s3Url, boardDirectory)
-               ).toList();
+      return boardList.stream().map(this::createBoardDto).toList();
    }
 
    @Transactional
@@ -88,6 +85,16 @@ public class BoardService {
 
    private String uploadImage(MultipartFile file){
       return awsS3Service.upload(boardDirectory, file);
+   }
+
+   private BoardDto createBoardDto(Board board) {
+      Long challengeId = board.getChallengeId();
+      if (challengeId != 0) {
+         Challenge challenge = challengeRepository.findById(challengeId)
+                 .orElseThrow(() -> new NotFoundException("존재하지 않는 챌린지입니다."));
+         return new BoardDto(board, challenge.getChallengeTitle(), s3Url, boardDirectory);
+      }
+      return new BoardDto(board, null, s3Url, boardDirectory);
    }
 
 }
