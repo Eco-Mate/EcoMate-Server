@@ -24,17 +24,4 @@ public class CreateBoardRequestDto {
     @NotNull
     private String boardContent;
 
-    @NotNull
-    private String image;
-
-    public Board toEntity(User user) {
-        return Board.builder()
-                .user(user)
-                .boardTitle(boardTitle)
-                .boardContent(boardContent)
-                .challengeId(challengeId)
-                .image(image)
-                .likeCnt(0L)
-                .build();
-    }
 }
