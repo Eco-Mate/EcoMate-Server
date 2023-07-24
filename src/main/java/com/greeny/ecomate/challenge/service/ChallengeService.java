@@ -65,7 +65,6 @@ public class ChallengeService {
     public void deleteChallenge(Long challengeId) {
         Challenge challenge = challengeRepository.findById(challengeId)
                 .orElseThrow(() -> new IllegalArgumentException("챌린지가 존재하지 않습니다."));
-
         challengeRepository.delete(challenge);
     }
 

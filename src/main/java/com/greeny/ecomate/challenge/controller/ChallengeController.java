@@ -71,7 +71,7 @@ public class ChallengeController {
     public ApiUtil.ApiSuccessResult<String> deleteChallenge(@PathVariable Long challengeId,
                                   HttpServletRequest req) {
         challengeService.deleteChallenge(challengeId);
-        return ApiUtil.success("챌린지 삭제 성공", "삭제되었습니다.");
+        return ApiUtil.success("챌린지 삭제 성공", "해당 챌린지가 삭제되었습니다.");
     }
 
 }

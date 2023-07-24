@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -33,8 +34,12 @@ public class MyChallengeService {
         Challenge challenge = challengeRepository.findById(dto.challengeId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 챌린지입니다."));
 
+        if(!challenge.getActiveYn())
+            throw new IllegalArgumentException("활성화되지 않은 챌린지 입니다.");
+
         // 새도전
-        if(!myChallengeRepository.findMyChallengeByUser_UserIdAndChallenge_ChallengeId(user.getUserId(), challenge.getChallengeId()).isPresent()) {
+        Optional<MyChallenge> mc = myChallengeRepository.findMyChallengeByUser_UserIdAndChallenge_ChallengeId(user.getUserId(), challenge.getChallengeId());
+        if(mc.isEmpty()) {
             MyChallenge myChallenge = MyChallenge.builder()
                     .challenge(challenge)
                     .user(user)
@@ -47,7 +52,7 @@ public class MyChallengeService {
         }
         // 재도전
         else {
-             MyChallenge myChallenge = myChallengeRepository.findMyChallengeByUser_UserIdAndChallenge_ChallengeId(user.getUserId(), challenge.getChallengeId()).get();
+             MyChallenge myChallenge = mc.get();
              if(myChallenge.getAchieveType().equals(AchieveType.PROCEEDING)) {
                  throw new IllegalArgumentException("해당 도전은 진행 중입니다. 계속 도전해보세요!");
              }
@@ -69,17 +74,22 @@ public class MyChallengeService {
         return myChallengeList.stream().map(MyChallengeDto::from).toList();
     }
 
-    public List<MyChallengeDto> getAllMyChallengeDoneByUserId(Long userId) {
-        List<MyChallenge> myChallengeDoneList = myChallengeRepository.findAllByUser_UserIdAndAchieveType(userId, AchieveType.FINISH);
-        return myChallengeDoneList.stream().map(MyChallengeDto::from).toList();
+    public List<MyChallengeDto> getAllMyChallengeProceedingByUserId(Long userId) {
+        List<MyChallenge> myChallengeProceedingList = myChallengeRepository.findAllByUser_UserIdAndAchieveType(userId, AchieveType.PROCEEDING);
+        return myChallengeProceedingList.stream().map(MyChallengeDto::from).toList();
     }
 
-    public Long getMyChallengeDoneCntByUserId(Long userId) {
-        return myChallengeRepository.countMyChallengesByUser_UserIdAndAchieveType(userId, AchieveType.FINISH);
+    public List<MyChallengeDto> getAllMyChallengeFinishByUserId(Long userId) {
+        List<MyChallenge> myChallengeFinishList = myChallengeRepository.findAllByUser_UserIdAndAchieveType(userId, AchieveType.FINISH);
+        return myChallengeFinishList.stream().map(MyChallengeDto::from).toList();
     }
 
     public Long getMyChallengeProceedingCntByUserId(Long userId) {
         return myChallengeRepository.countMyChallengesByUser_UserIdAndAchieveType(userId, AchieveType.PROCEEDING);
+    }
+
+    public Long getMyChallengeFinishCntByUserId(Long userId) {
+        return myChallengeRepository.countMyChallengesByUser_UserIdAndAchieveType(userId, AchieveType.FINISH);
     }
 
     public MyChallengeDto getMyChallengeById(Long myChallengeId) {
@@ -113,6 +123,13 @@ public class MyChallengeService {
 
             return "챌린지를 달성 완료하여 트리포인트가 적립되었습니다. 축하드립니다!";
         }
+    }
+
+    @Transactional
+    public void deleteMyChallenge(Long myChallengeId) {
+        MyChallenge myChallenge = myChallengeRepository.findMyChallengeByMyChallengeId(myChallengeId)
+                .orElseThrow(() -> new IllegalArgumentException("도전하지 않은 챌린지입니다."));
+        myChallengeRepository.delete(myChallenge);
     }
 
 }
