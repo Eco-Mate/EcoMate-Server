@@ -52,7 +52,7 @@ public class MyChallengeService {
         }
         // 재도전
         else {
-             MyChallenge myChallenge = myChallengeRepository.findMyChallengeByUser_UserIdAndChallenge_ChallengeId(user.getUserId(), challenge.getChallengeId()).get();
+             MyChallenge myChallenge = mc.get();
              if(myChallenge.getAchieveType().equals(AchieveType.PROCEEDING)) {
                  throw new IllegalArgumentException("해당 도전은 진행 중입니다. 계속 도전해보세요!");
              }
