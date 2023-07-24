@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -37,7 +38,8 @@ public class MyChallengeService {
             throw new IllegalArgumentException("활성화되지 않은 챌린지 입니다.");
 
         // 새도전
-        if(!myChallengeRepository.findMyChallengeByUser_UserIdAndChallenge_ChallengeId(user.getUserId(), challenge.getChallengeId()).isPresent()) {
+        Optional<MyChallenge> mc = myChallengeRepository.findMyChallengeByUser_UserIdAndChallenge_ChallengeId(user.getUserId(), challenge.getChallengeId());
+        if(mc.isEmpty()) {
             MyChallenge myChallenge = MyChallenge.builder()
                     .challenge(challenge)
                     .user(user)
