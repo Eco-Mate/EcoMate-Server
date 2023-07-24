@@ -9,5 +9,6 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 public class BoardListDto {
-    private List<BoardDto> boardDtoList;
+    private Boolean isLast;
+    private List<BoardDto> boardList;
 }
