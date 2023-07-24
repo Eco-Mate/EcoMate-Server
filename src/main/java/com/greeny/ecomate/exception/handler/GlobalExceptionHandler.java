@@ -4,7 +4,6 @@ package com.greeny.ecomate.exception.handler;
 import com.greeny.ecomate.exception.NotFoundException;
 import com.greeny.ecomate.utils.api.ApiUtil;
 import com.greeny.ecomate.utils.api.ApiUtil.ApiErrorResult;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -35,12 +34,6 @@ public class GlobalExceptionHandler {
         }
         ApiErrorResult<String> error = ApiUtil.error(HttpServletResponse.SC_BAD_REQUEST, sb.toString());
         return ResponseEntity.status(HttpServletResponse.SC_BAD_REQUEST).body(error);
-    }
-
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<?> handleIllegalArgumentException(Exception e) {
-        ApiErrorResult<String> error = ApiUtil.error(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
 }

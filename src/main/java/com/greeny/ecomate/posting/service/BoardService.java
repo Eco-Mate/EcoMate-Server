@@ -4,7 +4,6 @@ import com.greeny.ecomate.challenge.entity.Challenge;
 import com.greeny.ecomate.challenge.repository.ChallengeRepository;
 import com.greeny.ecomate.exception.NotFoundException;
 import com.greeny.ecomate.posting.dto.BoardDto;
-import com.greeny.ecomate.posting.dto.BoardListDto;
 import com.greeny.ecomate.posting.dto.CreateBoardRequestDto;
 import com.greeny.ecomate.posting.dto.UpdateBoardRequestDto;
 import com.greeny.ecomate.posting.entity.Board;
@@ -14,7 +13,6 @@ import com.greeny.ecomate.user.entity.User;
 import com.greeny.ecomate.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -57,11 +55,9 @@ public class BoardService {
       return boardRepository.save(board).getBoardId();
    }
 
-   public BoardListDto getAllBoard(int page, int size) {
-      validatePaging(page, size);
-      PageRequest pageRequest = PageRequest.of(page - 1, size, Sort.by("boardId").descending());
-      Slice<Board> boardSlice = boardRepository.findAll(pageRequest);
-      return new BoardListDto(boardSlice.isLast(), boardSlice.getContent().stream().map(this::createBoardDto).toList());
+   public List<BoardDto> getAllBoard() {
+      List<Board> boardList = boardRepository.findAll();
+      return boardList.stream().map(this::createBoardDto).toList();
    }
 
    public List<BoardDto> getBoardByNickname(String nickname) {
@@ -99,16 +95,6 @@ public class BoardService {
          return new BoardDto(board, challenge.getChallengeTitle(), s3Url, boardDirectory);
       }
       return new BoardDto(board, null, s3Url, boardDirectory);
-   }
-
-   private void validatePaging(int page, int size) {
-      System.out.println("----------------");
-      if (page < 1) {
-         throw new IllegalArgumentException("페이지 번호는 1보다 작을 수 없습니다.");
-      }
-      if (size <= 0) {
-         throw new IllegalArgumentException("조회 요청 사이즈는 0보다 커야합니다.");
-      }
    }
 
 }
