@@ -1,20 +1,16 @@
 package com.greeny.ecomate.posting.controller;
 
-import com.greeny.ecomate.posting.dto.BoardDto;
 import com.greeny.ecomate.posting.dto.BoardListDto;
 import com.greeny.ecomate.posting.dto.CreateBoardRequestDto;
 import com.greeny.ecomate.posting.dto.UpdateBoardRequestDto;
 import com.greeny.ecomate.posting.service.BoardService;
 import com.greeny.ecomate.utils.api.ApiUtil;
-import com.greeny.ecomate.utils.api.ApiUtil.ApiSuccessResult;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import java.awt.print.Pageable;
-import java.util.List;
 
 @Tag(name = "Board(게시물)")
 @RestController
@@ -31,8 +27,8 @@ public class BoardController {
     }
 
     @GetMapping
-    public ApiUtil.ApiSuccessResult<BoardListDto> getAllBoard() {
-        return ApiUtil.success("게시물 전체 조회 성공", new BoardListDto(boardService.getAllBoard()));
+    public ApiUtil.ApiSuccessResult<BoardListDto> getAllBoard(@RequestParam(name = "page") int page, @RequestParam(name = "size") int size) {
+        return ApiUtil.success("게시물 전체 조회 성공", boardService.getAllBoard(page, size));
     }
 
     @PutMapping
