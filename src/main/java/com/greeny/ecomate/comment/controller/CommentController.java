@@ -10,6 +10,7 @@ import com.greeny.ecomate.utils.api.ApiUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -20,7 +21,7 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping
-    public ApiUtil.ApiSuccessResult<Long> createComment(@RequestBody CreateCommentRequestDto createRequest) {
+    public ApiUtil.ApiSuccessResult<Long> createComment(@Valid  @RequestBody CreateCommentRequestDto createRequest) {
         return ApiUtil.success("댓글 생성 성공", commentService.createComment(createRequest));
     }
 
