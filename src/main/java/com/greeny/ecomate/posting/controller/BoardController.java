@@ -26,7 +26,7 @@ public class BoardController {
 
     @PostMapping
 
-    public ApiUtil.ApiSuccessResult<Long> createBoard(@RequestPart CreateBoardRequestDto createDto, @RequestPart MultipartFile file) {
+    public ApiUtil.ApiSuccessResult<Long> createBoard(@Valid @RequestPart CreateBoardRequestDto createDto, @RequestPart MultipartFile file) {
         return ApiUtil.success("게시물 생성 성공", boardService.createBoard(createDto, file));
     }
 
