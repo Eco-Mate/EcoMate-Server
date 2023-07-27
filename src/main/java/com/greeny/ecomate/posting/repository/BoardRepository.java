@@ -14,5 +14,8 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     @Query("SELECT b FROM Board b join fetch b.user")
     List<Board> findAll(Pageable pageable);
 
+    @Query("SELECT b FROM Board b join fetch b.user")
+    List<Board> findAll();
+
     List<Board> findAllByUser(User user);
 }
