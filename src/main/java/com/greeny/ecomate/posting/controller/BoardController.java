@@ -18,7 +18,7 @@ import javax.validation.Valid;
 @Tag(name = "Board(게시물)")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/board")
+@RequestMapping("/v1/boards")
 public class BoardController {
 
     private final BoardService boardService;
