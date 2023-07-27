@@ -67,6 +67,11 @@ public class BoardService {
       return boardList.stream().map(this::createBoardDto).toList();
    }
 
+   public List<BoardDto> getAllSortedByLikeCnt() {
+      List<Board> boardList = boardRepository.findAllSortedByLikeCnt();
+      return boardList.stream().map(this::createBoardDto).toList();
+   }
+
    @Transactional
    public Long updateBoard(UpdateBoardRequestDto updateDto) {
       Board board = boardRepository.findById(updateDto.getBoardId())
