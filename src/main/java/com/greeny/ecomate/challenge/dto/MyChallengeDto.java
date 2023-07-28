@@ -23,7 +23,7 @@ public record MyChallengeDto(
     public static MyChallengeDto from(MyChallenge entity) {
         return new MyChallengeDto(
                 entity.getMyChallengeId(),
-                entity.getUser().getNickname(),
+                entity.getMember().getNickname(),
                 entity.getChallenge().getChallengeId(),
                 entity.getAchieveType(),
                 entity.getAchieveCnt(),

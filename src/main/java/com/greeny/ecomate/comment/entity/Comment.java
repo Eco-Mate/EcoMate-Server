@@ -22,16 +22,16 @@ public class Comment extends BaseEntity {
     @JoinColumn(name = "board_id")
     private Board board;
 
-    @Column(name = "user_id")
-    private Long userId;
+    @Column(name = "member_id")
+    private Long memberId;
 
     @Column(name = "content", length = 500)
     private String content;
 
     @Builder
-    public Comment(Board board, Long userId, String content) {
+    public Comment(Board board, Long memberId, String content) {
         this.board = board;
-        this.userId = userId;
+        this.memberId = memberId;
         this.content = content;
     }
 }

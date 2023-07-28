@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 public class BoardDto {
 
     private Long boardId;
-    private Long userId;
+    private Long memberId;
     private String nickname;
     private String profileImage;
     private String challengeTitle;
@@ -22,9 +22,9 @@ public class BoardDto {
 
     public BoardDto(Board board, String challengeTitle, String s3Url, String boardDirectory) {
         this.boardId = board.getBoardId();
-        this.userId = board.getUser().getUserId();
-        this.nickname = board.getUser().getNickname();
-        this.profileImage = board.getUser().getProfleImage();
+        this.memberId = board.getMember().getMemberId();
+        this.nickname = board.getMember().getNickname();
+        this.profileImage = board.getMember().getProfileImage();
         this.challengeTitle = challengeTitle;
         this.boardTitle = board.getBoardTitle();
         this.boardContent = board.getBoardContent();

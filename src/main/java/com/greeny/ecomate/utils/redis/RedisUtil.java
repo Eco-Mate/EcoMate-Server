@@ -28,4 +28,24 @@ public class RedisUtil {
         redisTemplate.delete(key);
     }
 
+    public void sAdd(String key, Object value) {
+        redisTemplate.opsForSet().add(key, value);
+    }
+
+    public void sRem(String key, Object value) {
+        redisTemplate.opsForSet().remove(key, value);
+    }
+
+    public Boolean sIsMember(String key, Object value) {
+        return redisTemplate.opsForSet().isMember(key, value);
+    }
+
+    public Long sSize(String key) {
+        return redisTemplate.opsForSet().size(key);
+    }
+
+    public Boolean exists(String key) {
+        return redisTemplate.hasKey(key);
+    }
+
 }

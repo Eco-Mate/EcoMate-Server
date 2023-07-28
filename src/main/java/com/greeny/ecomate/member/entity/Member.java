@@ -1,4 +1,4 @@
-package com.greeny.ecomate.user.entity;
+package com.greeny.ecomate.member.entity;
 
 
 import com.greeny.ecomate.base.BaseEntity;
@@ -9,11 +9,11 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User extends BaseEntity {
+public class Member extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
-    private Long userId;
+    @Column(name = "member_id")
+    private Long memberId;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
@@ -33,7 +33,7 @@ public class User extends BaseEntity {
     private String nickname;
 
     @Column(name = "profile_image", length = 200)
-    private String profleImage;
+    private String profileImage;
 
     @Column(name = "name", length = 30)
     private String name;
@@ -46,8 +46,8 @@ public class User extends BaseEntity {
 
 
     @Builder
-    public User(Role role, Level level, Long totalTreePoint,
-                String nickname, String name, String password, String email) {
+    public Member(Role role, Level level, Long totalTreePoint,
+                  String nickname, String name, String password, String email) {
         this.role = role;
         this.level = level;
         this.totalTreePoint = totalTreePoint;
