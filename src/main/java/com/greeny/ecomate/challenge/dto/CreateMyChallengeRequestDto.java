@@ -13,7 +13,7 @@ public record CreateMyChallengeRequestDto(
 
     public static CreateMyChallengeRequestDto from(MyChallenge entity) {
         return new CreateMyChallengeRequestDto(
-                entity.getUser().getNickname(),
+                entity.getMember().getNickname(),
                 entity.getChallenge().getChallengeId());
     }
 

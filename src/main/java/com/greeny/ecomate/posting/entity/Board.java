@@ -1,7 +1,7 @@
 package com.greeny.ecomate.posting.entity;
 
 import com.greeny.ecomate.base.BaseEntity;
-import com.greeny.ecomate.user.entity.User;
+import com.greeny.ecomate.member.entity.Member;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,8 +20,8 @@ public class Board extends BaseEntity {
     private Long boardId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     @Column(name = "challenge_id")
     private Long challengeId;
@@ -39,8 +39,8 @@ public class Board extends BaseEntity {
     private Long likeCnt;
 
     @Builder
-    public Board(User user, String boardTitle, String boardContent, String image, Long likeCnt, Long challengeId) {
-        this.user = user;
+    public Board(Member member, String boardTitle, String boardContent, String image, Long likeCnt, Long challengeId) {
+        this.member = member;
         this.boardTitle = boardTitle;
         this.boardContent = boardContent;
         this.challengeId = challengeId;

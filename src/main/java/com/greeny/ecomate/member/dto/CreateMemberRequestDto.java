@@ -1,24 +1,22 @@
-package com.greeny.ecomate.user.dto;
+package com.greeny.ecomate.member.dto;
 
-import com.greeny.ecomate.user.entity.Level;
-import com.greeny.ecomate.user.entity.Role;
-import com.greeny.ecomate.user.entity.User;
-import lombok.AllArgsConstructor;
+import com.greeny.ecomate.member.entity.Level;
+import com.greeny.ecomate.member.entity.Role;
+import com.greeny.ecomate.member.entity.Member;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
 //@NoArgsConstructor
 //@AllArgsConstructor
-public class CreateUserRequestDto {
+public class CreateMemberRequestDto {
     private String email;
     private String name;
     private String nickname;
     private String password;
     private String role;
 
-    public User toEntity() {
-        return User.builder()
+    public Member toEntity() {
+        return Member.builder()
                 .role(Role.valueOf(role))
                 .level(Level.TREE)
                 .totalTreePoint(0L)

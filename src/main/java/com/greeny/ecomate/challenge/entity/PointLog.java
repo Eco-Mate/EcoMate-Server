@@ -1,7 +1,7 @@
 package com.greeny.ecomate.challenge.entity;
 
 import com.greeny.ecomate.base.BaseEntity;
-import com.greeny.ecomate.user.entity.User;
+import com.greeny.ecomate.member.entity.Member;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,7 +20,7 @@ public class PointLog extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private User user;
+    private Member user;
 
     @Column(name = "challenge_id")
     private Long challengeId;

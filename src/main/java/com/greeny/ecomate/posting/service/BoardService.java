@@ -9,8 +9,8 @@ import com.greeny.ecomate.posting.dto.UpdateBoardRequestDto;
 import com.greeny.ecomate.posting.entity.Board;
 import com.greeny.ecomate.posting.repository.BoardRepository;
 import com.greeny.ecomate.s3.service.AwsS3Service;
-import com.greeny.ecomate.user.entity.User;
-import com.greeny.ecomate.user.repository.UserRepository;
+import com.greeny.ecomate.member.entity.Member;
+import com.greeny.ecomate.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -32,19 +32,19 @@ public class BoardService {
 
 
    private final BoardRepository boardRepository;
-   private final UserRepository userRepository;
+   private final MemberRepository memberRepository;
    private final ChallengeRepository challengeRepository;
    private final AwsS3Service awsS3Service;
 
    @Transactional
    public Long createBoard(CreateBoardRequestDto createDto, MultipartFile file) {
-      User user = userRepository.findByNickname(createDto.getNickname())
+      Member member = memberRepository.findByNickname(createDto.getNickname())
               .orElseThrow(() -> new NotFoundException("존재하지 않는 사용자입니다."));
       validateChallenge(createDto.getChallengeId());
 
       String fileName = uploadImage(file);
       Board board = Board.builder()
-              .user(user)
+              .member(member)
               .boardTitle(createDto.getBoardTitle())
               .boardContent(createDto.getBoardContent())
               .challengeId(createDto.getChallengeId())
@@ -61,8 +61,8 @@ public class BoardService {
    }
 
    public List<BoardDto> getBoardByNickname(String nickname) {
-      List<Board> boardList = boardRepository.findAllByUser(
-              userRepository.findByNickname(nickname).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다.")
+      List<Board> boardList = boardRepository.findAllByMember(
+              memberRepository.findByNickname(nickname).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다.")
       ));
       return boardList.stream().map(this::createBoardDto).toList();
    }

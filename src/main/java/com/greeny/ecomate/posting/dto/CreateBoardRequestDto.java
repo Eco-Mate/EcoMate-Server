@@ -1,8 +1,5 @@
 package com.greeny.ecomate.posting.dto;
 
-import com.greeny.ecomate.challenge.entity.Challenge;
-import com.greeny.ecomate.posting.entity.Board;
-import com.greeny.ecomate.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

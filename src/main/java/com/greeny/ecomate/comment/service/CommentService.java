@@ -8,8 +8,8 @@ import com.greeny.ecomate.comment.repository.CommentRepository;
 import com.greeny.ecomate.exception.NotFoundException;
 import com.greeny.ecomate.posting.entity.Board;
 import com.greeny.ecomate.posting.repository.BoardRepository;
-import com.greeny.ecomate.user.entity.User;
-import com.greeny.ecomate.user.repository.UserRepository;
+import com.greeny.ecomate.member.entity.Member;
+import com.greeny.ecomate.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,19 +23,19 @@ import java.util.stream.Collectors;
 public class CommentService {
 
     private final CommentRepository commentRepository;
-    private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
     private final BoardRepository boardRepository;
 
     @Transactional
     public Long createComment(CreateCommentRequestDto createRequest) {
-        User user = userRepository.findByNickname(createRequest.getNickname())
+        Member member = memberRepository.findByNickname(createRequest.getNickname())
                 .orElseThrow(() -> new NotFoundException("존재하지 않는 사용자입니다."));
 
         Board board = boardRepository.findById(createRequest.getBoardId())
                 .orElseThrow(() -> new NotFoundException("존재하지 않는 게시물입니다."));
 
         Comment comment = Comment.builder()
-                .userId(user.getUserId())
+                .memberId(member.getMemberId())
                 .board(board)
                 .content(createRequest.getContent())
                 .build();
@@ -51,9 +51,9 @@ public class CommentService {
     }
 
     private CommentDto toCommentDto(Comment comment) {
-        User user = userRepository.findById(comment.getUserId())
+        Member member = memberRepository.findById(comment.getMemberId())
                 .orElseThrow(() -> new NotFoundException("존재하지 않는 사용자입니다."));
 
-        return new CommentDto(comment.getCommentId(), user.getNickname(), comment.getContent());
+        return new CommentDto(comment.getCommentId(), member.getNickname(), comment.getContent());
     }
 }

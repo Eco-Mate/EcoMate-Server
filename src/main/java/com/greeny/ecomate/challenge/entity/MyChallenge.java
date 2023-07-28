@@ -1,7 +1,7 @@
 package com.greeny.ecomate.challenge.entity;
 
 import com.greeny.ecomate.challenge.dto.MyChallengeDto;
-import com.greeny.ecomate.user.entity.User;
+import com.greeny.ecomate.member.entity.Member;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,8 +19,8 @@ public class MyChallenge {
     private Long myChallengeId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "challenge_id")
@@ -39,8 +39,8 @@ public class MyChallenge {
     private Long doneCnt;
 
     @Builder
-    public MyChallenge(User user, Challenge challenge,AchieveType achieveType, Long achieveCnt, Long achievePoint, Long doneCnt) {
-        this.user = user;
+    public MyChallenge(Member member, Challenge challenge, AchieveType achieveType, Long achieveCnt, Long achievePoint, Long doneCnt) {
+        this.member = member;
         this.challenge = challenge;
         this.achieveType = achieveType;
         this.achieveCnt = achieveCnt;
@@ -48,14 +48,14 @@ public class MyChallenge {
         this.doneCnt = doneCnt;
     }
 
-    public static MyChallenge of(User user, Challenge challenge, AchieveType achieveType, Long achieveCnt, Long achievePoint, Long doneCnt) {
-        return new MyChallenge(user, challenge, achieveType, achieveCnt, achievePoint, doneCnt);
+    public static MyChallenge of(Member member, Challenge challenge, AchieveType achieveType, Long achieveCnt, Long achievePoint, Long doneCnt) {
+        return new MyChallenge(member, challenge, achieveType, achieveCnt, achievePoint, doneCnt);
     }
 
     public static MyChallengeDto from(MyChallenge entity) {
         return new MyChallengeDto(
                 entity.getMyChallengeId(),
-                entity.getUser().getNickname(),
+                entity.getMember().getNickname(),
                 entity.getChallenge().getChallengeId(),
                 entity.getAchieveType(),
                 entity.getAchieveCnt(),

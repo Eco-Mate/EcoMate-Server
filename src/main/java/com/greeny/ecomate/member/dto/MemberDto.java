@@ -1,12 +1,11 @@
-package com.greeny.ecomate.user.dto;
+package com.greeny.ecomate.member.dto;
 
-import com.greeny.ecomate.user.entity.Level;
-import com.greeny.ecomate.user.entity.Role;
-import com.greeny.ecomate.user.entity.User;
-import lombok.Data;
+import com.greeny.ecomate.member.entity.Level;
+import com.greeny.ecomate.member.entity.Role;
+import com.greeny.ecomate.member.entity.Member;
 
-public record UserDto(
-        Long userId,
+public record MemberDto(
+        Long memberId,
         Role role,
         Level level,
         Long totalTreePoint,
@@ -15,9 +14,9 @@ public record UserDto(
         String email
 ) {
 
-    public static UserDto from(User entity) {
-        return new UserDto(
-            entity.getUserId(),
+    public static MemberDto from(Member entity) {
+        return new MemberDto(
+            entity.getMemberId(),
             entity.getRole(),
             entity.getLevel(),
             entity.getTotalTreePoint(),

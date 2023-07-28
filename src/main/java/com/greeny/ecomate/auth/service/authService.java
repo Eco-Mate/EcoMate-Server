@@ -2,8 +2,8 @@ package com.greeny.ecomate.auth.service;
 
 import com.greeny.ecomate.auth.dto.SignUpForm;
 import com.greeny.ecomate.exception.NotFoundException;
-import com.greeny.ecomate.user.entity.User;
-import com.greeny.ecomate.user.repository.UserRepository;
+import com.greeny.ecomate.member.entity.Member;
+import com.greeny.ecomate.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,53 +16,53 @@ public class authService {
 
     private final PasswordEncoder passwordEncoder;
 
-    private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
 
-    private boolean isDuplicateUserName(String name) {
-        return userRepository.existsUserByName(name);
+    private boolean isDuplicateMemberName(String name) {
+        return memberRepository.existsMemberByName(name);
     }
 
-    private boolean isDuplicateUserNickname(String nickname) {
-        return userRepository.exitsUserByNickname(nickname);
+    private boolean isDuplicateMemberNickname(String nickname) {
+        return memberRepository.existsMemberByNickname(nickname);
     }
 
-    private boolean isDuplicateUserEmail(String email) {
-        return userRepository.existsUserByEmail(email);
+    private boolean isDuplicateMemberEmail(String email) {
+        return memberRepository.existsMemberByEmail(email);
     }
 
     @Transactional
     public Long signUp(SignUpForm form) throws RuntimeException {
-        if(isDuplicateUserName(form.getName())) {
+        if(isDuplicateMemberName(form.getName())) {
             throw new IllegalStateException("이미 존재하는 아이디 입니다.");
         }
-        if(isDuplicateUserNickname(form.getNickname())) {
+        if(isDuplicateMemberNickname(form.getNickname())) {
             throw new IllegalStateException("이미 존재하는 닉네임 입니다.");
         }
-        if(isDuplicateUserEmail(form.getEmail())) {
+        if(isDuplicateMemberEmail(form.getEmail())) {
             throw new IllegalStateException("이미 존재하는 이메일 입니다.");
         }
 
-        User user = User.builder()
+        Member member = Member.builder()
                 .name(form.getName())
                 .password(passwordEncoder.encode(form.getPassword()))
                 .nickname(form.getNickname())
                 .email(form.getEmail())
                 .build();
 
-        userRepository.save(user);
+        memberRepository.save(member);
 
-        return user.getUserId();
+        return member.getMemberId();
     }
 
-    public User signIn(SignUpForm form) throws NotFoundException {
-        User findUser = userRepository.findByName(form.getName())
+    public Member signIn(SignUpForm form) throws NotFoundException {
+        Member findMember = memberRepository.findByName(form.getName())
                 .orElseThrow(() -> new NotFoundException("계정이 존재하지 않습니다."));
 
-        if(!passwordEncoder.matches(form.getPassword(), findUser.getPassword())) {
+        if(!passwordEncoder.matches(form.getPassword(), findMember.getPassword())) {
             throw new NotFoundException("비밀번호가 잘못되었습니다.");
         }
 
-        return findUser;
+        return findMember;
     }
 
 }
