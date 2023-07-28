@@ -12,12 +12,12 @@ import javax.validation.constraints.NotNull;
 public class SignUpForm {
 
     @NotNull
-    private String name;
+    private String name; // 아이디
     @NotNull
-    private String password;
+    private String password; // 비밀번호
     @NotNull
-    private String nickname;
+    private String nickname; // 닉네임
     @NotNull
-    private String email;
+    private String email; // 이메일
 
 }

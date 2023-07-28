@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class SignUpResponse {
 
-    private Long userId;
+    private Long memberId;
 
 }
