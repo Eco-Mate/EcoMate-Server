@@ -73,8 +73,8 @@ public class BoardService {
    }
 
    @Transactional
-   public Long updateBoard(UpdateBoardRequestDto updateDto) {
-      Board board = boardRepository.findById(updateDto.getBoardId())
+   public Long updateBoard(Long boardId, UpdateBoardRequestDto updateDto) {
+      Board board = boardRepository.findById(boardId)
               .orElseThrow(() -> new NotFoundException("존재하지 않는 게시글입니다."));
       board.update(updateDto.getBoardTitle(), updateDto.getBoardContent());
       return board.getBoardId();
