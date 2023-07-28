@@ -9,9 +9,6 @@ public class UpdateBoardRequestDto {
     // image, challenge 는 수정 불가
 
     @NotNull
-    private Long boardId;
-
-    @NotNull
     private String boardTitle;
 
     @NotNull
