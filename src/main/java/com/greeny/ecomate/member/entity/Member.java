@@ -33,7 +33,7 @@ public class Member extends BaseEntity {
     private String nickname;
 
     @Column(name = "profile_image", length = 200)
-    private String profleImage;
+    private String profileImage;
 
     @Column(name = "name", length = 30)
     private String name;

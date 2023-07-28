@@ -10,13 +10,22 @@ spring:
   profiles:
     include:
       - secret
+
   datasource:
     url: jdbc:mysql://ecomate.crgoui2zsut0.ap-northeast-2.rds.amazonaws.com:3306/ecomate
     driver-class-name: com.mysql.cj.jdbc.Driver
+
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
 
+  security:
+    filter:
+      order: 2
+
+  redis:
+    host: 127.0.0.1
+    port: 6379
 
   jpa:
     hibernate:
@@ -39,6 +48,7 @@ springdoc:
   paths-to-match: /**
   default-consumes-media-type: application/json
   default-produces-media-type: application/json
+
 cloud:
   aws:
     region:
