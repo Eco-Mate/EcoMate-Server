@@ -24,7 +24,7 @@ public class BoardDto {
         this.boardId = board.getBoardId();
         this.memberId = board.getMember().getMemberId();
         this.nickname = board.getMember().getNickname();
-        this.profileImage = board.getMember().getProfleImage();
+        this.profileImage = board.getMember().getProfileImage();
         this.challengeTitle = challengeTitle;
         this.boardTitle = board.getBoardTitle();
         this.boardContent = board.getBoardContent();
