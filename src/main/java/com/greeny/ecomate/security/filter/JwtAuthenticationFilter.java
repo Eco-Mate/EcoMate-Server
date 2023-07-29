@@ -3,11 +3,13 @@ package com.greeny.ecomate.security.filter;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.greeny.ecomate.exception.TokenNotFoundException;
 import com.greeny.ecomate.security.provider.JwtProvider;
+import com.greeny.ecomate.utils.cookie.CookieUtil;
 import com.greeny.ecomate.utils.jwt.JwtExtractor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
 
 import javax.servlet.FilterChain;
@@ -26,7 +28,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
     throws IOException, ServletException, TokenNotFoundException, JWTVerificationException {
 
-        HttpServletRequest req = (HttpServletRequest) request;
+        HttpServletRequest req = (HttpServletRequest)request;
 
         if(req.getMethod().equals("OPTIONS")) {
             chain.doFilter(request, response);
@@ -41,7 +43,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
         request.setAttribute("memberId", memberId);
         request.setAttribute("email", email);
 
-        Authentication authenticate = jwtProvider.authenticate(new UsernamePasswordAuthenticationToken(email, " "));
+        Authentication authenticate = jwtProvider.authenticate(new UsernamePasswordAuthenticationToken(email, memberId));
         SecurityContextHolder.getContext().setAuthentication(authenticate);
 
         chain.doFilter(request, response);

@@ -1,5 +1,6 @@
 package com.greeny.ecomate.member.service;
 
+import com.greeny.ecomate.exception.NotFoundException;
 import com.greeny.ecomate.member.dto.CreateMemberRequestDto;
 import com.greeny.ecomate.member.dto.MemberDto;
 import com.greeny.ecomate.member.entity.Member;
@@ -22,6 +23,11 @@ public class MemberService {
     public List<MemberDto> getAllMember() {
         List<Member> memberList = memberRepository.findAll();
         return memberList.stream().map(MemberDto::from).toList();
+    }
+
+    public Member getMemberById(Long memberId) {
+        return memberRepository.findByMemberId(memberId)
+                .orElseThrow(() -> new NotFoundException("존재하지 않는 사용자입니다."));
     }
 
 }
