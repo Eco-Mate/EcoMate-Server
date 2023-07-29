@@ -66,6 +66,10 @@ public class ChallengeController {
     public ApiUtil.ApiSuccessResult<Long> updateChallengeActiveYn(@PathVariable Long challengeId,
                                         @RequestBody boolean activeYn,
                                         HttpServletRequest req) {
+
+        String memberToken = JwtExtractor.extractJwt(req);
+        req.setAttribute("memberId", jwtProvider.getMemberIdFromToken(memberToken));
+
         Long memberId = (Long) req.getAttribute("memberId");
         Member member = memberService.getMemberById(memberId);
         challengeService.updateChallengeActiveYn(challengeId, activeYn, member);
@@ -77,6 +81,10 @@ public class ChallengeController {
     public ApiUtil.ApiSuccessResult<Long> updateChallenge(@PathVariable Long challengeId,
                                 @Valid @RequestBody ChallengeDto challengeDto,
                                 HttpServletRequest req) {
+
+        String memberToken = JwtExtractor.extractJwt(req);
+        req.setAttribute("memberId", jwtProvider.getMemberIdFromToken(memberToken));
+
         Long memberId = (Long) req.getAttribute("memberId");
         Member member = memberService.getMemberById(memberId);
         challengeService.updateChallenge(challengeId, challengeDto, member);
@@ -87,6 +95,10 @@ public class ChallengeController {
     @DeleteMapping("/{challengeId}")
     public ApiUtil.ApiSuccessResult<String> deleteChallenge(@PathVariable Long challengeId,
                                   HttpServletRequest req) {
+
+        String memberToken = JwtExtractor.extractJwt(req);
+        req.setAttribute("memberId", jwtProvider.getMemberIdFromToken(memberToken));
+
         Long memberId = (Long) req.getAttribute("memberId");
         Member member = memberService.getMemberById(memberId);
         challengeService.deleteChallenge(challengeId, member);
