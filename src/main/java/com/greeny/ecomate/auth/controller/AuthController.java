@@ -50,8 +50,8 @@ public class AuthController {
             HttpServletResponse res) throws RuntimeException {
         Member member = authService.signInMember(form);
 
-        String accessToken = jwtProvider.generateMemberToken(member.getEmail(), member.getName() + "");
-        String refreshToken = jwtProvider.generateMemberRefreshToken(member.getEmail(), member.getName() + "");
+        String accessToken = jwtProvider.generateMemberToken(member.getEmail(), member.getMemberId() + "");
+        String refreshToken = jwtProvider.generateMemberRefreshToken(member.getEmail(), member.getMemberId() + "");
 
         ResponseCookie cookie = cookieUtil.createCookie(JwtProvider.ACCOUNT_TOKEN_NAME, refreshToken);
         res.addHeader("Set-Cookie", cookie.toString());

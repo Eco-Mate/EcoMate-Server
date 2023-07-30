@@ -7,6 +7,8 @@ import com.greeny.ecomate.challenge.entity.AchieveType;
 import com.greeny.ecomate.challenge.entity.Challenge;
 import com.greeny.ecomate.challenge.repository.ChallengeRepository;
 import com.greeny.ecomate.challenge.repository.MyChallengeRepository;
+import com.greeny.ecomate.member.entity.Member;
+import com.greeny.ecomate.member.entity.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +24,10 @@ public class ChallengeService {
     private final MyChallengeRepository myChallengeRepository;
 
     @Transactional
-    public Long createChallenge(CreateChallengeRequestDto dto) {
+    public Long createChallenge(CreateChallengeRequestDto dto, Member member) {
+        if(member.getRole() != Role.ROLE_ADMIN) {
+            throw new IllegalStateException("챌린지 생성 권한이 없습니다.");
+        }
         Challenge challenge = dto.toEntity();
         return challengeRepository.save(challenge).getChallengeId();
     }
@@ -43,7 +48,11 @@ public class ChallengeService {
     }
 
     @Transactional
-    public void updateChallengeActiveYn(Long challengeId, boolean activeYn) {
+    public void updateChallengeActiveYn(Long challengeId, boolean activeYn, Member member) {
+        if(member.getRole() != Role.ROLE_ADMIN) {
+            throw new IllegalStateException("챌린지 활성화 수정 권한이 없습니다.");
+        }
+
         Challenge challenge = challengeRepository.findById(challengeId)
                 .orElseThrow(() -> new IllegalArgumentException("챌린지가 존재하지 않습니다."));
 
@@ -51,7 +60,11 @@ public class ChallengeService {
     }
 
     @Transactional
-    public void updateChallenge(Long challengeId, ChallengeDto challengeDto) {
+    public void updateChallenge(Long challengeId, ChallengeDto challengeDto, Member member) {
+        if(member.getRole() != Role.ROLE_ADMIN) {
+            throw new IllegalStateException("챌린지 내용 수정 권한이 없습니다.");
+        }
+
         Challenge challenge = challengeRepository.findById(challengeId)
                 .orElseThrow(() -> new IllegalArgumentException("챌린지가 존재하지 않습니다."));
 
@@ -62,7 +75,11 @@ public class ChallengeService {
     }
 
     @Transactional
-    public void deleteChallenge(Long challengeId) {
+    public void deleteChallenge(Long challengeId, Member member) {
+        if(member.getRole() != Role.ROLE_ADMIN) {
+            throw new IllegalStateException("챌린지 삭제 권한이 없습니다.");
+        }
+
         Challenge challenge = challengeRepository.findById(challengeId)
                 .orElseThrow(() -> new IllegalArgumentException("챌린지가 존재하지 않습니다."));
         challengeRepository.delete(challenge);
