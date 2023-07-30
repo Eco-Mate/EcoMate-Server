@@ -1,47 +1,30 @@
 package com.greeny.ecomate.challenge.dto;
 
 import com.greeny.ecomate.challenge.entity.Challenge;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 
-public record ChallengeDto(
-        Long challengeId,
-        Boolean activeYn,
-        String challengeTitle,
-        String description,
-        Long goalCnt,
-        Long treePoint,
-        LocalDateTime createdDate
-) {
+@Data
+public class ChallengeDto {
 
-    public static ChallengeDto of(boolean activeYn, String challengeTitle, String description, Long goalCnt, Long treePoint) {
-        return new ChallengeDto(null, activeYn, challengeTitle, description, goalCnt, treePoint, null);
-    }
+    private Long challengeId;
+    private Boolean activeYn;
+    private String challengeTitle;
+    private String description;
+    private Long goalCnt;
+    private Long treePoint;
+    private LocalDateTime createdDate;
 
-    public static ChallengeDto of(boolean activeYn, String challengeTitle, String description, Long goalCnt, Long treePoint, LocalDateTime createdDate) {
-        return new ChallengeDto(null, activeYn, challengeTitle, description, goalCnt, treePoint, createdDate);
-    }
-
-    public static ChallengeDto from(Challenge entity) {
-        return new ChallengeDto(
-                entity.getChallengeId(),
-                entity.getActiveYn(),
-                entity.getChallengeTitle(),
-                entity.getDescription(),
-                entity.getGoalCnt(),
-                entity.getTreePoint(),
-                entity.getCreatedDate()
-        );
-    }
-
-    public Challenge toEntity() {
-        return Challenge.of(
-                activeYn,
-                challengeTitle,
-                description,
-                goalCnt,
-                treePoint
-        );
+    public ChallengeDto(Challenge challenge) {
+        this.challengeId = challenge.getChallengeId();
+        this.activeYn = challenge.getActiveYn();
+        this.challengeTitle = challenge.getChallengeTitle();
+        this.description = challenge.getDescription();
+        this.goalCnt = challenge.getGoalCnt();
+        this.treePoint = challenge.getTreePoint();
+        this.createdDate = challenge.getCreatedDate();
     }
 
 }

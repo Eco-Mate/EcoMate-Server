@@ -48,22 +48,6 @@ public class MyChallenge {
         this.doneCnt = doneCnt;
     }
 
-    public static MyChallenge of(Member member, Challenge challenge, AchieveType achieveType, Long achieveCnt, Long achievePoint, Long doneCnt) {
-        return new MyChallenge(member, challenge, achieveType, achieveCnt, achievePoint, doneCnt);
-    }
-
-    public static MyChallengeDto from(MyChallenge entity) {
-        return new MyChallengeDto(
-                entity.getMyChallengeId(),
-                entity.getMember().getNickname(),
-                entity.getChallenge().getChallengeId(),
-                entity.getAchieveType(),
-                entity.getAchieveCnt(),
-                entity.getAchievePoint(),
-                entity.getDoneCnt()
-        );
-    }
-
     public void updateAchieveType(AchieveType achieveType) { this.achieveType = achieveType; }
 
     public void updateAchieveCnt(Long achieveCnt) { this.achieveCnt = achieveCnt; }

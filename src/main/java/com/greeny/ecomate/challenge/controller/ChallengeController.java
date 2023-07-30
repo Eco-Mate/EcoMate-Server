@@ -2,10 +2,12 @@ package com.greeny.ecomate.challenge.controller;
 
 import com.greeny.ecomate.challenge.dto.ChallengeDto;
 import com.greeny.ecomate.challenge.dto.CreateChallengeRequestDto;
+import com.greeny.ecomate.challenge.dto.UpdateChallengeRequestDto;
 import com.greeny.ecomate.challenge.entity.Challenge;
 import com.greeny.ecomate.challenge.service.ChallengeService;
 import com.greeny.ecomate.member.entity.Member;
 import com.greeny.ecomate.member.service.MemberService;
+import com.greeny.ecomate.posting.dto.UpdateBoardRequestDto;
 import com.greeny.ecomate.security.provider.JwtProvider;
 import com.greeny.ecomate.utils.api.ApiUtil;
 import com.greeny.ecomate.utils.jwt.JwtExtractor;
@@ -79,16 +81,15 @@ public class ChallengeController {
     @ApiResponse(description = "(관리자) challengeId에 해당하는 챌린지 수정")
     @PutMapping("/{challengeId}")
     public ApiUtil.ApiSuccessResult<Long> updateChallenge(@PathVariable Long challengeId,
-                                @Valid @RequestBody ChallengeDto challengeDto,
-                                HttpServletRequest req) {
+                                                          @Valid @RequestBody UpdateChallengeRequestDto dto,
+                                                          HttpServletRequest req) {
 
         String memberToken = JwtExtractor.extractJwt(req);
         req.setAttribute("memberId", jwtProvider.getMemberIdFromToken(memberToken));
 
         Long memberId = (Long) req.getAttribute("memberId");
         Member member = memberService.getMemberById(memberId);
-        challengeService.updateChallenge(challengeId, challengeDto, member);
-        return ApiUtil.success("챌린지 수정 성공", challengeId);
+        return ApiUtil.success("챌린지 수정 성공", challengeService.updateChallenge(challengeId, dto, member));
     }
 
     @ApiResponse(description = "(관리자) challengeId에 해당하는 챌린지 삭제")

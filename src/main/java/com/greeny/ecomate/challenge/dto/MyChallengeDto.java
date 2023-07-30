@@ -2,33 +2,40 @@ package com.greeny.ecomate.challenge.dto;
 
 import com.greeny.ecomate.challenge.entity.AchieveType;
 import com.greeny.ecomate.challenge.entity.MyChallenge;
+import lombok.Data;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-public record MyChallengeDto(
-        Long myChallengeId,
-        String nickname,
-        Long challengeId,
-        AchieveType achieveType,
-        Long achieveCnt,
-        Long achievePoint,
-        Long doneCnt
-) {
+@Data
+public class MyChallengeDto {
 
-    public static MyChallengeDto of(Long myChallengeId, String nickname, Long challengeId, AchieveType achieveType, Long achieveCnt, Long achievePoint, Long doneCnt) {
-        return new MyChallengeDto(myChallengeId, nickname, challengeId, achieveType, achieveCnt, achievePoint, doneCnt);
-    }
+    private Long myChallengeId;
+    private Long memberId;
+    private String nickname;
+    private Long challengeId;
+    private String challengeTitle;
+    private String description;
+    private Long goalCnt;
+    private Long treePoint;
+    private AchieveType achieveType;
+    private Long achieveCnt;
+    private Long achievePoint;
+    private Long doneCnt;
 
-    public static MyChallengeDto from(MyChallenge entity) {
-        return new MyChallengeDto(
-                entity.getMyChallengeId(),
-                entity.getMember().getNickname(),
-                entity.getChallenge().getChallengeId(),
-                entity.getAchieveType(),
-                entity.getAchieveCnt(),
-                entity.getAchievePoint(),
-                entity.getDoneCnt());
+    public MyChallengeDto(MyChallenge myChallenge) {
+        this.myChallengeId = myChallenge.getMyChallengeId();
+        this.memberId = myChallenge.getMember().getMemberId();
+        this.nickname = myChallenge.getMember().getNickname();
+        this.challengeId = myChallenge.getChallenge().getChallengeId();
+        this.challengeTitle = myChallenge.getChallenge().getChallengeTitle();
+        this.description = myChallenge.getChallenge().getDescription();
+        this.goalCnt = myChallenge.getChallenge().getGoalCnt();
+        this.treePoint = myChallenge.getChallenge().getTreePoint();
+        this.achieveType = myChallenge.getAchieveType();
+        this.achieveCnt = myChallenge.getAchieveCnt();
+        this.achievePoint = myChallenge.getAchievePoint();
+        this.doneCnt = myChallenge.getDoneCnt();
     }
 
 }
