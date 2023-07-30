@@ -1,9 +1,7 @@
 package com.greeny.ecomate.challenge.controller;
 
-import com.greeny.ecomate.challenge.dto.CreateMyChallengeRequestDto;
 import com.greeny.ecomate.challenge.dto.MyChallengeDto;
 import com.greeny.ecomate.challenge.service.MyChallengeService;
-import com.greeny.ecomate.member.entity.Member;
 import com.greeny.ecomate.member.service.MemberService;
 import com.greeny.ecomate.security.provider.JwtProvider;
 import com.greeny.ecomate.utils.api.ApiUtil;
@@ -14,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.util.List;
 
 @RestController
