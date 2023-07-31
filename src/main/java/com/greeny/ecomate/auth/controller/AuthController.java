@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseCookie;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,7 +36,7 @@ public class AuthController {
     private final RedisUtil redisUtil;
 
     @ApiResponse(description = "회원가입")
-    @PostMapping("/members/new")
+    @PostMapping(value = "/members/new", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiUtil.ApiSuccessResult<SignUpResponse> signUpMember(
             @RequestBody @Valid SignUpForm form) throws RuntimeException {
         Long id = authService.signUpMember(form);
@@ -43,7 +44,7 @@ public class AuthController {
     }
 
     @ApiResponse(description = "로그인")
-    @PostMapping("/members/login")
+    @PostMapping(value = "/members/login", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiUtil.ApiSuccessResult<SignInResponse> signInMember(
             @RequestBody @Valid SignInForm form,
             HttpServletRequest req,

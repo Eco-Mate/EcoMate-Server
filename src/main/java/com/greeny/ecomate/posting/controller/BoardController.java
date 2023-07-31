@@ -10,6 +10,7 @@ import com.greeny.ecomate.utils.api.ApiUtil.ApiSuccessResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,7 +25,7 @@ public class BoardController {
     private final BoardService boardService;
 
     @Operation(summary = "게시물 생성")
-    @PostMapping
+    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ApiUtil.ApiSuccessResult<Long> createBoard(@Valid @RequestPart CreateBoardRequestDto createDto, @RequestPart MultipartFile file) {
         return ApiUtil.success("게시물 생성 성공", boardService.createBoard(createDto, file));
     }
@@ -41,7 +42,7 @@ public class BoardController {
         return ApiUtil.success("인기 게시물 조회 성공", new BoardListDto(boardService.getAllSortedByLikeCnt()));
     }
 
-    @Operation(summary = "게시물 수정", description = "boardTitle, boardontent 만 수정 가능합니다.")
+    @Operation(summary = "게시물 수정", description = "boardTitle, boardContent 만 수정 가능합니다.")
     @PutMapping("/{boardId}")
     public ApiUtil.ApiSuccessResult<Long> updateBoard(@PathVariable Long boardId, @Valid @RequestBody UpdateBoardRequestDto updateDto) {
         return ApiUtil.success("게시물 수정 성공", boardService.updateBoard(boardId, updateDto));
