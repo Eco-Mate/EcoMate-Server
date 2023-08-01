@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -32,17 +33,18 @@ public class ChallengeController {
 
     @ApiResponse(description = "(관리자) 챌린지 생성")
     @PostMapping("/form")
-    public ApiUtil.ApiSuccessResult<Long> createNewChallenge(@Valid @RequestBody CreateChallengeRequestDto dto,
+    public ApiUtil.ApiSuccessResult<Long> createNewChallenge(@Valid @RequestPart CreateChallengeRequestDto dto,
+                                                             @RequestPart MultipartFile file,
                                                              HttpServletRequest req) {
         Long memberId = (Long) req.getAttribute("memberId");
         Member member = memberService.getMemberById(memberId);
-        Long challengeId = challengeService.createChallenge(dto, member);
+        Long challengeId = challengeService.createChallenge(dto, member, file);
         return ApiUtil.success("챌린지 생성 성공", challengeId);
     }
 
     @ApiResponse(description = "challengeId로 챌린지 단일 조회")
     @GetMapping("/{challengeId}")
-    public ApiUtil.ApiSuccessResult<Challenge> getChallengeById(@PathVariable Long challengeId,
+    public ApiUtil.ApiSuccessResult<ChallengeDto> getChallengeById(@PathVariable Long challengeId,
                                       HttpServletRequest req) {
         return ApiUtil.success("챌린지 조회 성공", challengeService.getChallengeById(challengeId));
     }
