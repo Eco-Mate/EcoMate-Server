@@ -37,10 +37,14 @@ public class SecurityConfig {
                                                   JwtProvider jwtProvider, ObjectMapper objectMapper) throws Exception {
         return setJwtHttpSecurity(http, objectMapper)
                 .requestMatchers()
-                .antMatchers("/api/v1/**")
+                .antMatchers("/v1/challenges/**")
+                .antMatchers("/v1/members/**")
+                .antMatchers("/v1/boards/**")
                 .and()
                 .authorizeRequests()
-                .antMatchers("/api/v1/**").hasAnyRole("ROLE_USER", "ROLE_ADMIN")
+                .antMatchers("/v1/challenges/**").hasAnyRole("ROLE_USER", "ROLE_ADMIN")
+                .antMatchers("/v1/members/**").hasAnyRole("ROLE_USER", "ROLE_ADMIN")
+                .antMatchers("/v1/boards/**").hasAnyRole("ROLE_USER", "ROLE_ADMIN")
                 .and()
                 .addFilterAfter(jwtAuthenticationFilter(jwtProvider),
                         JwtExceptionFilter.class)

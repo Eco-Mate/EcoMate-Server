@@ -35,8 +35,8 @@ public class ChallengeController {
     public ApiUtil.ApiSuccessResult<Long> createNewChallenge(@Valid @RequestBody CreateChallengeRequestDto dto,
                                                              HttpServletRequest req) {
 
-        String memberToken = JwtExtractor.extractJwt(req);
-        req.setAttribute("memberId", jwtProvider.getMemberIdFromToken(memberToken));
+        //String memberToken = JwtExtractor.extractJwt(req);
+        //req.setAttribute("memberId", jwtProvider.getMemberIdFromToken(memberToken));
 
         Long memberId = (Long) req.getAttribute("memberId");
         Member member = memberService.getMemberById(memberId);
