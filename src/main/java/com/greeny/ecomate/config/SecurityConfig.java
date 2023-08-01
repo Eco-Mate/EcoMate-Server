@@ -37,17 +37,22 @@ public class SecurityConfig {
                                                   JwtProvider jwtProvider, ObjectMapper objectMapper) throws Exception {
         return setJwtHttpSecurity(http, objectMapper)
                 .requestMatchers()
-                .antMatchers("/v1/challenges/**")
-                .antMatchers("/v1/members/**")
+                .antMatchers("/v1/challenges/form")
+                .antMatchers(HttpMethod.PUT, "/v1/challenges/**")
+                .antMatchers(HttpMethod.DELETE, "/v1/challenges/**")
+                .antMatchers("/v1/myChallenges/**")
+                .antMatchers("/v1/members")
                 .antMatchers("/v1/boards/**")
+                .antMatchers("/v1/comments/**")
                 .and()
                 .authorizeRequests()
-                .antMatchers("/v1/challenges/**").hasAnyRole("ROLE_USER", "ROLE_ADMIN")
-                .antMatchers("/v1/members/**").hasAnyRole("ROLE_USER", "ROLE_ADMIN")
-                .antMatchers("/v1/boards/**").hasAnyRole("ROLE_USER", "ROLE_ADMIN")
+                .antMatchers("/v1/challenges/**").hasRole("ADMIN")
+                .antMatchers("/v1/myChallenges/**").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/v1/members").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/v1/boards/**").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/v1/comments/**").hasAnyRole("USER", "ADMIN")
                 .and()
-                .addFilterAfter(jwtAuthenticationFilter(jwtProvider),
-                        JwtExceptionFilter.class)
+                .addFilterAfter(jwtAuthenticationFilter(jwtProvider), JwtExceptionFilter.class)
                 .build();
     }
 
@@ -58,7 +63,7 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.OPTIONS, "/api/v1/**").permitAll()
+                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .and()
                 .exceptionHandling()
                 .authenticationEntryPoint(new JwtNotAuthenticatedHandler(new ObjectMapper()))
