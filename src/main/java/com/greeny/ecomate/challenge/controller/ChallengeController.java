@@ -34,10 +34,6 @@ public class ChallengeController {
     @PostMapping("/form")
     public ApiUtil.ApiSuccessResult<Long> createNewChallenge(@Valid @RequestBody CreateChallengeRequestDto dto,
                                                              HttpServletRequest req) {
-
-        //String memberToken = JwtExtractor.extractJwt(req);
-        //req.setAttribute("memberId", jwtProvider.getMemberIdFromToken(memberToken));
-
         Long memberId = (Long) req.getAttribute("memberId");
         Member member = memberService.getMemberById(memberId);
         Long challengeId = challengeService.createChallenge(dto, member);
@@ -68,10 +64,6 @@ public class ChallengeController {
     public ApiUtil.ApiSuccessResult<Long> updateChallengeActiveYn(@PathVariable Long challengeId,
                                         @RequestBody boolean activeYn,
                                         HttpServletRequest req) {
-
-        String memberToken = JwtExtractor.extractJwt(req);
-        req.setAttribute("memberId", jwtProvider.getMemberIdFromToken(memberToken));
-
         Long memberId = (Long) req.getAttribute("memberId");
         Member member = memberService.getMemberById(memberId);
         challengeService.updateChallengeActiveYn(challengeId, activeYn, member);
@@ -83,10 +75,6 @@ public class ChallengeController {
     public ApiUtil.ApiSuccessResult<Long> updateChallenge(@PathVariable Long challengeId,
                                                           @Valid @RequestBody UpdateChallengeRequestDto dto,
                                                           HttpServletRequest req) {
-
-        String memberToken = JwtExtractor.extractJwt(req);
-        req.setAttribute("memberId", jwtProvider.getMemberIdFromToken(memberToken));
-
         Long memberId = (Long) req.getAttribute("memberId");
         Member member = memberService.getMemberById(memberId);
         return ApiUtil.success("챌린지 수정 성공", challengeService.updateChallenge(challengeId, dto, member));
@@ -96,10 +84,6 @@ public class ChallengeController {
     @DeleteMapping("/{challengeId}")
     public ApiUtil.ApiSuccessResult<String> deleteChallenge(@PathVariable Long challengeId,
                                   HttpServletRequest req) {
-
-        String memberToken = JwtExtractor.extractJwt(req);
-        req.setAttribute("memberId", jwtProvider.getMemberIdFromToken(memberToken));
-
         Long memberId = (Long) req.getAttribute("memberId");
         Member member = memberService.getMemberById(memberId);
         challengeService.deleteChallenge(challengeId, member);
