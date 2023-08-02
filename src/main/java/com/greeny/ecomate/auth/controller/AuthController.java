@@ -8,16 +8,11 @@ import com.greeny.ecomate.security.provider.JwtProvider;
 import com.greeny.ecomate.utils.api.ApiUtil;
 import com.greeny.ecomate.utils.cookie.CookieUtil;
 import com.greeny.ecomate.utils.redis.RedisUtil;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseCookie;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -36,17 +31,17 @@ public class AuthController {
     private final RedisUtil redisUtil;
 
     @ApiResponse(description = "회원가입")
-    @PostMapping(value = "/members/new", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping( "/members/new")
     public ApiUtil.ApiSuccessResult<SignUpResponse> signUpMember(
-            @RequestBody @Valid SignUpForm form) throws RuntimeException {
+            @Valid @RequestBody SignUpForm form) throws RuntimeException {
         Long id = authService.signUpMember(form);
         return ApiUtil.success("회원가입 성공", new SignUpResponse(id));
     }
 
     @ApiResponse(description = "로그인")
-    @PostMapping(value = "/members/login", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping("/members/login")
     public ApiUtil.ApiSuccessResult<SignInResponse> signInMember(
-            @RequestBody @Valid SignInForm form,
+            @Valid @RequestBody SignInForm form,
             HttpServletRequest req,
             HttpServletResponse res) throws RuntimeException {
         Member member = authService.signInMember(form);
