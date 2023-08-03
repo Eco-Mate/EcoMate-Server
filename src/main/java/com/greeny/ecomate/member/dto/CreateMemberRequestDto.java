@@ -3,11 +3,11 @@ package com.greeny.ecomate.member.dto;
 import com.greeny.ecomate.member.entity.Level;
 import com.greeny.ecomate.member.entity.Role;
 import com.greeny.ecomate.member.entity.Member;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
-//@NoArgsConstructor
-//@AllArgsConstructor
+@AllArgsConstructor
 public class CreateMemberRequestDto {
     private String email;
     private String name;

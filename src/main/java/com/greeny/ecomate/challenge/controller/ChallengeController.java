@@ -7,7 +7,6 @@ import com.greeny.ecomate.challenge.entity.Challenge;
 import com.greeny.ecomate.challenge.service.ChallengeService;
 import com.greeny.ecomate.member.entity.Member;
 import com.greeny.ecomate.member.service.MemberService;
-import com.greeny.ecomate.posting.dto.UpdateBoardRequestDto;
 import com.greeny.ecomate.security.provider.JwtProvider;
 import com.greeny.ecomate.utils.api.ApiUtil;
 import com.greeny.ecomate.utils.jwt.JwtExtractor;
