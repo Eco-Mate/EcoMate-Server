@@ -24,6 +24,9 @@ public class Challenge extends BaseEntity {
     @Column(name = "description", length = 100)
     private String description;
 
+    @Column(name = "image", length = 200)
+    private String image;
+
     @Column(name = "goal_cnt")
     private Long goalCnt;
 
@@ -31,10 +34,11 @@ public class Challenge extends BaseEntity {
     private Long treePoint;
 
     @Builder
-    public Challenge(Boolean activeYn, String challengeTitle, String description, Long goalCnt, Long treePoint) {
+    public Challenge(Boolean activeYn, String challengeTitle, String description, String image, Long goalCnt, Long treePoint) {
         this.activeYn = activeYn;
         this.challengeTitle = challengeTitle;
         this.description = description;
+        this.image = image;
         this.goalCnt = goalCnt;
         this.treePoint = treePoint;
     }
