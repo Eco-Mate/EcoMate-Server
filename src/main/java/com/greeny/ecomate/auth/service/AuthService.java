@@ -4,6 +4,7 @@ import com.greeny.ecomate.auth.dto.SignInForm;
 import com.greeny.ecomate.auth.dto.SignUpForm;
 import com.greeny.ecomate.exception.NotAuthenticatedException;
 import com.greeny.ecomate.exception.NotFoundException;
+import com.greeny.ecomate.member.entity.Level;
 import com.greeny.ecomate.member.entity.Member;
 import com.greeny.ecomate.member.entity.Role;
 import com.greeny.ecomate.member.repository.MemberRepository;
@@ -56,6 +57,8 @@ public class AuthService {
 
         Member member = Member.builder()
                 .role(Role.ROLE_USER)
+                .level(Level.TREE)
+                .totalTreePoint(0L)
                 .name(form.getName())
                 .password(passwordEncoder.encode(form.getPassword()))
                 .nickname(form.getNickname())
