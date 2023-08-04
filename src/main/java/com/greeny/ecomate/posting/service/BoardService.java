@@ -74,8 +74,7 @@ public class BoardService {
 
    @Transactional
    public Long updateBoard(Long boardId, UpdateBoardRequestDto updateDto) {
-      Board board = boardRepository.findById(boardId)
-              .orElseThrow(() -> new NotFoundException("존재하지 않는 게시글입니다."));
+      Board board = findBoardById(boardId);
       board.update(updateDto.getBoardTitle(), updateDto.getBoardContent());
       return board.getBoardId();
    }
@@ -102,4 +101,8 @@ public class BoardService {
       return new BoardDto(board, null, s3Url, boardDirectory);
    }
 
+    private Board findBoardById(Long boardId) {
+      return boardRepository.findById(boardId)
+              .orElseThrow(() -> new NotFoundException("존재하지 않는 게시물입니다."));
+    }
 }
