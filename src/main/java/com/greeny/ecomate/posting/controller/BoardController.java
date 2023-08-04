@@ -1,12 +1,10 @@
 package com.greeny.ecomate.posting.controller;
 
-import com.greeny.ecomate.posting.dto.BoardDto;
 import com.greeny.ecomate.posting.dto.BoardListDto;
 import com.greeny.ecomate.posting.dto.CreateBoardRequestDto;
 import com.greeny.ecomate.posting.dto.UpdateBoardRequestDto;
 import com.greeny.ecomate.posting.service.BoardService;
 import com.greeny.ecomate.utils.api.ApiUtil;
-import com.greeny.ecomate.utils.api.ApiUtil.ApiSuccessResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @Tag(name = "Board(게시물)")
@@ -46,6 +45,14 @@ public class BoardController {
     @PutMapping("/{boardId}")
     public ApiUtil.ApiSuccessResult<Long> updateBoard(@PathVariable Long boardId, @Valid @RequestBody UpdateBoardRequestDto updateDto) {
         return ApiUtil.success("게시물 수정 성공", boardService.updateBoard(boardId, updateDto));
+    }
+
+    @DeleteMapping("/{boardId}")
+    public ApiUtil.ApiSuccessResult<String> deleteBoardById(@PathVariable Long boardId,
+                                                            HttpServletRequest req) {
+        Long memberId = (Long) req.getAttribute("memberId");
+        boardService.deleteBoardById(boardId, memberId);
+        return ApiUtil.success("게시물 삭제 성공", boardId + " 이(가) 삭제되었습니다.");
     }
 
 }

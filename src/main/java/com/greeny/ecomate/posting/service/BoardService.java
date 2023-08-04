@@ -13,11 +13,13 @@ import com.greeny.ecomate.member.entity.Member;
 import com.greeny.ecomate.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @Transactional(readOnly = true)
@@ -74,10 +76,18 @@ public class BoardService {
 
    @Transactional
    public Long updateBoard(Long boardId, UpdateBoardRequestDto updateDto) {
-      Board board = boardRepository.findById(boardId)
-              .orElseThrow(() -> new NotFoundException("존재하지 않는 게시글입니다."));
+      Board board = findBoardById(boardId);
       board.update(updateDto.getBoardTitle(), updateDto.getBoardContent());
       return board.getBoardId();
+   }
+
+   @Transactional
+   public void deleteBoardById(Long boardId, Long memberId) {
+      Board board = findBoardById(boardId);
+      if (!board.getMember().getMemberId().equals(memberId))
+         throw new AccessDeniedException("삭제 권한이 없습니다.");
+
+      boardRepository.delete(board);
    }
 
    private void validateChallenge(Long challengeId) {
@@ -102,4 +112,8 @@ public class BoardService {
       return new BoardDto(board, null, s3Url, boardDirectory);
    }
 
+    private Board findBoardById(Long boardId) {
+      return boardRepository.findById(boardId)
+              .orElseThrow(() -> new NotFoundException("존재하지 않는 게시물입니다."));
+    }
 }
