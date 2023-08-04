@@ -10,6 +10,7 @@ import com.greeny.ecomate.utils.api.ApiUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -28,6 +29,14 @@ public class CommentController {
     @GetMapping("/boards/{boardId}")
     public ApiUtil.ApiSuccessResult<CommentListDto> getCommentByBoard(@PathVariable Long boardId) {
         return ApiUtil.success("게시물의 댓글 조회 성공", commentService.getCommentByBoard(boardId));
+    }
+
+    @DeleteMapping("/{commentId}")
+    public ApiUtil.ApiSuccessResult<String> deleteCommentById(@PathVariable Long commentId,
+                                                              HttpServletRequest req) {
+        Long memberId = (Long) req.getAttribute("memberId");
+        commentService.deleteCommentById(commentId, memberId);
+        return ApiUtil.success("댓글 삭제 성공", commentId + "이(가) 삭제되었습니다.");
     }
 
 }

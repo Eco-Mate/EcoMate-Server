@@ -11,6 +11,7 @@ import com.greeny.ecomate.posting.repository.BoardRepository;
 import com.greeny.ecomate.member.entity.Member;
 import com.greeny.ecomate.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,5 +56,14 @@ public class CommentService {
                 .orElseThrow(() -> new NotFoundException("존재하지 않는 사용자입니다."));
 
         return new CommentDto(comment.getCommentId(), member.getNickname(), comment.getContent());
+    }
+
+    public void deleteCommentById(Long commentId, Long memberId) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new NotFoundException("존재하지 않는 댓글입니다."));
+        if (!comment.getMemberId().equals(memberId))
+            throw new AccessDeniedException("삭제 권한이 없습니다.");
+
+        commentRepository.delete(comment);
     }
 }
