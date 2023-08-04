@@ -44,6 +44,7 @@ public class SecurityConfig {
                 .antMatchers("/v1/members")
                 .antMatchers(HttpMethod.POST, "/v1/boards/**")
                 .antMatchers(HttpMethod.PUT, "/v1/boards/**")
+                .antMatchers(HttpMethod.DELETE, "/v1/boards/**")
                 .antMatchers("/v1/comments/**")
                 .and()
                 .authorizeRequests()
