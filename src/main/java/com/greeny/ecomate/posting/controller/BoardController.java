@@ -45,8 +45,10 @@ public class BoardController {
 
     @Operation(summary = "게시물 수정", description = "boardTitle, boardContent 만 수정 가능합니다.")
     @PutMapping("/{boardId}")
-    public ApiUtil.ApiSuccessResult<Long> updateBoard(@PathVariable Long boardId, @Valid @RequestBody UpdateBoardRequestDto updateDto) {
-        return ApiUtil.success("게시물 수정 성공", boardService.updateBoard(boardId, updateDto));
+    public ApiUtil.ApiSuccessResult<Long> updateBoard(@PathVariable Long boardId, @Valid @RequestBody UpdateBoardRequestDto updateDto,
+                                                      HttpServletRequest req) {
+        Long memberId = (Long) req.getAttribute("memberId");
+        return ApiUtil.success("게시물 수정 성공", boardService.updateBoard(boardId, memberId, updateDto));
     }
 
     @DeleteMapping("/{boardId}")
