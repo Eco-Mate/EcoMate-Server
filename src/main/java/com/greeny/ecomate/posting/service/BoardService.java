@@ -39,8 +39,8 @@ public class BoardService {
    private final AwsS3Service awsS3Service;
 
    @Transactional
-   public Long createBoard(CreateBoardRequestDto createDto, MultipartFile file) {
-      Member member = memberRepository.findByNickname(createDto.getNickname())
+   public Long createBoard(CreateBoardRequestDto createDto, MultipartFile file, Long memberId) {
+      Member member = memberRepository.findById(memberId)
               .orElseThrow(() -> new NotFoundException("존재하지 않는 사용자입니다."));
       validateChallenge(createDto.getChallengeId());
 
@@ -75,8 +75,9 @@ public class BoardService {
    }
 
    @Transactional
-   public Long updateBoard(Long boardId, UpdateBoardRequestDto updateDto) {
+   public Long updateBoard(Long boardId, Long memberId, UpdateBoardRequestDto updateDto) {
       Board board = findBoardById(boardId);
+      validateAuth(board, memberId);
       board.update(updateDto.getBoardTitle(), updateDto.getBoardContent());
       return board.getBoardId();
    }
@@ -84,9 +85,7 @@ public class BoardService {
    @Transactional
    public void deleteBoardById(Long boardId, Long memberId) {
       Board board = findBoardById(boardId);
-      if (!board.getMember().getMemberId().equals(memberId))
-         throw new AccessDeniedException("삭제 권한이 없습니다.");
-
+      validateAuth(board, memberId);
       boardRepository.delete(board);
    }
 
@@ -96,6 +95,11 @@ public class BoardService {
          challengeRepository.findById(challengeId)
                  .orElseThrow(() -> new NotFoundException("존재하지 않는 챌린지입니다."));
       }
+   }
+
+   private void validateAuth(Board board, Long memberId) {
+      if (!board.getMember().getMemberId().equals(memberId))
+         throw new AccessDeniedException("삭제 권한이 없습니다.");
    }
 
    private String uploadImage(MultipartFile file){
