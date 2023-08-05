@@ -10,9 +10,6 @@ import javax.validation.constraints.NotNull;
 public class CreateBoardRequestDto {
 
     @NotNull
-    private String nickname;
-
-    @NotNull
     private Long challengeId;
 
     @NotNull

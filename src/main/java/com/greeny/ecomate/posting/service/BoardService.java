@@ -39,8 +39,8 @@ public class BoardService {
    private final AwsS3Service awsS3Service;
 
    @Transactional
-   public Long createBoard(CreateBoardRequestDto createDto, MultipartFile file) {
-      Member member = memberRepository.findByNickname(createDto.getNickname())
+   public Long createBoard(CreateBoardRequestDto createDto, MultipartFile file, Long memberId) {
+      Member member = memberRepository.findById(memberId)
               .orElseThrow(() -> new NotFoundException("존재하지 않는 사용자입니다."));
       validateChallenge(createDto.getChallengeId());
 

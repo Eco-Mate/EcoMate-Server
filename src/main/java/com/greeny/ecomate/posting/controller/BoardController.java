@@ -25,8 +25,10 @@ public class BoardController {
 
     @Operation(summary = "게시물 생성")
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    public ApiUtil.ApiSuccessResult<Long> createBoard(@Valid @RequestPart CreateBoardRequestDto createDto, @RequestPart MultipartFile file) {
-        return ApiUtil.success("게시물 생성 성공", boardService.createBoard(createDto, file));
+    public ApiUtil.ApiSuccessResult<Long> createBoard(@Valid @RequestPart CreateBoardRequestDto createDto, @RequestPart MultipartFile file,
+                                                      HttpServletRequest req) {
+        Long memberId = (Long) req.getAttribute("memberId");
+        return ApiUtil.success("게시물 생성 성공", boardService.createBoard(createDto, file, memberId));
     }
 
     @Operation(summary = "게시물 전체 조회", description = "challengeTitle == null : 챌린지 미등록 게시물, profileImage == null : 기본 프로필 이미지 입니다.")
