@@ -39,7 +39,7 @@ public class BoardService {
    private final AwsS3Service awsS3Service;
 
    @Transactional
-   public Long createBoard(CreateBoardRequestDto createDto, MultipartFile file, Long memberId) {
+   public Board createBoard(CreateBoardRequestDto createDto, MultipartFile file, Long memberId) {
       Member member = memberRepository.findById(memberId)
               .orElseThrow(() -> new NotFoundException("존재하지 않는 사용자입니다."));
       validateChallenge(createDto.getChallengeId());
@@ -54,7 +54,7 @@ public class BoardService {
               .likeCnt(0L)
               .build();
 
-      return boardRepository.save(board).getBoardId();
+      return boardRepository.save(board);
    }
 
    public List<BoardDto> getAllBoard() {

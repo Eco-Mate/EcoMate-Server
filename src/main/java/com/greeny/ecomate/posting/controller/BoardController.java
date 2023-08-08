@@ -28,7 +28,7 @@ public class BoardController {
     public ApiUtil.ApiSuccessResult<Long> createBoard(@Valid @RequestPart CreateBoardRequestDto createDto, @RequestPart MultipartFile file,
                                                       HttpServletRequest req) {
         Long memberId = (Long) req.getAttribute("memberId");
-        return ApiUtil.success("게시물 생성 성공", boardService.createBoard(createDto, file, memberId));
+        return ApiUtil.success("게시물 생성 성공", boardService.createBoard(createDto, file, memberId).getBoardId());
     }
 
     @Operation(summary = "게시물 전체 조회", description = "challengeTitle == null : 챌린지 미등록 게시물, profileImage == null : 기본 프로필 이미지 입니다.")
