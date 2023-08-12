@@ -52,4 +52,12 @@ public class Board extends BaseEntity {
         this.boardTitle = boardTitle;
         this.boardContent = boardContent;
     }
+
+    public void increaseLike() {
+        this.likeCnt++;
+    }
+
+    public void decreaseLike() {
+        this.likeCnt--;
+    }
 }

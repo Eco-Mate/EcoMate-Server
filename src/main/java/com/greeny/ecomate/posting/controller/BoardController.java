@@ -28,19 +28,21 @@ public class BoardController {
     public ApiUtil.ApiSuccessResult<Long> createBoard(@Valid @RequestPart CreateBoardRequestDto createDto, @RequestPart MultipartFile file,
                                                       HttpServletRequest req) {
         Long memberId = (Long) req.getAttribute("memberId");
-        return ApiUtil.success("게시물 생성 성공", boardService.createBoard(createDto, file, memberId));
+        return ApiUtil.success("게시물 생성 성공", boardService.createBoard(createDto, file, memberId).getBoardId());
     }
 
     @Operation(summary = "게시물 전체 조회", description = "challengeTitle == null : 챌린지 미등록 게시물, profileImage == null : 기본 프로필 이미지 입니다.")
     @GetMapping
-    public ApiUtil.ApiSuccessResult<BoardListDto> getAllBoard() {
-        return ApiUtil.success("게시물 전체 조회 성공", new BoardListDto(boardService.getAllBoard()));
+    public ApiUtil.ApiSuccessResult<BoardListDto> getAllBoard(HttpServletRequest req) {
+        Long memberId = (Long) req.getAttribute("memberId");
+        return ApiUtil.success("게시물 전체 조회 성공", new BoardListDto(boardService.getAllBoard(memberId)));
     }
 
     @Operation(summary = "인기 게시물 조회", description = "challengeTitle == null : 챌린지 미등록 게시물, profileImage == null : 기본 프로필 이미지 입니다.")
     @GetMapping("/popular-posts")
-    public ApiUtil.ApiSuccessResult<BoardListDto> getAllSortedByLikeCnt() {
-        return ApiUtil.success("인기 게시물 조회 성공", new BoardListDto(boardService.getAllSortedByLikeCnt()));
+    public ApiUtil.ApiSuccessResult<BoardListDto> getAllSortedByLikeCnt(HttpServletRequest req) {
+        Long memberId = (Long) req.getAttribute("memberId");
+        return ApiUtil.success("인기 게시물 조회 성공", new BoardListDto(boardService.getAllSortedByLikeCnt(memberId)));
     }
 
     @Operation(summary = "게시물 수정", description = "boardTitle, boardContent 만 수정 가능합니다.")
@@ -51,6 +53,7 @@ public class BoardController {
         return ApiUtil.success("게시물 수정 성공", boardService.updateBoard(boardId, memberId, updateDto));
     }
 
+    @Operation(summary = "게시물 삭제")
     @DeleteMapping("/{boardId}")
     public ApiUtil.ApiSuccessResult<String> deleteBoardById(@PathVariable Long boardId,
                                                             HttpServletRequest req) {
