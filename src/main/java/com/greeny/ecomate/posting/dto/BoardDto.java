@@ -18,9 +18,10 @@ public class BoardDto {
     private String boardContent;
     private String image;
     private Long likeCnt;
+    private Boolean liked;
     private LocalDateTime createdDate;
 
-    public BoardDto(Board board, String challengeTitle, String s3Url, String boardDirectory) {
+    public BoardDto(Board board, String challengeTitle, String imageUrl, Boolean liked) {
         this.boardId = board.getBoardId();
         this.memberId = board.getMember().getMemberId();
         this.nickname = board.getMember().getNickname();
@@ -28,8 +29,9 @@ public class BoardDto {
         this.challengeTitle = challengeTitle;
         this.boardTitle = board.getBoardTitle();
         this.boardContent = board.getBoardContent();
-        this.image = s3Url + "/" + boardDirectory + "/" + board.getImage();
+        this.image = imageUrl + "/" + board.getImage();
         this.likeCnt = board.getLikeCnt();
+        this.liked = liked;
         this.createdDate = board.getCreatedDate();
     }
 }

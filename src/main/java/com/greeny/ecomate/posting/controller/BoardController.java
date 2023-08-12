@@ -33,14 +33,16 @@ public class BoardController {
 
     @Operation(summary = "게시물 전체 조회", description = "challengeTitle == null : 챌린지 미등록 게시물, profileImage == null : 기본 프로필 이미지 입니다.")
     @GetMapping
-    public ApiUtil.ApiSuccessResult<BoardListDto> getAllBoard() {
-        return ApiUtil.success("게시물 전체 조회 성공", new BoardListDto(boardService.getAllBoard()));
+    public ApiUtil.ApiSuccessResult<BoardListDto> getAllBoard(HttpServletRequest req) {
+        Long memberId = (Long) req.getAttribute("memberId");
+        return ApiUtil.success("게시물 전체 조회 성공", new BoardListDto(boardService.getAllBoard(memberId)));
     }
 
     @Operation(summary = "인기 게시물 조회", description = "challengeTitle == null : 챌린지 미등록 게시물, profileImage == null : 기본 프로필 이미지 입니다.")
     @GetMapping("/popular-posts")
-    public ApiUtil.ApiSuccessResult<BoardListDto> getAllSortedByLikeCnt() {
-        return ApiUtil.success("인기 게시물 조회 성공", new BoardListDto(boardService.getAllSortedByLikeCnt()));
+    public ApiUtil.ApiSuccessResult<BoardListDto> getAllSortedByLikeCnt(HttpServletRequest req) {
+        Long memberId = (Long) req.getAttribute("memberId");
+        return ApiUtil.success("인기 게시물 조회 성공", new BoardListDto(boardService.getAllSortedByLikeCnt(memberId)));
     }
 
     @Operation(summary = "게시물 수정", description = "boardTitle, boardContent 만 수정 가능합니다.")
