@@ -53,6 +53,7 @@ public class BoardController {
         return ApiUtil.success("게시물 수정 성공", boardService.updateBoard(boardId, memberId, updateDto));
     }
 
+    @Operation(summary = "게시물 삭제")
     @DeleteMapping("/{boardId}")
     public ApiUtil.ApiSuccessResult<String> deleteBoardById(@PathVariable Long boardId,
                                                             HttpServletRequest req) {
