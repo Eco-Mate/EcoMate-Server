@@ -11,6 +11,7 @@ import com.greeny.ecomate.posting.repository.BoardRepository;
 import com.greeny.ecomate.member.entity.Member;
 import com.greeny.ecomate.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +23,12 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class CommentService {
+
+    @Value("${s3-directory.profile}")
+    String profileDirectory;
+
+    @Value("${cloud.aws.s3.url}")
+    String s3Url;
 
     private final CommentRepository commentRepository;
     private final MemberRepository memberRepository;
@@ -55,7 +62,7 @@ public class CommentService {
         Member member = memberRepository.findById(comment.getMemberId())
                 .orElseThrow(() -> new NotFoundException("존재하지 않는 사용자입니다."));
 
-        return new CommentDto(comment.getCommentId(), member.getNickname(), comment.getContent());
+        return new CommentDto(member, comment);
     }
 
     public void deleteCommentById(Long commentId, Long memberId) {
