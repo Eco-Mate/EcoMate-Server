@@ -30,7 +30,7 @@ public class CommentController {
         return ApiUtil.success("댓글 생성 성공", commentService.createComment(createRequest, memberId));
     }
 
-    @GetMapping("/boards/{boardId}")
+    @GetMapping("/board/{boardId}")
     @Operation(summary = "특정 게시물의 댓글 조회")
     public ApiUtil.ApiSuccessResult<CommentListDto> getCommentByBoard(@PathVariable Long boardId) {
         return ApiUtil.success("게시물의 댓글 조회 성공", commentService.getCommentByBoard(boardId));
