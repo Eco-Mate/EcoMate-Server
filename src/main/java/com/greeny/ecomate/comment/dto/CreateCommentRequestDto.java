@@ -10,8 +10,5 @@ public class CreateCommentRequestDto {
     private Long boardId;
 
     @NotNull
-    private String nickname;
-
-    @NotNull
     private String content;
 }
