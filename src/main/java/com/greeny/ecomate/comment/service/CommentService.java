@@ -28,8 +28,8 @@ public class CommentService {
     private final BoardRepository boardRepository;
 
     @Transactional
-    public Long createComment(CreateCommentRequestDto createRequest) {
-        Member member = memberRepository.findByNickname(createRequest.getNickname())
+    public Long createComment(CreateCommentRequestDto createRequest, Long memberId) {
+        Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new NotFoundException("존재하지 않는 사용자입니다."));
 
         Board board = boardRepository.findById(createRequest.getBoardId())

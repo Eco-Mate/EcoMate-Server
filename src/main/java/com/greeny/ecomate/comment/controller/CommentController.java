@@ -22,8 +22,10 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping
-    public ApiUtil.ApiSuccessResult<Long> createComment(@Valid  @RequestBody CreateCommentRequestDto createRequest) {
-        return ApiUtil.success("댓글 생성 성공", commentService.createComment(createRequest));
+    public ApiUtil.ApiSuccessResult<Long> createComment(@Valid @RequestBody CreateCommentRequestDto createRequest,
+                                                        HttpServletRequest req) {
+        Long memberId = (Long) req.getAttribute("memberId");
+        return ApiUtil.success("댓글 생성 성공", commentService.createComment(createRequest, memberId));
     }
 
     @GetMapping("/boards/{boardId}")
