@@ -65,6 +65,7 @@ public class CommentService {
         return new CommentDto(member, comment);
     }
 
+    @Transactional
     public void deleteCommentById(Long commentId, Long memberId) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new NotFoundException("존재하지 않는 댓글입니다."));
