@@ -21,6 +21,12 @@ public class GlobalExceptionHandler {
         ApiErrorResult<String> error = ApiUtil.error(HttpServletResponse.SC_NOT_FOUND, e.getMessage());
         return ResponseEntity.status(HttpServletResponse.SC_NOT_FOUND).body(error);
     }
+
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<?> handleIllegalStateException(IllegalStateException e) {
+        ApiErrorResult<String> error = ApiUtil.error(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+        return ResponseEntity.status(HttpServletResponse.SC_BAD_REQUEST).body(error);
+    }
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> handleMethodArgumentException(MethodArgumentNotValidException e) {
         BindingResult bindingResult = e.getBindingResult();
