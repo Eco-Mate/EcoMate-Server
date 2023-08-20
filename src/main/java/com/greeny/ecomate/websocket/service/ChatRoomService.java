@@ -67,4 +67,10 @@ public class ChatRoomService {
         return new ChatRoomResponseDto(roomId, memberNicknameList, name);
     }
 
+    @Transactional(readOnly = true)
+    public List<String> searchMemberByNickname(String nickname) {
+        List<String> nicknameList = memberRepository.findByNicknameContaining(nickname).stream().map(Member::getNickname).toList();
+        return nicknameList;
+    }
+
 }

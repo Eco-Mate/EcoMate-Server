@@ -39,3 +39,6 @@ out/
 
 # secret
 application-secret.yaml
+
+### Querydsl
+/src/main/generated
