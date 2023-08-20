@@ -7,16 +7,16 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class ChatMessageResponseDto {
-    private Long roomId;
+public class ChatDto {
+    private Long chatId;
     private String message;
     private Long senderId;
     private String senderNickname;
     private String profileImage;
     private LocalDateTime createdTime;
 
-    public ChatMessageResponseDto(Chat chat, Member sender, String profileImageUrl) {
-        this.roomId = chat.getChatRoom().getRoomId();
+    public ChatDto(Chat chat, Member sender, String profileImageUrl) {
+        this.chatId = chat.getChatId();
         this.message = chat.getMessage();
         this.senderId = chat.getSenderId();
         this.senderNickname = sender.getNickname();
