@@ -58,13 +58,18 @@ public class BoardService {
       return boardRepository.save(board);
    }
 
-   public List<BoardDto> getAllBoard(Long memberId) {
+   public List<BoardDto> getAllBoards(Long memberId) {
       List<Board> boardList = boardRepository.findAll();
       return boardList.stream().map(b -> createBoardDto(b, memberId)).toList();
    }
 
-   public List<BoardDto> getAllSortedByLikeCnt(Long memberId) {
+   public List<BoardDto> getAllBoardsSortedByLikeCnt(Long memberId) {
       List<Board> boardList = boardRepository.findAllSortedByLikeCnt();
+      return boardList.stream().map(b -> createBoardDto(b, memberId)).toList();
+   }
+
+   public List<BoardDto> getAllBoardsByCurrentUser(Long memberId) {
+      List<Board> boardList = boardRepository.findAllByMemberId(memberId);
       return boardList.stream().map(b -> createBoardDto(b, memberId)).toList();
    }
 
