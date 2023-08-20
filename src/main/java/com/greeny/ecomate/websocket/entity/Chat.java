@@ -25,16 +25,16 @@ public class Chat extends BaseEntity {
     private ChatType chatType;
 
     @Column(name = "sender")
-    private String sender;
+    private Long senderId;
 
     @Column(name = "message", columnDefinition = "TEXT")
     private String message;
 
     @Builder
-    public Chat(ChatRoom chatRoom, ChatType chatType, String sender, String message) {
+    public Chat(ChatRoom chatRoom, ChatType chatType, Long senderId, String message) {
         this.chatRoom = chatRoom;
         this.chatType = chatType;
-        this.sender = sender;
+        this.senderId = senderId;
         this.message = message;
     }
 
