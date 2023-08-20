@@ -37,4 +37,11 @@ public class ChatRoomController {
         return chatRoomService.findAllRoomByMemberId(memberId);
     }
 
+    @Operation(summary = "채팅방 멤버 초대 시 멤버 닉네임 검색", description = "account token이 필요합니다.")
+    @ApiResponse(description = "채팅방 멤버 초대 시 멤버 닉네임을 (부분)검색하여 조회")
+    @GetMapping("/room/search-member")
+    public List<String> searchMemberByNickname(@RequestParam String nickname, HttpServletRequest req) {
+        return chatRoomService.searchMemberByNickname(nickname);
+    }
+
 }
