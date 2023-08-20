@@ -1,6 +1,5 @@
-package com.greeny.ecomate.posting.dto;
+package com.greeny.ecomate.board.dto;
 
-import com.greeny.ecomate.posting.entity.Board;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

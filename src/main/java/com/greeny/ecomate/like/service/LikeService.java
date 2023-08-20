@@ -2,11 +2,10 @@ package com.greeny.ecomate.like.service;
 
 import com.greeny.ecomate.exception.NotFoundException;
 import com.greeny.ecomate.like.dto.CreateLikeDto;
-import com.greeny.ecomate.like.dto.LikeDto;
 import com.greeny.ecomate.like.entity.Like;
 import com.greeny.ecomate.like.repository.LikeRepository;
-import com.greeny.ecomate.posting.entity.Board;
-import com.greeny.ecomate.posting.repository.BoardRepository;
+import com.greeny.ecomate.board.entity.Board;
+import com.greeny.ecomate.board.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

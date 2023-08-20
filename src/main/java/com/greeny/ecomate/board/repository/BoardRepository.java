@@ -1,6 +1,6 @@
-package com.greeny.ecomate.posting.repository;
+package com.greeny.ecomate.board.repository;
 
-import com.greeny.ecomate.posting.entity.Board;
+import com.greeny.ecomate.board.entity.Board;
 import com.greeny.ecomate.member.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

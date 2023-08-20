@@ -1,9 +1,9 @@
-package com.greeny.ecomate.posting.controller;
+package com.greeny.ecomate.board.controller;
 
-import com.greeny.ecomate.posting.dto.BoardListDto;
-import com.greeny.ecomate.posting.dto.CreateBoardRequestDto;
-import com.greeny.ecomate.posting.dto.UpdateBoardRequestDto;
-import com.greeny.ecomate.posting.service.BoardService;
+import com.greeny.ecomate.board.dto.BoardListDto;
+import com.greeny.ecomate.board.dto.CreateBoardRequestDto;
+import com.greeny.ecomate.board.dto.UpdateBoardRequestDto;
+import com.greeny.ecomate.board.service.BoardService;
 import com.greeny.ecomate.utils.api.ApiUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

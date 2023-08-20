@@ -1,4 +1,4 @@
-package com.greeny.ecomate.posting.entity;
+package com.greeny.ecomate.board.entity;
 
 import com.greeny.ecomate.base.BaseEntity;
 import com.greeny.ecomate.member.entity.Member;
