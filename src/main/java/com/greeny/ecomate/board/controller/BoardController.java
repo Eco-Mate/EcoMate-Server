@@ -1,9 +1,9 @@
-package com.greeny.ecomate.posting.controller;
+package com.greeny.ecomate.board.controller;
 
-import com.greeny.ecomate.posting.dto.BoardListDto;
-import com.greeny.ecomate.posting.dto.CreateBoardRequestDto;
-import com.greeny.ecomate.posting.dto.UpdateBoardRequestDto;
-import com.greeny.ecomate.posting.service.BoardService;
+import com.greeny.ecomate.board.dto.BoardListDto;
+import com.greeny.ecomate.board.dto.CreateBoardRequestDto;
+import com.greeny.ecomate.board.dto.UpdateBoardRequestDto;
+import com.greeny.ecomate.board.service.BoardService;
 import com.greeny.ecomate.utils.api.ApiUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -33,16 +33,23 @@ public class BoardController {
 
     @Operation(summary = "게시물 전체 조회", description = "challengeTitle == null : 챌린지 미등록 게시물, profileImage == null : 기본 프로필 이미지 입니다.")
     @GetMapping
-    public ApiUtil.ApiSuccessResult<BoardListDto> getAllBoard(HttpServletRequest req) {
+    public ApiUtil.ApiSuccessResult<BoardListDto> getAllBoards(HttpServletRequest req) {
         Long memberId = (Long) req.getAttribute("memberId");
-        return ApiUtil.success("게시물 전체 조회 성공", new BoardListDto(boardService.getAllBoard(memberId)));
+        return ApiUtil.success("게시물 전체 조회 성공", new BoardListDto(boardService.getAllBoards(memberId)));
+    }
+
+    @Operation(summary = "현재 사용자의 게시물 조회", description = "현재 로그인된 사용자의 게시물을 조회합니다.")
+    @GetMapping("/members")
+    public ApiUtil.ApiSuccessResult<BoardListDto> getAllBoardsByCurrentUser(HttpServletRequest req) {
+        Long memberId = (Long) req.getAttribute("memberId");
+        return ApiUtil.success("현재 사용자의 게시물 조회 성공", new BoardListDto(boardService.getAllBoardsByCurrentUser(memberId)));
     }
 
     @Operation(summary = "인기 게시물 조회", description = "challengeTitle == null : 챌린지 미등록 게시물, profileImage == null : 기본 프로필 이미지 입니다.")
     @GetMapping("/popular-posts")
-    public ApiUtil.ApiSuccessResult<BoardListDto> getAllSortedByLikeCnt(HttpServletRequest req) {
+    public ApiUtil.ApiSuccessResult<BoardListDto> getAllBoardsSortedByLikeCnt(HttpServletRequest req) {
         Long memberId = (Long) req.getAttribute("memberId");
-        return ApiUtil.success("인기 게시물 조회 성공", new BoardListDto(boardService.getAllSortedByLikeCnt(memberId)));
+        return ApiUtil.success("인기 게시물 조회 성공", new BoardListDto(boardService.getAllBoardsSortedByLikeCnt(memberId)));
     }
 
     @Operation(summary = "게시물 수정", description = "boardTitle, boardContent 만 수정 가능합니다.")

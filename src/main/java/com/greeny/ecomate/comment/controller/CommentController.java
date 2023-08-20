@@ -1,11 +1,8 @@
 package com.greeny.ecomate.comment.controller;
 
-import com.greeny.ecomate.comment.dto.CommentDto;
 import com.greeny.ecomate.comment.dto.CommentListDto;
 import com.greeny.ecomate.comment.dto.CreateCommentRequestDto;
 import com.greeny.ecomate.comment.service.CommentService;
-import com.greeny.ecomate.posting.dto.BoardDto;
-import com.greeny.ecomate.posting.entity.Board;
 import com.greeny.ecomate.utils.api.ApiUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor

@@ -1,15 +1,14 @@
-package com.greeny.ecomate.posting.service;
+package com.greeny.ecomate.board.service;
 
+import com.greeny.ecomate.board.dto.BoardDto;
+import com.greeny.ecomate.board.dto.CreateBoardRequestDto;
+import com.greeny.ecomate.board.dto.UpdateBoardRequestDto;
+import com.greeny.ecomate.board.entity.Board;
+import com.greeny.ecomate.board.repository.BoardRepository;
 import com.greeny.ecomate.challenge.entity.Challenge;
 import com.greeny.ecomate.challenge.repository.ChallengeRepository;
 import com.greeny.ecomate.exception.NotFoundException;
-import com.greeny.ecomate.like.entity.Like;
 import com.greeny.ecomate.like.repository.LikeRepository;
-import com.greeny.ecomate.posting.dto.BoardDto;
-import com.greeny.ecomate.posting.dto.CreateBoardRequestDto;
-import com.greeny.ecomate.posting.dto.UpdateBoardRequestDto;
-import com.greeny.ecomate.posting.entity.Board;
-import com.greeny.ecomate.posting.repository.BoardRepository;
 import com.greeny.ecomate.s3.service.AwsS3Service;
 import com.greeny.ecomate.member.entity.Member;
 import com.greeny.ecomate.member.repository.MemberRepository;
@@ -21,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Objects;
 
 @Service
 @Transactional(readOnly = true)
@@ -60,13 +58,18 @@ public class BoardService {
       return boardRepository.save(board);
    }
 
-   public List<BoardDto> getAllBoard(Long memberId) {
+   public List<BoardDto> getAllBoards(Long memberId) {
       List<Board> boardList = boardRepository.findAll();
       return boardList.stream().map(b -> createBoardDto(b, memberId)).toList();
    }
 
-   public List<BoardDto> getAllSortedByLikeCnt(Long memberId) {
+   public List<BoardDto> getAllBoardsSortedByLikeCnt(Long memberId) {
       List<Board> boardList = boardRepository.findAllSortedByLikeCnt();
+      return boardList.stream().map(b -> createBoardDto(b, memberId)).toList();
+   }
+
+   public List<BoardDto> getAllBoardsByCurrentUser(Long memberId) {
+      List<Board> boardList = boardRepository.findAllByMemberId(memberId);
       return boardList.stream().map(b -> createBoardDto(b, memberId)).toList();
    }
 

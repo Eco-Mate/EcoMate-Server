@@ -1,4 +1,4 @@
-package com.greeny.ecomate.posting.dto;
+package com.greeny.ecomate.board.dto;
 
 import lombok.Data;
 

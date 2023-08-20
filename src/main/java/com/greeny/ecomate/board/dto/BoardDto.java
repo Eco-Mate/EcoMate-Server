@@ -1,8 +1,7 @@
-package com.greeny.ecomate.posting.dto;
+package com.greeny.ecomate.board.dto;
 
-import com.greeny.ecomate.posting.entity.Board;
+import com.greeny.ecomate.board.entity.Board;
 import lombok.Data;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.time.LocalDateTime;
 

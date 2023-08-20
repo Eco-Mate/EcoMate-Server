@@ -1,7 +1,7 @@
 package com.greeny.ecomate.comment.entity;
 
 import com.greeny.ecomate.base.BaseEntity;
-import com.greeny.ecomate.posting.entity.Board;
+import com.greeny.ecomate.board.entity.Board;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
