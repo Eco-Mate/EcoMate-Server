@@ -7,10 +7,12 @@ import com.greeny.ecomate.member.entity.Member;
 import com.greeny.ecomate.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class MemberService {
 
@@ -30,4 +32,10 @@ public class MemberService {
                 .orElseThrow(() -> new NotFoundException("존재하지 않는 사용자입니다."));
     }
 
+    public MemberDto getCurrentMember(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new NotFoundException("존재하지 않는 사용자입니다."));
+
+        return MemberDto.from(member);
+    }
 }
