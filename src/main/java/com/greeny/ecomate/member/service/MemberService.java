@@ -3,6 +3,7 @@ package com.greeny.ecomate.member.service;
 import com.greeny.ecomate.exception.NotFoundException;
 import com.greeny.ecomate.member.dto.CreateMemberRequestDto;
 import com.greeny.ecomate.member.dto.MemberDto;
+import com.greeny.ecomate.member.dto.UpdateMemberRequestDto;
 import com.greeny.ecomate.member.entity.Member;
 import com.greeny.ecomate.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,14 +29,23 @@ public class MemberService {
     }
 
     public Member getMemberById(Long memberId) {
-        return memberRepository.findByMemberId(memberId)
-                .orElseThrow(() -> new NotFoundException("존재하지 않는 사용자입니다."));
+        return findMemberById(memberId);
     }
 
     public MemberDto getCurrentMember(Long memberId) {
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new NotFoundException("존재하지 않는 사용자입니다."));
+        return MemberDto.from(findMemberById(memberId));
+    }
 
-        return MemberDto.from(member);
+    @Transactional
+    public Long updateMember(UpdateMemberRequestDto updateDto, Long memberId) {
+        Member member = findMemberById(memberId);
+        member.update(updateDto.getName(), updateDto.getNickname(), updateDto.getEmail());
+
+        return member.getMemberId();
+    }
+
+    private Member findMemberById(Long memberId) {
+        return memberRepository.findByMemberId(memberId)
+                .orElseThrow(() -> new NotFoundException("존재하지 않는 사용자입니다."));
     }
 }

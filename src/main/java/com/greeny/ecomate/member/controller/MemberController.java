@@ -2,6 +2,7 @@ package com.greeny.ecomate.member.controller;
 
 import com.greeny.ecomate.member.dto.CreateMemberRequestDto;
 import com.greeny.ecomate.member.dto.MemberDto;
+import com.greeny.ecomate.member.dto.UpdateMemberRequestDto;
 import com.greeny.ecomate.member.service.MemberService;
 import com.greeny.ecomate.utils.api.ApiUtil;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -35,6 +36,12 @@ public class MemberController {
     public ApiUtil.ApiSuccessResult<MemberDto> getCurrentMember(HttpServletRequest req) {
         Long memberId = (Long) req.getAttribute("memberId");
         return ApiUtil.success("현재 사용자 정보 조회 성공", memberService.getCurrentMember(memberId));
+    }
+
+    @PutMapping
+    public ApiUtil.ApiSuccessResult<Long> updateMember(UpdateMemberRequestDto updateDto, HttpServletRequest req) {
+        Long memberId = (Long) req.getAttribute("memberId");
+        return ApiUtil.success("사용자 정보 수정 성공", memberService.updateMember(updateDto, memberId));
     }
 
 }

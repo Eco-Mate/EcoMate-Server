@@ -61,4 +61,9 @@ public class Member extends BaseEntity {
         this.totalTreePoint = treePoint;
     }
 
+    public void update(String name, String nickname, String email) {
+        this.name = name;
+        this.nickname = nickname;
+        this.email = email;
+    }
 }
