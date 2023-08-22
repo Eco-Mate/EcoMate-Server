@@ -8,9 +8,12 @@ import com.greeny.ecomate.utils.api.ApiUtil;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -42,6 +45,12 @@ public class MemberController {
     public ApiUtil.ApiSuccessResult<Long> updateMember(UpdateMemberRequestDto updateDto, HttpServletRequest req) {
         Long memberId = (Long) req.getAttribute("memberId");
         return ApiUtil.success("사용자 정보 수정 성공", memberService.updateMember(updateDto, memberId));
+    }
+
+    @PostMapping(value = "/profile-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ApiUtil.ApiSuccessResult<Long> updateProfileImage(@RequestPart MultipartFile profileImage, HttpServletRequest req) {
+        Long memberId = (Long) req.getAttribute("memberId");
+        return ApiUtil.success("사용자 프로필 이미지 수정 성공", memberService.updateProfileImage(profileImage, memberId));
     }
 
 }

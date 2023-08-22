@@ -66,4 +66,8 @@ public class Member extends BaseEntity {
         this.nickname = nickname;
         this.email = email;
     }
+
+    public void updateProfileImage(String fileName) {
+        this.profileImage = fileName;
+    }
 }
