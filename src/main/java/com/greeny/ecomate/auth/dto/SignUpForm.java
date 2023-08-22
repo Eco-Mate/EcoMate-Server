@@ -19,5 +19,7 @@ public class SignUpForm {
     private String nickname; // 닉네임
     @NotNull(message = "이메일을 입력해주세요.")
     private String email; // 이메일
+    @NotNull(message = "상태메시지를 입력해주세요.")
+    private String statusMessage; // 상태메시지
 
 }

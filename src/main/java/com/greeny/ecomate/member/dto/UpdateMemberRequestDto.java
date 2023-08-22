@@ -14,4 +14,7 @@ public class UpdateMemberRequestDto {
 
     @NotNull
     private String email;
+
+    @NotNull
+    private String statusMessage;
 }

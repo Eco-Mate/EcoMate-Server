@@ -11,7 +11,8 @@ public record MemberDto(
         Long totalTreePoint,
         String nickname,
         String name,
-        String email
+        String email,
+        String statusMessage
 ) {
 
     public static MemberDto from(Member entity) {
@@ -22,7 +23,8 @@ public record MemberDto(
             entity.getTotalTreePoint(),
             entity.getNickname(),
             entity.getName(),
-            entity.getEmail()
+            entity.getEmail(),
+            entity.getStatusMessage()
         );
     }
 

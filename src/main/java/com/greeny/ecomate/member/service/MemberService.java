@@ -47,7 +47,7 @@ public class MemberService {
     @Transactional
     public Long updateMember(UpdateMemberRequestDto updateDto, Long memberId) {
         Member member = findMemberById(memberId);
-        member.update(updateDto.getName(), updateDto.getNickname(), updateDto.getEmail());
+        member.update(updateDto.getName(), updateDto.getNickname(), updateDto.getEmail(), updateDto.getStatusMessage());
 
         return member.getMemberId();
     }

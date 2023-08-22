@@ -63,6 +63,7 @@ public class AuthService {
                 .password(passwordEncoder.encode(form.getPassword()))
                 .nickname(form.getNickname())
                 .email(form.getEmail())
+                .statusMessage(form.getStatusMessage())
                 .build();
 
         memberRepository.save(member);

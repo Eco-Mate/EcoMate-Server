@@ -14,6 +14,7 @@ public class CreateMemberRequestDto {
     private String nickname;
     private String password;
     private String role;
+    private String statusMessage;
 
     public Member toEntity() {
         return Member.builder()
@@ -24,6 +25,7 @@ public class CreateMemberRequestDto {
                 .name(name)
                 .password(password)
                 .email(email)
+                .statusMessage(statusMessage)
                 .build();
     }
 }
