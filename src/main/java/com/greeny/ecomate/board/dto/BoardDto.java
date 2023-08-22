@@ -20,11 +20,13 @@ public class BoardDto {
     private Boolean liked;
     private LocalDateTime createdDate;
 
-    public BoardDto(Board board, String challengeTitle, String imageUrl, Boolean liked) {
+    public BoardDto(Board board, String challengeTitle, String imageUrl, String profileImageUrl, Boolean liked) {
         this.boardId = board.getBoardId();
         this.memberId = board.getMember().getMemberId();
         this.nickname = board.getMember().getNickname();
-        this.profileImage = board.getMember().getProfileImage();
+        if (board.getMember().getProfileImage() != null) {
+            this.profileImage = profileImageUrl + "/" + board.getMember().getProfileImage();
+        }
         this.challengeTitle = challengeTitle;
         this.boardTitle = board.getBoardTitle();
         this.boardContent = board.getBoardContent();
