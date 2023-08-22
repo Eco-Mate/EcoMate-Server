@@ -29,6 +29,9 @@ public class BoardService {
    @Value("${s3-directory.board}")
    String boardDirectory;
 
+   @Value("${s3-directory.profile}")
+   String profileImageDirectory;
+
    @Value("${cloud.aws.s3.url}")
    String s3Url;
 
@@ -107,15 +110,16 @@ public class BoardService {
 
    private BoardDto createBoardDto(Board board, Long memberId) {
       String imageUrl = s3Url + "/" + boardDirectory;
+      String profileImageUrl = s3Url + "/" + profileImageDirectory;
       Boolean liked = likeRepository.findByBoardAndMemberId(board, memberId).isPresent();
 
       Long challengeId = board.getChallengeId();
       if (challengeId != 0) {
          Challenge challenge = challengeRepository.findById(challengeId)
                  .orElseThrow(() -> new NotFoundException("존재하지 않는 챌린지입니다."));
-         return new BoardDto(board, challenge.getChallengeTitle(), imageUrl, liked);
+         return new BoardDto(board, challenge.getChallengeTitle(), imageUrl, profileImageUrl, liked);
       }
-      return new BoardDto(board, null, imageUrl, liked);
+      return new BoardDto(board, null, imageUrl, profileImageUrl, liked);
    }
 
     private Board findBoardById(Long boardId) {
