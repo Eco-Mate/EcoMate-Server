@@ -2,6 +2,7 @@ package com.greeny.ecomate.exception.handler;
 
 
 import com.greeny.ecomate.exception.NotFoundException;
+import com.greeny.ecomate.exception.UnauthorizedAccessException;
 import com.greeny.ecomate.utils.api.ApiUtil;
 import com.greeny.ecomate.utils.api.ApiUtil.ApiErrorResult;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +27,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> handleIllegalStateException(IllegalStateException e) {
         ApiErrorResult<String> error = ApiUtil.error(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
         return ResponseEntity.status(HttpServletResponse.SC_BAD_REQUEST).body(error);
+    }
+
+    @ExceptionHandler(UnauthorizedAccessException.class)
+    public ResponseEntity<?> handleIllegalStateException(UnauthorizedAccessException e) {
+        ApiErrorResult<String> error = ApiUtil.error(HttpServletResponse.SC_FORBIDDEN, e.getMessage());
+        return ResponseEntity.status(HttpServletResponse.SC_FORBIDDEN).body(error);
     }
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> handleMethodArgumentException(MethodArgumentNotValidException e) {
