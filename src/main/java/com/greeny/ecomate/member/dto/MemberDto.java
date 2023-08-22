@@ -12,7 +12,9 @@ public record MemberDto(
         String nickname,
         String name,
         String email,
-        String statusMessage
+        String statusMessage,
+        Long followerCnt,
+        Long followingCnt
 ) {
 
     public static MemberDto from(Member entity) {
@@ -24,7 +26,9 @@ public record MemberDto(
             entity.getNickname(),
             entity.getName(),
             entity.getEmail(),
-            entity.getStatusMessage()
+            entity.getStatusMessage(),
+            entity.getFollowerCnt(),
+            entity.getFollowingCnt()
         );
     }
 
