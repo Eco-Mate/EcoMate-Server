@@ -44,10 +44,19 @@ public class Member extends BaseEntity {
     @Column(name = "email", length = 30)
     private String email;
 
+    @Column(name = "status_message", length = 255)
+    private String statusMessage;
+
+    @Column(name = "follower_cnt")
+    private Long followerCnt;
+
+    @Column(name = "following_cnt")
+    private Long followingCnt;
+
 
     @Builder
     public Member(Role role, Level level, Long totalTreePoint,
-                  String nickname, String name, String password, String email) {
+                  String nickname, String name, String password, String email, String statusMessage) {
         this.role = role;
         this.level = level;
         this.totalTreePoint = totalTreePoint;
@@ -55,16 +64,20 @@ public class Member extends BaseEntity {
         this.name = name;
         this.password = password;
         this.email = email;
+        this.statusMessage = statusMessage;
+        this.followerCnt = 0L;
+        this.followingCnt = 0L;
     }
 
     public void updateTotalTreePoint(Long treePoint) {
         this.totalTreePoint = treePoint;
     }
 
-    public void update(String name, String nickname, String email) {
+    public void update(String name, String nickname, String email, String statusMessage) {
         this.name = name;
         this.nickname = nickname;
         this.email = email;
+        this.statusMessage = statusMessage;
     }
 
     public void updateProfileImage(String fileName) {
