@@ -50,15 +50,13 @@ public class ChatRoomService {
     }
 
     public List<ChatRoomResponseDto> findAllRoomByMemberId(Long memberId) {
-        List<ChatJoin> chatJoinList = chatJoinRepository.findChatJoinsByMember_MemberId(memberId);
+        List<ChatRoom> chatJoinRooms = chatJoinRepository.findChatJoinsByMember_MemberId(memberId).stream().map(ChatJoin::getChatRoom).toList();
         List<ChatRoomResponseDto> chatRoomList = new ArrayList<>();
-        for(int i = 0; i < chatJoinList.size(); i++) {
-            ChatRoom chatRoom = chatJoinList.get(i).getChatRoom();
-            List<ChatJoin> chatRoomJoinList = chatJoinRepository.findChatJoinsByChatRoom_RoomId(chatRoom.getRoomId());
-            List<String> memberNicknameList = new ArrayList<>();
-            for(int j = 0; j < chatRoomJoinList.size(); j++)
-                memberNicknameList.add(chatRoomJoinList.get(j).getMember().getNickname());
-            chatRoomList.add(createChatRoomResponseDto(chatRoom.getRoomId(), memberNicknameList, chatJoinList.get(i).getChatRoom().getName()));
+        for(int i = 0; i < chatJoinRooms.size(); i++) {
+            ChatRoom chatRoom = chatJoinRooms.get(i);
+            List<Member> chatRoomJoinMemberList = chatJoinRepository.findChatJoinsByChatRoom_RoomId(chatRoom.getRoomId()).stream().map(ChatJoin::getMember).toList();
+            List<String> memberNicknameList = chatRoomJoinMemberList.stream().map(Member::getNickname).toList();
+            chatRoomList.add(createChatRoomResponseDto(chatRoom.getRoomId(), memberNicknameList, chatRoom.getName()));
         }
         return chatRoomList;
     }
