@@ -40,8 +40,8 @@ public class AwsS3Service {
         return fileName;
     }
 
-    public void delete(String fileName) {
-        amazonS3.deleteObject(new DeleteObjectRequest(bucket, fileName));
+    public void delete(String directory, String fileName) {
+        amazonS3.deleteObject(new DeleteObjectRequest(bucket, directory + "/" +fileName));
     }
 
     private String createFileName(String fileName) {
