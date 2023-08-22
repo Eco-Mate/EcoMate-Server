@@ -6,8 +6,6 @@ import javax.validation.constraints.NotNull;
 
 @Data
 public class UpdateMemberRequestDto {
-    @NotNull
-    private String name;
 
     @NotNull
     private String nickname;
