@@ -10,6 +10,7 @@ import com.greeny.ecomate.challenge.repository.MyChallengeRepository;
 import com.greeny.ecomate.member.entity.Member;
 import com.greeny.ecomate.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +21,12 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class MyChallengeService {
+
+    @Value("${s3-directory.challenge}")
+    String challengeDirectory;
+
+    @Value("${cloud.aws.s3.url}")
+    String s3Url;
 
     private final MyChallengeRepository myChallengeRepository;
     private final MemberRepository memberRepository;
@@ -70,7 +77,7 @@ public class MyChallengeService {
     }
 
     private MyChallengeDto createMyChallengeDto(MyChallenge myChallenge) {
-        return new MyChallengeDto(myChallenge);
+        return new MyChallengeDto(myChallenge, s3Url, challengeDirectory);
     }
 
     public List<MyChallengeDto> getAllMyChallengeByMemberId(Long memberId) {

@@ -25,14 +25,14 @@ public class MyChallengeDto {
     private Long doneCnt;
     private LocalDateTime createdDate;
 
-    public MyChallengeDto(MyChallenge myChallenge) {
+    public MyChallengeDto(MyChallenge myChallenge, String s3Url, String challengeDirectory) {
         this.myChallengeId = myChallenge.getMyChallengeId();
         this.memberId = myChallenge.getMember().getMemberId();
         this.nickname = myChallenge.getMember().getNickname();
         this.challengeId = myChallenge.getChallenge().getChallengeId();
         this.challengeTitle = myChallenge.getChallenge().getChallengeTitle();
         this.description = myChallenge.getChallenge().getDescription();
-        this.image = myChallenge.getChallenge().getImage();
+        this.image = s3Url + "/" + challengeDirectory + "/" + myChallenge.getChallenge().getImage();
         this.goalCnt = myChallenge.getChallenge().getGoalCnt();
         this.treePoint = myChallenge.getChallenge().getTreePoint();
         this.achieveType = myChallenge.getAchieveType();
