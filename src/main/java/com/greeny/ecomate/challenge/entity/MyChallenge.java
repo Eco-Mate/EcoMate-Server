@@ -1,5 +1,6 @@
 package com.greeny.ecomate.challenge.entity;
 
+import com.greeny.ecomate.base.BaseEntity;
 import com.greeny.ecomate.challenge.dto.MyChallengeDto;
 import com.greeny.ecomate.member.entity.Member;
 import lombok.AccessLevel;
@@ -12,7 +13,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class MyChallenge {
+public class MyChallenge extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
