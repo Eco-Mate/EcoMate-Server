@@ -37,11 +37,19 @@ public class ChatService {
         ChatRoom chatRoom = chatRoomRepository.findById(roomId)
                 .orElseThrow(() -> new NotFoundException("존재하지 않는 채팅방입니다."));
 
+        String message = "";
+        if(createDto.getChatType().equals(ChatType.CHAT))
+            message = createDto.getMessage();
+        else if(createDto.getChatType().equals(ChatType.ENTER))
+            message = createEnterChat(createDto, memberId);
+        else if(createDto.getChatType().equals(ChatType.LEAVE))
+            message = createLeaveChat(memberId);
+
         Chat chat = Chat.builder()
                 .chatRoom(chatRoom)
                 .senderId(memberId)
-                .message(createDto.getMessage())
-                .chatType(ChatType.CHAT)
+                .message(message)
+                .chatType(createDto.getChatType())
                 .build();
 
         return chatRepository.save(chat);
@@ -68,6 +76,36 @@ public class ChatService {
         List<Chat> chatList = chatRepository.findAllByChatRoom(chatRoom);
 
         return chatList.stream().map(this::createChatDto).toList();
+    }
+
+    private String createEnterChat(CreateChatMessageRequestDto createDto, Long memberId) {
+        Member member = memberRepository.findByMemberId(memberId)
+                .orElseThrow(() -> new NotFoundException("존재하지 않는 사용자입니다."));
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(member.getNickname());
+        sb.append("님이 ");
+        List<String> memberNicknameList = createDto.getMemberNicknameList();
+        for(int i = 0; i < memberNicknameList.size(); i++) {
+            sb.append(memberNicknameList.get(i));
+            if(i == memberNicknameList.size()-1)
+                sb.append("님을 초대했습니다.");
+            else
+                sb.append("님, ");
+        }
+
+        return sb.toString();
+    }
+
+    private String createLeaveChat(Long memberId) {
+        Member member = memberRepository.findByMemberId(memberId)
+                .orElseThrow(() -> new NotFoundException("존재하지 않는 사용자입니다."));
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(member.getNickname());
+        sb.append("님이 나갔습니다.");
+
+        return sb.toString();
     }
 
     private ChatDto createChatDto(Chat chat) {
