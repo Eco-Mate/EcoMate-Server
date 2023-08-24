@@ -82,4 +82,8 @@ public class Member extends BaseEntity {
     public void updateProfileImage(String fileName) {
         this.profileImage = fileName;
     }
+
+    public void deleteProfileImage() {
+        this.profileImage = null;
+    }
 }
