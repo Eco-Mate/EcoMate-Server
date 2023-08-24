@@ -24,6 +24,9 @@ public class MemberService {
     @Value("${s3-directory.profile}")
     private String profileImageDirectory;
 
+    @Value("${cloud.aws.s3.url}")
+    String s3Url;
+
     private final MemberRepository memberRepository;
     private final AwsS3Service awsS3Service;
 
@@ -33,7 +36,7 @@ public class MemberService {
 
     public List<MemberDto> getAllMember() {
         List<Member> memberList = memberRepository.findAll();
-        return memberList.stream().map(MemberDto::from).toList();
+        return memberList.stream().map(m -> MemberDto.from(s3Url + "/" + profileImageDirectory, m)).toList();
     }
 
     public Member getMemberById(Long memberId) {
@@ -41,7 +44,7 @@ public class MemberService {
     }
 
     public MemberDto getCurrentMember(Long memberId) {
-        return MemberDto.from(findMemberById(memberId));
+        return MemberDto.from(s3Url + "/" + profileImageDirectory, findMemberById(memberId));
     }
 
     @Transactional

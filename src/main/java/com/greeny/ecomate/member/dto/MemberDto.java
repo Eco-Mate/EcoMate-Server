@@ -9,6 +9,7 @@ public record MemberDto(
         Role role,
         Level level,
         Long totalTreePoint,
+        String profileImage,
         String nickname,
         String name,
         String email,
@@ -16,20 +17,21 @@ public record MemberDto(
         Long followerCnt,
         Long followingCnt
 ) {
+    private MemberDto(Member member, String profileImage) {
+         this(member.getMemberId(), member.getRole(), member.getLevel(), member.getTotalTreePoint(), profileImage,
+                member.getNickname(), member.getName(), member.getEmail(), member.getStatusMessage(), member.getFollowerCnt(), member.getFollowingCnt());
+    }
 
-    public static MemberDto from(Member entity) {
-        return new MemberDto(
-            entity.getMemberId(),
-            entity.getRole(),
-            entity.getLevel(),
-            entity.getTotalTreePoint(),
-            entity.getNickname(),
-            entity.getName(),
-            entity.getEmail(),
-            entity.getStatusMessage(),
-            entity.getFollowerCnt(),
-            entity.getFollowingCnt()
-        );
+    private MemberDto(Member member) {
+        this(member.getMemberId(), member.getRole(), member.getLevel(), member.getTotalTreePoint(), null,
+                member.getNickname(), member.getName(), member.getEmail(), member.getStatusMessage(), member.getFollowerCnt(), member.getFollowingCnt());
+    }
+
+    public static MemberDto from(String profileImageUrl, Member member) {
+        if (member.getProfileImage() != null) {
+            return new MemberDto(member, profileImageUrl + "/" + member.getProfileImage());
+        }
+        return new MemberDto(member);
     }
 
 }
