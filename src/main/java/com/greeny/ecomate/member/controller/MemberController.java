@@ -58,4 +58,13 @@ public class MemberController {
         return ApiUtil.success("사용자 프로필 이미지 수정 성공", memberService.updateProfileImage(profileImage, memberId));
     }
 
+    @Operation(summary = "사용자 프로필 이미지 삭제")
+    @DeleteMapping("/profile-image")
+    public ApiUtil.ApiSuccessResult<String> deleteProfileImage(HttpServletRequest req) {
+        Long memberId = (Long) req.getAttribute("memberId");
+        memberService.deleteProfileImage(memberId);
+
+        return ApiUtil.success("사용자 프로필 이미지 삭제 성공", memberId + " 의 프로필 이미지가 삭제되었습니다.");
+    }
+
 }

@@ -67,6 +67,16 @@ public class MemberService {
         return member.getMemberId();
     }
 
+    @Transactional
+    public void deleteProfileImage(Long memberId) {
+        Member member = findMemberById(memberId);
+        if (member.getProfileImage() == null) {
+            throw new IllegalStateException("이미 삭제된 이미지입니다.");
+        }
+        awsS3Service.delete(profileImageDirectory, member.getProfileImage());
+        member.deleteProfileImage();
+    }
+
     private String uploadProfileImage(MultipartFile profileImage) {
         return awsS3Service.upload(profileImageDirectory, profileImage);
     }
@@ -75,4 +85,5 @@ public class MemberService {
         return memberRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new NotFoundException("존재하지 않는 사용자입니다."));
     }
+
 }
