@@ -16,12 +16,14 @@ public class MyChallengeDto {
     private Long challengeId;
     private String challengeTitle;
     private String description;
+    private String image;
     private Long goalCnt;
     private Long treePoint;
     private AchieveType achieveType;
     private Long achieveCnt;
     private Long achievePoint;
     private Long doneCnt;
+    private LocalDateTime createdDate;
 
     public MyChallengeDto(MyChallenge myChallenge) {
         this.myChallengeId = myChallenge.getMyChallengeId();
@@ -30,12 +32,14 @@ public class MyChallengeDto {
         this.challengeId = myChallenge.getChallenge().getChallengeId();
         this.challengeTitle = myChallenge.getChallenge().getChallengeTitle();
         this.description = myChallenge.getChallenge().getDescription();
+        this.image = myChallenge.getChallenge().getImage();
         this.goalCnt = myChallenge.getChallenge().getGoalCnt();
         this.treePoint = myChallenge.getChallenge().getTreePoint();
         this.achieveType = myChallenge.getAchieveType();
         this.achieveCnt = myChallenge.getAchieveCnt();
         this.achievePoint = myChallenge.getAchievePoint();
         this.doneCnt = myChallenge.getDoneCnt();
+        this.createdDate = myChallenge.getCreatedDate();
     }
 
 }
