@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface BoardSaveRepository extends JpaRepository<BoardSave, Long> {
 
@@ -13,4 +14,7 @@ public interface BoardSaveRepository extends JpaRepository<BoardSave, Long> {
     List<BoardSave> findByMemberId(Long memberId);
 
     Boolean existsBoardSaveByBoardAndMemberId(Board board, Long memberId);
+
+    @Query("SELECT s FROM BoardSave s where s.memberId = :memberId and s.board.boardId = :boardId")
+    Optional<BoardSave> findByBoardIdAndMemberId(Long boardId, Long memberId);
 }

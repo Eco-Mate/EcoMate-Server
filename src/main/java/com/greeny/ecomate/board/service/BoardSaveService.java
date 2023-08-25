@@ -33,4 +33,12 @@ public class BoardSaveService {
                 .build();
         return boardSaveRepository.save(boardSave);
     }
+
+    @Transactional
+    public void deleteBoardSave(Long boardId, Long memberId) {
+        BoardSave boardSave = boardSaveRepository.findByBoardIdAndMemberId(boardId, memberId)
+                .orElseThrow(() -> new NotFoundException("삭제할 게시물 저장 기록이 없습니다."));
+
+        boardSaveRepository.delete(boardSave);
+    }
 }
