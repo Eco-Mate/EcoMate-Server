@@ -27,36 +27,43 @@ public class BoardController {
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ApiUtil.ApiSuccessResult<Long> createBoard(@Valid @RequestPart CreateBoardRequestDto createDto, @RequestPart MultipartFile file,
                                                       HttpServletRequest req) {
-        Long memberId = (Long) req.getAttribute("memberId");
+        Long memberId = getMemberId(req);
         return ApiUtil.success("게시물 생성 성공", boardService.createBoard(createDto, file, memberId).getBoardId());
     }
 
     @Operation(summary = "게시물 전체 조회", description = "challengeTitle == null : 챌린지 미등록 게시물, profileImage == null : 기본 프로필 이미지 입니다.")
     @GetMapping
     public ApiUtil.ApiSuccessResult<BoardListDto> getAllBoards(HttpServletRequest req) {
-        Long memberId = (Long) req.getAttribute("memberId");
+        Long memberId = getMemberId(req);
         return ApiUtil.success("게시물 전체 조회 성공", new BoardListDto(boardService.getAllBoards(memberId)));
     }
 
     @Operation(summary = "현재 사용자의 게시물 조회", description = "현재 로그인된 사용자의 게시물을 조회합니다.")
     @GetMapping("/members")
-    public ApiUtil.ApiSuccessResult<BoardListDto> getAllBoardsByCurrentUser(HttpServletRequest req) {
-        Long memberId = (Long) req.getAttribute("memberId");
-        return ApiUtil.success("현재 사용자의 게시물 조회 성공", new BoardListDto(boardService.getAllBoardsByCurrentUser(memberId)));
+    public ApiUtil.ApiSuccessResult<BoardListDto> getAllBoardsByCurrentMember(HttpServletRequest req) {
+        Long memberId = getMemberId(req);
+        return ApiUtil.success("현재 사용자의 게시물 조회 성공", new BoardListDto(boardService.getAllBoardsByCurrentMember(memberId)));
     }
 
     @Operation(summary = "인기 게시물 조회", description = "challengeTitle == null : 챌린지 미등록 게시물, profileImage == null : 기본 프로필 이미지 입니다.")
     @GetMapping("/popular-posts")
     public ApiUtil.ApiSuccessResult<BoardListDto> getAllBoardsSortedByLikeCnt(HttpServletRequest req) {
-        Long memberId = (Long) req.getAttribute("memberId");
+        Long memberId = getMemberId(req);
         return ApiUtil.success("인기 게시물 조회 성공", new BoardListDto(boardService.getAllBoardsSortedByLikeCnt(memberId)));
+    }
+
+    @Operation(summary = "현재 사용자의 저장한 게시물 조회")
+    @GetMapping("/save")
+    public ApiUtil.ApiSuccessResult<BoardListDto> getSavedBoardsByMember(HttpServletRequest req) {
+        Long memberId = getMemberId(req);
+        return ApiUtil.success("현재 사용자의 저장한 게시물 조회 성공", new BoardListDto(boardService.getAllSavedBoardsByCurrentMember(memberId)));
     }
 
     @Operation(summary = "게시물 수정", description = "boardTitle, boardContent 만 수정 가능합니다.")
     @PutMapping("/{boardId}")
     public ApiUtil.ApiSuccessResult<Long> updateBoard(@PathVariable Long boardId, @Valid @RequestBody UpdateBoardRequestDto updateDto,
                                                       HttpServletRequest req) {
-        Long memberId = (Long) req.getAttribute("memberId");
+        Long memberId = getMemberId(req);
         return ApiUtil.success("게시물 수정 성공", boardService.updateBoard(boardId, memberId, updateDto));
     }
 
@@ -64,9 +71,13 @@ public class BoardController {
     @DeleteMapping("/{boardId}")
     public ApiUtil.ApiSuccessResult<String> deleteBoardById(@PathVariable Long boardId,
                                                             HttpServletRequest req) {
-        Long memberId = (Long) req.getAttribute("memberId");
+        Long memberId = getMemberId(req);
         boardService.deleteBoardById(boardId, memberId);
         return ApiUtil.success("게시물 삭제 성공", boardId + " 이(가) 삭제되었습니다.");
+    }
+
+    private Long getMemberId(HttpServletRequest req) {
+        return (Long) req.getAttribute("memberId");
     }
 
 }

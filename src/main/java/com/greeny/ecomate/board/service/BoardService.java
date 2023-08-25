@@ -4,7 +4,9 @@ import com.greeny.ecomate.board.dto.BoardDto;
 import com.greeny.ecomate.board.dto.CreateBoardRequestDto;
 import com.greeny.ecomate.board.dto.UpdateBoardRequestDto;
 import com.greeny.ecomate.board.entity.Board;
+import com.greeny.ecomate.board.entity.BoardSave;
 import com.greeny.ecomate.board.repository.BoardRepository;
+import com.greeny.ecomate.boardSave.repository.BoardSaveRepository;
 import com.greeny.ecomate.challenge.entity.Challenge;
 import com.greeny.ecomate.challenge.repository.ChallengeRepository;
 import com.greeny.ecomate.exception.NotFoundException;
@@ -40,6 +42,7 @@ public class BoardService {
    private final MemberRepository memberRepository;
    private final ChallengeRepository challengeRepository;
    private final LikeRepository likeRepository;
+   private final BoardSaveRepository saveLogRepository;
    private final AwsS3Service awsS3Service;
 
    @Transactional
@@ -71,9 +74,15 @@ public class BoardService {
       return boardList.stream().map(b -> createBoardDto(b, memberId)).toList();
    }
 
-   public List<BoardDto> getAllBoardsByCurrentUser(Long memberId) {
+   public List<BoardDto> getAllBoardsByCurrentMember(Long memberId) {
       List<Board> boardList = boardRepository.findAllByMemberId(memberId);
       return boardList.stream().map(b -> createBoardDto(b, memberId)).toList();
+   }
+
+   public List<BoardDto> getAllSavedBoardsByCurrentMember(Long memberId) {
+      List<BoardSave> saveLogList = saveLogRepository.findByMemberId(memberId);
+
+      return saveLogList.stream().map(s -> createBoardDto(s.getBoard(), memberId)).toList();
    }
 
    @Transactional
