@@ -1,5 +1,6 @@
 package com.greeny.ecomate.member.controller;
 
+import com.greeny.ecomate.member.dto.FollowMemberDto;
 import com.greeny.ecomate.member.service.FollowService;
 import com.greeny.ecomate.member.service.MemberService;
 import com.greeny.ecomate.utils.api.ApiUtil;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @RestController
 @RequestMapping("/v1/follows")
@@ -47,6 +49,14 @@ public class FollowController {
         Long toMemberId = memberService.getMemberByNickname(nickname).getMemberId();
         Long fromMemberId = (Long) req.getAttribute("memberId");
         return ApiUtil.success("팔로우 상태 확인 성공", followService.checkFollowState(fromMemberId, toMemberId));
+    }
+
+    @Operation(summary = "팔로잉 리스트 조회", description = "account token이 필요합니다.")
+    @ApiResponse(description = "팔로잉 리스트 조회")
+    @GetMapping("/followings/{nickname}")
+    public ApiUtil.ApiSuccessResult<List<FollowMemberDto>> getFollowings(@PathVariable String nickname) {
+        Long fromMemberId = memberService.getMemberByNickname(nickname).getMemberId();
+        return ApiUtil.success("팔로잉 리스트 조회 성공", followService.getFollowings(fromMemberId));
     }
 
 }

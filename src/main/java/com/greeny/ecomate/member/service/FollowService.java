@@ -1,5 +1,6 @@
 package com.greeny.ecomate.member.service;
 
+import com.greeny.ecomate.member.dto.FollowMemberDto;
 import com.greeny.ecomate.member.entity.Follow;
 import com.greeny.ecomate.member.entity.Member;
 import com.greeny.ecomate.member.repository.FollowRepository;
@@ -8,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -15,6 +18,7 @@ public class FollowService {
 
     private final FollowRepository followRepository;
     private final MemberRepository memberRepository;
+    private final MemberService memberService;
 
     @Transactional
     public Long follow(Long fromMemberId, Long toMemberId) {
@@ -59,6 +63,16 @@ public class FollowService {
     public void updateFollowerCnt(Long toMemberId, Long cnt) {
         Member toMember = memberRepository.findByMemberId(toMemberId).get();
         toMember.updateFollowerCnt(toMember.getFollowerCnt()+cnt);
+    }
+
+    public List<FollowMemberDto> getFollowings(Long memberId) {
+        List<Long> followings = followRepository.findFollowsByFromMemberId(memberId).stream().map(Follow::getToMemberId).toList();
+        return followings.stream().map(this::createFollowMemberDto).toList();
+    }
+
+    private FollowMemberDto createFollowMemberDto(Long memberId) {
+        Member member = memberService.getMemberById(memberId);
+        return new FollowMemberDto(member);
     }
 
 }
