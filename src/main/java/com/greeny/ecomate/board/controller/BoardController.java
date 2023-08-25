@@ -40,9 +40,9 @@ public class BoardController {
 
     @Operation(summary = "현재 사용자의 게시물 조회", description = "현재 로그인된 사용자의 게시물을 조회합니다.")
     @GetMapping("/members")
-    public ApiUtil.ApiSuccessResult<BoardListDto> getAllBoardsByCurrentUser(HttpServletRequest req) {
+    public ApiUtil.ApiSuccessResult<BoardListDto> getAllBoardsByCurrentMember(HttpServletRequest req) {
         Long memberId = getMemberId(req);
-        return ApiUtil.success("현재 사용자의 게시물 조회 성공", new BoardListDto(boardService.getAllBoardsByCurrentUser(memberId)));
+        return ApiUtil.success("현재 사용자의 게시물 조회 성공", new BoardListDto(boardService.getAllBoardsByCurrentMember(memberId)));
     }
 
     @Operation(summary = "인기 게시물 조회", description = "challengeTitle == null : 챌린지 미등록 게시물, profileImage == null : 기본 프로필 이미지 입니다.")
@@ -50,6 +50,13 @@ public class BoardController {
     public ApiUtil.ApiSuccessResult<BoardListDto> getAllBoardsSortedByLikeCnt(HttpServletRequest req) {
         Long memberId = getMemberId(req);
         return ApiUtil.success("인기 게시물 조회 성공", new BoardListDto(boardService.getAllBoardsSortedByLikeCnt(memberId)));
+    }
+
+    @Operation(summary = "현재 사용자의 저장한 게시물 조회")
+    @GetMapping("/save")
+    public ApiUtil.ApiSuccessResult<BoardListDto> getSavedBoardsByMember(HttpServletRequest req) {
+        Long memberId = getMemberId(req);
+        return ApiUtil.success("현재 사용자의 저장한 게시물 조회 성공", new BoardListDto(boardService.getAllSavedBoardsByCurrentMember(memberId)));
     }
 
     @Operation(summary = "게시물 수정", description = "boardTitle, boardContent 만 수정 가능합니다.")
