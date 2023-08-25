@@ -1,0 +1,35 @@
+package com.greeny.ecomate.board.controller;
+
+import com.greeny.ecomate.board.dto.CreateSaveLogRequestDto;
+import com.greeny.ecomate.board.service.BoardSaveService;
+import com.greeny.ecomate.utils.api.ApiUtil;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+
+@Tag(name = "게시물 저장")
+@RestController
+@RequestMapping("/v1/board-saves")
+@RequiredArgsConstructor
+public class BoardSaveController {
+
+    private final BoardSaveService boardSaveService;
+
+    @PostMapping
+    public ApiUtil.ApiSuccessResult<Long> createBoardSave(@Valid @RequestBody CreateSaveLogRequestDto createDto,
+                                                        HttpServletRequest req) {
+        Long memberId = getMemberId(req);
+        return ApiUtil.success("게시물 저장 성공", boardSaveService.createSaveLog(createDto, memberId).getBoardSaveId());
+    }
+
+    private Long getMemberId(HttpServletRequest req) {
+        return (Long) req.getAttribute("memberId");
+    }
+
+}
