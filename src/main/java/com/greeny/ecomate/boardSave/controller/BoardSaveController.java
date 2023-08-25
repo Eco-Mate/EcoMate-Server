@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-@Tag(name = "게시물 저장")
+@Tag(name = "BoardSave(게시물 저장)")
 @RestController
 @RequestMapping("/v1/board-saves")
 @RequiredArgsConstructor
