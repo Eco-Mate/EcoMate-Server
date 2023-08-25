@@ -70,6 +70,11 @@ public class FollowService {
         return followings.stream().map(this::createFollowMemberDto).toList();
     }
 
+    public List<FollowMemberDto> getFollowers(Long memberId) {
+        List<Long> followers = followRepository.findFollowsByToMemberId(memberId).stream().map(Follow::getFromMemberId).toList();
+        return followers.stream().map(this::createFollowMemberDto).toList();
+    }
+
     private FollowMemberDto createFollowMemberDto(Long memberId) {
         Member member = memberService.getMemberById(memberId);
         return new FollowMemberDto(member);

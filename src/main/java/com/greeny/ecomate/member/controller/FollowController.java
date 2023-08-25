@@ -59,4 +59,12 @@ public class FollowController {
         return ApiUtil.success("팔로잉 리스트 조회 성공", followService.getFollowings(fromMemberId));
     }
 
+    @Operation(summary = "팔로워 리스트 조회", description = "account token이 필요합니다.")
+    @ApiResponse(description = "팔로워 리스트 조회")
+    @GetMapping("/followers/{nickname}")
+    public ApiUtil.ApiSuccessResult<List<FollowMemberDto>> getFollowers(@PathVariable String nickname) {
+        Long toMemberId = memberService.getMemberByNickname(nickname).getMemberId();
+        return ApiUtil.success("팔로워 리스트 조회 성공", followService.getFollowers(toMemberId));
+    }
+
 }
