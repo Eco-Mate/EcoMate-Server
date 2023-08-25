@@ -73,6 +73,9 @@ public class Member extends BaseEntity {
         this.totalTreePoint = treePoint;
     }
 
+    public void updateFollowerCnt(Long cnt) { this.followerCnt = cnt; }
+    public void updateFollowingCnt(Long cnt) { this.followingCnt = cnt; }
+
     public void update(String nickname, String email, String statusMessage) {
         this.nickname = nickname;
         this.email = email;

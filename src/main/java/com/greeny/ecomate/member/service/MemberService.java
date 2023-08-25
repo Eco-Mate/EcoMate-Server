@@ -43,6 +43,8 @@ public class MemberService {
         return findMemberById(memberId);
     }
 
+    public Member getMemberByNickname(String nickname) { return findMemberByNickname(nickname); }
+
     public MemberDto getCurrentMember(Long memberId) {
         return MemberDto.from(s3Url + "/" + profileImageDirectory, findMemberById(memberId));
     }
@@ -83,6 +85,11 @@ public class MemberService {
 
     private Member findMemberById(Long memberId) {
         return memberRepository.findByMemberId(memberId)
+                .orElseThrow(() -> new NotFoundException("존재하지 않는 사용자입니다."));
+    }
+
+    private Member findMemberByNickname(String nickname) {
+        return memberRepository.findByNickname(nickname)
                 .orElseThrow(() -> new NotFoundException("존재하지 않는 사용자입니다."));
     }
 
