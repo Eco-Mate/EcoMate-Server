@@ -1,7 +1,7 @@
-package com.greeny.ecomate.board.controller;
+package com.greeny.ecomate.boardSave.controller;
 
-import com.greeny.ecomate.board.dto.CreateSaveLogRequestDto;
-import com.greeny.ecomate.board.service.BoardSaveService;
+import com.greeny.ecomate.boardSave.dto.CreateBoardSaveRequestDto;
+import com.greeny.ecomate.boardSave.service.BoardSaveService;
 import com.greeny.ecomate.utils.api.ApiUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -21,7 +21,7 @@ public class BoardSaveController {
 
     @Operation(summary = "게시물 저장")
     @PostMapping
-    public ApiUtil.ApiSuccessResult<Long> createBoardSave(@Valid @RequestBody CreateSaveLogRequestDto createDto,
+    public ApiUtil.ApiSuccessResult<Long> createBoardSave(@Valid @RequestBody CreateBoardSaveRequestDto createDto,
                                                         HttpServletRequest req) {
         Long memberId = getMemberId(req);
         return ApiUtil.success("게시물 저장 성공", boardSaveService.createSaveLog(createDto, memberId).getBoardSaveId());

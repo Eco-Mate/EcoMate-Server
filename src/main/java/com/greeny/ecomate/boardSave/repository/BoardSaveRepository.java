@@ -1,4 +1,4 @@
-package com.greeny.ecomate.board.repository;
+package com.greeny.ecomate.boardSave.repository;
 
 import com.greeny.ecomate.board.entity.Board;
 import com.greeny.ecomate.board.entity.BoardSave;

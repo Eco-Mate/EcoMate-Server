@@ -1,11 +1,11 @@
-package com.greeny.ecomate.board.service;
+package com.greeny.ecomate.boardSave.service;
 
 import com.greeny.ecomate.board.entity.Board;
 import com.greeny.ecomate.board.repository.BoardRepository;
 import com.greeny.ecomate.exception.NotFoundException;
-import com.greeny.ecomate.board.dto.CreateSaveLogRequestDto;
+import com.greeny.ecomate.boardSave.dto.CreateBoardSaveRequestDto;
 import com.greeny.ecomate.board.entity.BoardSave;
-import com.greeny.ecomate.board.repository.BoardSaveRepository;
+import com.greeny.ecomate.boardSave.repository.BoardSaveRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +19,7 @@ public class BoardSaveService {
     private final BoardRepository boardRepository;
 
     @Transactional
-    public BoardSave createSaveLog(CreateSaveLogRequestDto createDto, Long memberId) {
+    public BoardSave createSaveLog(CreateBoardSaveRequestDto createDto, Long memberId) {
         Board board = boardRepository.findById(createDto.getBoardId())
                 .orElseThrow(() -> new NotFoundException("존재하지 않는 게시물입니다."));
 

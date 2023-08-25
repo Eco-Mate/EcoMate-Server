@@ -6,7 +6,7 @@ import com.greeny.ecomate.board.dto.UpdateBoardRequestDto;
 import com.greeny.ecomate.board.entity.Board;
 import com.greeny.ecomate.board.entity.BoardSave;
 import com.greeny.ecomate.board.repository.BoardRepository;
-import com.greeny.ecomate.board.repository.BoardSaveRepository;
+import com.greeny.ecomate.boardSave.repository.BoardSaveRepository;
 import com.greeny.ecomate.challenge.entity.Challenge;
 import com.greeny.ecomate.challenge.repository.ChallengeRepository;
 import com.greeny.ecomate.exception.NotFoundException;
