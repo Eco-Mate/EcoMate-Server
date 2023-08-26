@@ -44,6 +44,12 @@ public class MemberController {
         return ApiUtil.success("현재 사용자 정보 조회 성공", memberService.getCurrentMember(memberId));
     }
 
+    @Operation(summary = "특정 사용자의 정보 조회")
+    @GetMapping("/{memberId}")
+    public ApiUtil.ApiSuccessResult<MemberDto> getMemberByMemberId(@PathVariable Long memberId) {
+        return ApiUtil.success("특정 사용자의 정보 조회 성공", memberService.getMemberByMemberId(memberId));
+    }
+
     @Operation(summary = "사용자 정보 수정", description = "프로필 이미지를 제외한 name, nickname, email 수정 가능")
     @PutMapping
     public ApiUtil.ApiSuccessResult<Long> updateMember(@Valid @RequestBody UpdateMemberRequestDto updateDto, HttpServletRequest req) {
