@@ -45,6 +45,13 @@ public class BoardController {
         return ApiUtil.success("현재 사용자의 게시물 조회 성공", new BoardListDto(boardService.getAllBoardsByCurrentMember(memberId)));
     }
 
+    @Operation(summary = "특정 사용자의 게시물 조회")
+    @GetMapping("/members/{reqMemberId}")
+    public ApiUtil.ApiSuccessResult<BoardListDto> getAllBoardsByMemberId(@PathVariable Long reqMemberId, HttpServletRequest req) {
+        Long memberId = getMemberId(req);
+        return ApiUtil.success("특정 사용자의 게시물 조회 성공", new BoardListDto(boardService.getAllBoardsByMemberId(reqMemberId, memberId)));
+    }
+
     @Operation(summary = "인기 게시물 조회", description = "challengeTitle == null : 챌린지 미등록 게시물, profileImage == null : 기본 프로필 이미지 입니다.")
     @GetMapping("/popular-posts")
     public ApiUtil.ApiSuccessResult<BoardListDto> getAllBoardsSortedByLikeCnt(HttpServletRequest req) {
