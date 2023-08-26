@@ -53,6 +53,13 @@ public class ChallengeController {
         return ApiUtil.success("챌린지 전체 조회 성공", challengeService.findAllChallenge());
     }
 
+    @ApiResponse(description = "memberId가 도전하지 않은 챌린지 전체 조회")
+    @GetMapping("/unchallenged")
+    public ApiUtil.ApiSuccessResult<List<ChallengeDto>> getBeforeStartChallenges(HttpServletRequest req) {
+        Long memberId = (Long) req.getAttribute("memberId");
+        return ApiUtil.success("도전하지 않은 챌린지 전체 조회 성공", challengeService.findBeforeStartChallenge(memberId));
+    }
+
     @ApiResponse(description = "challengeId로 해당 챌린지를 도전하고 있는 회원 수 조회")
     @GetMapping("/cnt/{challengeId}")
     public ApiUtil.ApiSuccessResult<Long> getChallengeInCnt(@PathVariable Long challengeId) {

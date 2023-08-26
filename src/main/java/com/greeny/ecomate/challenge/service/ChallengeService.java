@@ -3,6 +3,7 @@ package com.greeny.ecomate.challenge.service;
 
 import com.greeny.ecomate.challenge.dto.ChallengeDto;
 import com.greeny.ecomate.challenge.dto.CreateChallengeRequestDto;
+import com.greeny.ecomate.challenge.dto.MyChallengeDto;
 import com.greeny.ecomate.challenge.dto.UpdateChallengeRequestDto;
 import com.greeny.ecomate.challenge.entity.AchieveType;
 import com.greeny.ecomate.challenge.entity.Challenge;
@@ -34,6 +35,7 @@ public class ChallengeService {
     private final MyChallengeRepository myChallengeRepository;
 
     private final AwsS3Service awsS3Service;
+    private final MyChallengeService myChallengeService;
 
     private String uploadImage(MultipartFile file){
         return awsS3Service.upload(challengeDirectory, file);
@@ -57,6 +59,12 @@ public class ChallengeService {
         return challengeRepository.save(challenge).getChallengeId();
     }
 
+    private Challenge findChallengeById(Long challengeId) {
+        Challenge findChallenge = challengeRepository.findById(challengeId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 챌린지입니다."));
+        return findChallenge;
+    }
+
     public ChallengeDto getChallengeById(Long challengeId) {
         Challenge findChallenge = challengeRepository.findById(challengeId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 챌린지입니다."));
@@ -70,6 +78,16 @@ public class ChallengeService {
     public List<ChallengeDto> findAllChallenge() {
         List<Challenge> challengeList = challengeRepository.findAll();
         return challengeList.stream().map(this::createChallengeDto).toList();
+    }
+
+    public List<ChallengeDto> findBeforeStartChallenge(Long memberId) {
+        List<Long> afterStartChallengeList = myChallengeService.getAllMyChallengeByMemberId(memberId).stream().map(MyChallengeDto::getChallengeId).toList();
+        List<Challenge> beforeStartChallengeList = challengeRepository.findAll();
+        for (Long idx : afterStartChallengeList) {
+            Challenge challenge = findChallengeById(idx);
+            beforeStartChallengeList.remove(challenge);
+        }
+        return beforeStartChallengeList.stream().map(this::createChallengeDto).toList();
     }
 
     public Long getProceedingChallengeCnt(Long challengeId) {
