@@ -4,6 +4,7 @@ import com.greeny.ecomate.utils.api.ApiUtil;
 import com.greeny.ecomate.websocket.dto.ChatRoomResponseDto;
 import com.greeny.ecomate.websocket.dto.CreateChatRoomRequestDto;
 import com.greeny.ecomate.websocket.dto.MemberToChatRoomDto;
+import com.greeny.ecomate.websocket.dto.UpdateChatRoomRequestDto;
 import com.greeny.ecomate.websocket.service.ChatRoomService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -53,13 +54,25 @@ public class ChatRoomController {
         Long memberId = (Long) req.getAttribute("memberId");
         return ApiUtil.success("채팅방 생성 후 멤버 초대 성공", chatRoomService.addMemberToChatRoom(chatRoomId, dto, memberId));
     }
-
+  
+    @Operation(summary = "채팅방 이름 수정")
+    @PutMapping("/{roomId}")
+    public ApiUtil.ApiSuccessResult<Long> updateChatRoomName(@PathVariable Long roomId, @RequestBody UpdateChatRoomRequestDto updateDto,
+                                                             HttpServletRequest req) {
+        Long memberId = getMemberId(req);
+        return ApiUtil.success("채팅방 이름 수정 성공", chatRoomService.updateChatRoomName(roomId, memberId, updateDto).getChatJoinId());
+    }
+  
     @Operation(summary = "채팅방 나가기", description = "account token이 필요합니다.")
     @ApiResponse(description = "채팅방 나가기")
     @DeleteMapping("/{chatRoomId}")
     public ApiUtil.ApiSuccessResult<String> leaveChatRoom(@PathVariable Long chatRoomId, HttpServletRequest req) {
         Long memberId = (Long) req.getAttribute("memberId");
         return ApiUtil.success("채팅방 나가기 성공", chatRoomService.leaveChatRoom(chatRoomId, memberId));
+    }
+
+    private Long getMemberId(HttpServletRequest req) {
+        return (Long) req.getAttribute("memberId");
     }
 
 }

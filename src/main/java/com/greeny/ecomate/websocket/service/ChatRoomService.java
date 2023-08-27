@@ -7,6 +7,7 @@ import com.greeny.ecomate.member.repository.MemberRepository;
 import com.greeny.ecomate.websocket.dto.ChatRoomResponseDto;
 import com.greeny.ecomate.websocket.dto.CreateChatRoomRequestDto;
 import com.greeny.ecomate.websocket.dto.MemberToChatRoomDto;
+import com.greeny.ecomate.websocket.dto.UpdateChatRoomRequestDto;
 import com.greeny.ecomate.websocket.entity.ChatJoin;
 import com.greeny.ecomate.websocket.entity.ChatRoom;
 import com.greeny.ecomate.websocket.repository.ChatJoinRepository;
@@ -103,6 +104,17 @@ public class ChatRoomService {
         return chatRoomId;
     }
 
+    public ChatJoin updateChatRoomName(Long roomId, Long memberId, UpdateChatRoomRequestDto updateDto) {
+        ChatRoom chatRoom = chatRoomRepository.findById(roomId)
+                .orElseThrow(() -> new NotFoundException("존재하지 않는 채팅방입니다."));
+
+        ChatJoin chatJoin = chatJoinRepository.findChatJoinByChatRoomIdAndMemberId(roomId, memberId)
+                .orElseThrow(() -> new NotFoundException("해당 채팅방에 참여하고 있지 않습니다."));
+        chatRoom.updateRoomName(updateDto.getRoomName());
+
+        return chatJoin;
+    }
+  
     @Transactional
     public String leaveChatRoom(Long chatRoomId, Long memberId) {
         ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
