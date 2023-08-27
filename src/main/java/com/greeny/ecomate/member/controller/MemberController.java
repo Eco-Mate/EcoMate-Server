@@ -25,6 +25,7 @@ public class MemberController {
 
     private final MemberService memberService;
 
+    @Operation(summary = "사용자 생성")
     @ApiResponse(description = "사용자 생성")
     @PostMapping
     public ApiUtil.ApiSuccessResult<Long> createMember(@RequestBody CreateMemberRequestDto createDto) {
