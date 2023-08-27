@@ -39,6 +39,14 @@ public class BoardSaveController {
         return ApiUtil.success("게시물 저장 취소 성공", new BoardSaveDto(false));
     }
 
+    @Operation(summary = "게시물 저장 여부 확인")
+    @GetMapping("/is-saved/{boardId}")
+    public ApiUtil.ApiSuccessResult<BoardSaveDto> checkBoardSave(@PathVariable Long boardId,
+                                                            HttpServletRequest req) {
+        Long memberId = getMemberId(req);
+        return ApiUtil.success("게시물 저장 여부 조회 성공", new BoardSaveDto(boardSaveService.checkBoardSave(boardId, memberId)));
+    }
+
     private Long getMemberId(HttpServletRequest req) {
         return (Long) req.getAttribute("memberId");
     }
