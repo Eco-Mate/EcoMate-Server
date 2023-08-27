@@ -3,7 +3,6 @@ package com.greeny.ecomate.websocket.controller;
 import com.greeny.ecomate.utils.api.ApiUtil;
 import com.greeny.ecomate.websocket.dto.ChatRoomResponseDto;
 import com.greeny.ecomate.websocket.dto.CreateChatRoomRequestDto;
-import com.greeny.ecomate.websocket.dto.MemberToChatRoomDto;
 import com.greeny.ecomate.websocket.service.ChatRoomService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -44,14 +43,6 @@ public class ChatRoomController {
     @GetMapping("/search-members")
     public ApiUtil.ApiSuccessResult<List<String>> searchMemberByNickname(@RequestParam String nickname, HttpServletRequest req) {
         return ApiUtil.success("멤버 닉네임 검색 성공", chatRoomService.searchMemberByNickname(nickname));
-    }
-
-    @Operation(summary = "채팅방 생성 후 멤버 초대", description = "account token이 필요합니다.")
-    @ApiResponse(description = "채팅방 생성 후 맴버 초대")
-    @PostMapping("/{chatRoomId}")
-    public ApiUtil.ApiSuccessResult<Long> addMemberToChatRoom(@PathVariable Long chatRoomId, @RequestBody MemberToChatRoomDto dto, HttpServletRequest req) {
-        Long memberId = (Long) req.getAttribute("memberId");
-        return ApiUtil.success("채팅방 생성 후 멤버 초대 성공", chatRoomService.addMemberToChatRoom(chatRoomId, dto, memberId));
     }
 
 }
