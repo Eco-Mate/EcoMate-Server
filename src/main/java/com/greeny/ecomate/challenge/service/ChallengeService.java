@@ -34,6 +34,7 @@ public class ChallengeService {
 
     private final ChallengeRepository challengeRepository;
     private final MyChallengeRepository myChallengeRepository;
+    private final MemberRepository memberRepository;
 
     private final AwsS3Service awsS3Service;
     private final MyChallengeService myChallengeService;
@@ -85,9 +86,14 @@ public class ChallengeService {
         return challengeList.stream().map(this::createChallengeDto).toList();
     }
 
-    public List<ChallengeDto> findBeforeStartChallenge(Long memberId) {
-        List<Long> afterStartChallengeList = myChallengeService.getAllMyChallengeByMemberId(memberId).stream().map(MyChallengeDto::getChallengeId).toList();
-        List<Challenge> beforeStartChallengeList = challengeRepository.findAll();
+    public List<ChallengeDto> findBeforeStartChallenge(Member member) {
+        List<Long> afterStartChallengeList = myChallengeService.getAllMyChallengeByMemberId(member.getMemberId()).stream().map(MyChallengeDto::getChallengeId).toList();
+        List<Challenge> beforeStartChallengeList;
+        if(member.getRole() != Role.ROLE_ADMIN)
+            beforeStartChallengeList = challengeRepository.findChallengesByActiveYn(true);
+        else
+            beforeStartChallengeList = challengeRepository.findAll();
+
         for (Long idx : afterStartChallengeList) {
             Challenge challenge = findChallengeById(idx);
             beforeStartChallengeList.remove(challenge);

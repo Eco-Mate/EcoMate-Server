@@ -47,7 +47,7 @@ public class ChallengeController {
         return ApiUtil.success("챌린지 조회 성공", challengeService.getChallengeById(challengeId));
     }
 
-    @Operation(summary = "챌린지 전체 조회", description = "account token이 필요합니다.")
+    @Operation(summary = "챌린지 전체 조회", description = "account token이 필요합니다. 권한에 따라 활성화 여부에 의해 필터링된 챌린지 리스트를 조회할 수 있습니다.")
     @ApiResponse(description = "챌린지 전체 조회")
     @GetMapping
     public ApiUtil.ApiSuccessResult<List<ChallengeDto>> getAllChallenge(HttpServletRequest req) {
@@ -56,12 +56,13 @@ public class ChallengeController {
         return ApiUtil.success("챌린지 전체 조회 성공", challengeService.findAllChallenge(member));
     }
 
-    @Operation(summary = "로그인된 사용자가 도전하지 않은 챌린지 전체 조회")
+    @Operation(summary = "로그인된 사용자가 도전하지 않은 챌린지 전체 조회", description = "account token이 필요합니다.")
     @ApiResponse(description = "로그인된 사용자가 도전하지 않은 챌린지 전체 조회")
     @GetMapping("/unchallenged")
     public ApiUtil.ApiSuccessResult<List<ChallengeDto>> getBeforeStartChallenges(HttpServletRequest req) {
         Long memberId = (Long) req.getAttribute("memberId");
-        return ApiUtil.success("도전하지 않은 챌린지 전체 조회 성공", challengeService.findBeforeStartChallenge(memberId));
+        Member member = memberService.getMemberById(memberId);
+        return ApiUtil.success("도전하지 않은 챌린지 전체 조회 성공", challengeService.findBeforeStartChallenge(member));
     }
 
     @Operation(summary = "challengeId로 해당 챌린지를 도전하고 있는 회원 수 조회")
