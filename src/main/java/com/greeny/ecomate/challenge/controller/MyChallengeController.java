@@ -2,10 +2,7 @@ package com.greeny.ecomate.challenge.controller;
 
 import com.greeny.ecomate.challenge.dto.MyChallengeDto;
 import com.greeny.ecomate.challenge.service.MyChallengeService;
-import com.greeny.ecomate.member.service.MemberService;
-import com.greeny.ecomate.security.provider.JwtProvider;
 import com.greeny.ecomate.utils.api.ApiUtil;
-import com.greeny.ecomate.utils.jwt.JwtExtractor;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +18,6 @@ import java.util.List;
 public class MyChallengeController {
 
     private final MyChallengeService myChallengeService;
-    private final MemberService memberService;
-    private final JwtProvider jwtProvider;
 
     @ApiResponse(description = "챌린지 새도전 or 재도전")
     @PostMapping("/{challengeId}")
@@ -33,39 +28,45 @@ public class MyChallengeController {
         return ApiUtil.success("챌린지 도전 시작 성공", myChallengeId);
     }
 
-    @ApiResponse(description = "memberId 별 도전 챌린지 전체 조회")
+    @ApiResponse(description = "로그인된 사용자의 도전 챌린지 전체 조회")
     @GetMapping("/member/all")
-    public ApiUtil.ApiSuccessResult<List<MyChallengeDto>> getAllMyChallengeByMemberId(HttpServletRequest req) {
+    public ApiUtil.ApiSuccessResult<List<MyChallengeDto>> getAllMyChallenges(HttpServletRequest req) {
         Long memberId = (Long) req.getAttribute("memberId");
-        return ApiUtil.success("사용자별 도전 챌린지 조회 성공", myChallengeService.getAllMyChallengeByMemberId(memberId));
+        return ApiUtil.success("로그인된 사용자의 도전 챌린지 조회 성공", myChallengeService.getAllMyChallengeByMemberId(memberId));
     }
 
-    @ApiResponse(description = "memberId 별 진행 중인 챌린지 전체 조회")
+    @ApiResponse(description = "로그인된 사용자의 진행 중인 챌린지 전체 조회")
     @GetMapping("/member/proceeding")
-    public ApiUtil.ApiSuccessResult<List<MyChallengeDto>> getAllMyChallengeProceedingByMemberId(HttpServletRequest req) {
+    public ApiUtil.ApiSuccessResult<List<MyChallengeDto>> getAllMyChallengesProceeding(HttpServletRequest req) {
         Long memberId = (Long) req.getAttribute("memberId");
-        return ApiUtil.success("사용자별 진행 중인 챌린지 전체 조회 성공", myChallengeService.getAllMyChallengeProceedingByMemberId(memberId));
+        return ApiUtil.success("로그인된 사용자의 진행 중인 챌린지 전체 조회 성공", myChallengeService.getAllMyChallengeProceedingByMemberId(memberId));
     }
 
-    @ApiResponse(description = "memberId 별 완료한 챌린지 전체 조회")
+    @ApiResponse(description = "로그인된 사용자의 완료한 챌린지 전체 조회")
     @GetMapping("/member/finish")
-    public ApiUtil.ApiSuccessResult<List<MyChallengeDto>> getAllMyChallengeDoneByMemberId(HttpServletRequest req) {
+    public ApiUtil.ApiSuccessResult<List<MyChallengeDto>> getAllMyChallengesDone(HttpServletRequest req) {
         Long memberId = (Long) req.getAttribute("memberId");
-        return ApiUtil.success("사용자별 완료한 챌린지 전체 조회 성공", myChallengeService.getAllMyChallengeFinishByMemberId(memberId));
+        return ApiUtil.success("로그인된 사용자의 완료한 챌린지 전체 조회 성공", myChallengeService.getAllMyChallengeFinishByMemberId(memberId));
     }
 
-    @ApiResponse(description = "memberId에 해당하는 사용자가 진행 중인 챌린지 수 조회")
+    @ApiResponse(description = "로그인된 사용자의 진행 중인 챌린지 수 조회")
     @GetMapping("/member/proceeding/cnt")
-    public ApiUtil.ApiSuccessResult<Long> getMyChallengeProceedingCntByMemberId(HttpServletRequest req) {
+    public ApiUtil.ApiSuccessResult<Long> getMyChallengeProceedingCnt(HttpServletRequest req) {
         Long memberId = (Long) req.getAttribute("memberId");
-        return ApiUtil.success("해당 사용자가 도전 중인 챌린지 수 조회 성공", myChallengeService.getMyChallengeProceedingCntByMemberId(memberId));
+        return ApiUtil.success("로그인된 사용자가 도전 중인 챌린지 수 조회 성공", myChallengeService.getMyChallengeProceedingCntByMemberId(memberId));
     }
 
-    @ApiResponse(description = "memberId에 해당하는 사용자가 완료한 챌린지 수 조회")
+    @ApiResponse(description = "로그인된 사용자의 완료한 챌린지 수 조회")
     @GetMapping("/member/finish/cnt")
-    public ApiUtil.ApiSuccessResult<Long> getMyChallengeDoneCntByMemberId(HttpServletRequest req) {
+    public ApiUtil.ApiSuccessResult<Long> getMyChallengeDoneCnt(HttpServletRequest req) {
         Long memberId = (Long) req.getAttribute("memberId");
-        return ApiUtil.success("해당 사용자가 도전 완료한 챌린지 수 조회 성공", myChallengeService.getMyChallengeFinishCntByMemberId(memberId));
+        return ApiUtil.success("로그인된 사용자가 도전 완료한 챌린지 수 조회 성공", myChallengeService.getMyChallengeFinishCntByMemberId(memberId));
+    }
+
+    @ApiResponse(description = "memberId에 해당하는 사용자의 진행 중인 챌린지 전체 조회")
+    @GetMapping("/member/{memberId}/proceeding")
+    public ApiUtil.ApiSuccessResult<List<MyChallengeDto>> getAllMyChallengeProceedingByMemberId(@PathVariable Long memberId) {
+        return ApiUtil.success("해당 사용자의 진행 중인 챌린지 전제 조회 성공", myChallengeService.getAllMyChallengeProceedingByMemberId(memberId));
     }
 
     @ApiResponse(description = "myChallengeId로 도전 챌린지 단일 조회")
