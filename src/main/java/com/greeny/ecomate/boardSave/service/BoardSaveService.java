@@ -41,4 +41,11 @@ public class BoardSaveService {
 
         boardSaveRepository.delete(boardSave);
     }
+
+    public Boolean checkBoardSave(Long boardId, Long memberId) {
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(() -> new NotFoundException("존재하지 않는 게시물입니다."));
+
+        return boardSaveRepository.existsBoardSaveByBoardAndMemberId(board, memberId);
+    }
 }
