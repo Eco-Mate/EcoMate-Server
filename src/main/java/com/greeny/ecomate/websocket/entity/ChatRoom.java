@@ -26,4 +26,7 @@ public class ChatRoom extends BaseEntity {
         this.name = name;
     }
 
+    public void updateRoomName(String roomName) {
+        this.name = roomName;
+    }
 }
