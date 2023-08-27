@@ -49,6 +49,10 @@ public class MemberService {
         return MemberDto.from(s3Url + "/" + profileImageDirectory, findMemberById(memberId));
     }
 
+    public MemberDto getMemberByMemberId(Long memberId) {
+        return MemberDto.from(s3Url + "/" + profileImageDirectory, findMemberById(memberId));
+    }
+
     @Transactional
     public Long updateMember(UpdateMemberRequestDto updateDto, Long memberId) {
         Member member = findMemberById(memberId);

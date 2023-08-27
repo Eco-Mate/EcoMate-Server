@@ -79,6 +79,11 @@ public class BoardService {
       return boardList.stream().map(b -> createBoardDto(b, memberId)).toList();
    }
 
+   public List<BoardDto> getAllBoardsByMemberId(Long reqMemberId, Long memberId) {
+      List<Board> boardList = boardRepository.findAllByMemberId(reqMemberId);
+      return boardList.stream().map(b -> createBoardDto(b, memberId)).toList();
+   }
+
    public List<BoardDto> getAllSavedBoardsByCurrentMember(Long memberId) {
       List<BoardSave> saveLogList = saveLogRepository.findByMemberId(memberId);
 

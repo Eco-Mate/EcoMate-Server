@@ -1,5 +1,7 @@
 package com.greeny.ecomate.boardSave.controller;
 
+import com.greeny.ecomate.board.entity.Board;
+import com.greeny.ecomate.boardSave.dto.BoardSaveDto;
 import com.greeny.ecomate.boardSave.dto.CreateBoardSaveRequestDto;
 import com.greeny.ecomate.boardSave.service.BoardSaveService;
 import com.greeny.ecomate.utils.api.ApiUtil;
@@ -21,19 +23,28 @@ public class BoardSaveController {
 
     @Operation(summary = "게시물 저장")
     @PostMapping
-    public ApiUtil.ApiSuccessResult<Long> createBoardSave(@Valid @RequestBody CreateBoardSaveRequestDto createDto,
+    public ApiUtil.ApiSuccessResult<BoardSaveDto> createBoardSave(@Valid @RequestBody CreateBoardSaveRequestDto createDto,
                                                         HttpServletRequest req) {
         Long memberId = getMemberId(req);
-        return ApiUtil.success("게시물 저장 성공", boardSaveService.createSaveLog(createDto, memberId).getBoardSaveId());
+        boardSaveService.createSaveLog(createDto, memberId);
+        return ApiUtil.success("게시물 저장 성공", new BoardSaveDto(true));
     }
 
     @Operation(summary = "게시물 저장 취소")
     @DeleteMapping("/{boardId}")
-    public ApiUtil.ApiSuccessResult<String> deleteBoardSave(@PathVariable Long boardId,
-                                                            HttpServletRequest req) {
+    public ApiUtil.ApiSuccessResult<BoardSaveDto> deleteBoardSave(@PathVariable Long boardId,
+                                                           HttpServletRequest req) {
         Long memberId = getMemberId(req);
         boardSaveService.deleteBoardSave(boardId, memberId);
-        return ApiUtil.success("게시물 저장 취소 성공", boardId + " 의 게시물 저장을 취소했습니다.");
+        return ApiUtil.success("게시물 저장 취소 성공", new BoardSaveDto(false));
+    }
+
+    @Operation(summary = "게시물 저장 여부 확인")
+    @GetMapping("/is-saved/{boardId}")
+    public ApiUtil.ApiSuccessResult<BoardSaveDto> checkBoardSave(@PathVariable Long boardId,
+                                                            HttpServletRequest req) {
+        Long memberId = getMemberId(req);
+        return ApiUtil.success("게시물 저장 여부 조회 성공", new BoardSaveDto(boardSaveService.checkBoardSave(boardId, memberId)));
     }
 
     private Long getMemberId(HttpServletRequest req) {

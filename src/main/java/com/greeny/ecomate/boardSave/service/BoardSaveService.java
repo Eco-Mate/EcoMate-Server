@@ -19,7 +19,7 @@ public class BoardSaveService {
     private final BoardRepository boardRepository;
 
     @Transactional
-    public BoardSave createSaveLog(CreateBoardSaveRequestDto createDto, Long memberId) {
+    public void createSaveLog(CreateBoardSaveRequestDto createDto, Long memberId) {
         Board board = boardRepository.findById(createDto.getBoardId())
                 .orElseThrow(() -> new NotFoundException("존재하지 않는 게시물입니다."));
 
@@ -31,7 +31,7 @@ public class BoardSaveService {
                 .board(board)
                 .memberId(memberId)
                 .build();
-        return boardSaveRepository.save(boardSave);
+        boardSaveRepository.save(boardSave);
     }
 
     @Transactional
@@ -40,5 +40,12 @@ public class BoardSaveService {
                 .orElseThrow(() -> new NotFoundException("삭제할 게시물 저장 기록이 없습니다."));
 
         boardSaveRepository.delete(boardSave);
+    }
+
+    public Boolean checkBoardSave(Long boardId, Long memberId) {
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(() -> new NotFoundException("존재하지 않는 게시물입니다."));
+
+        return boardSaveRepository.existsBoardSaveByBoardAndMemberId(board, memberId);
     }
 }
