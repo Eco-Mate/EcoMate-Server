@@ -16,7 +16,7 @@ public interface MemberRepository extends
         QuerydslPredicateExecutor<Member>,
         QuerydslBinderCustomizer<QMember> {
 
-    Optional<Member> findByMemberId(Long member);
+    Optional<Member> findByMemberId(Long memberId);
 
     Optional<Member> findByNickname(String nickname);
 
