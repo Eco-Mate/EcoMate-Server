@@ -11,6 +11,7 @@ import com.greeny.ecomate.challenge.repository.ChallengeRepository;
 import com.greeny.ecomate.challenge.repository.MyChallengeRepository;
 import com.greeny.ecomate.member.entity.Member;
 import com.greeny.ecomate.member.entity.Role;
+import com.greeny.ecomate.member.repository.MemberRepository;
 import com.greeny.ecomate.s3.service.AwsS3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -75,8 +76,12 @@ public class ChallengeService {
         return new ChallengeDto(challenge, s3Url, challengeDirectory);
     }
 
-    public List<ChallengeDto> findAllChallenge() {
-        List<Challenge> challengeList = challengeRepository.findAll();
+    public List<ChallengeDto> findAllChallenge(Member member) {
+        List<Challenge> challengeList;
+        if(member.getRole() != Role.ROLE_ADMIN)
+            challengeList = challengeRepository.findChallengesByActiveYn(true);
+        else
+            challengeList = challengeRepository.findAll();
         return challengeList.stream().map(this::createChallengeDto).toList();
     }
 

@@ -47,11 +47,13 @@ public class ChallengeController {
         return ApiUtil.success("챌린지 조회 성공", challengeService.getChallengeById(challengeId));
     }
 
-    @Operation(summary = "챌린지 전체 조회")
+    @Operation(summary = "챌린지 전체 조회", description = "account token이 필요합니다.")
     @ApiResponse(description = "챌린지 전체 조회")
     @GetMapping
-    public ApiUtil.ApiSuccessResult<List<ChallengeDto>> getAllChallenge() {
-        return ApiUtil.success("챌린지 전체 조회 성공", challengeService.findAllChallenge());
+    public ApiUtil.ApiSuccessResult<List<ChallengeDto>> getAllChallenge(HttpServletRequest req) {
+        Long memberId = (Long) req.getAttribute("memberId");
+        Member member = memberService.getMemberById(memberId);
+        return ApiUtil.success("챌린지 전체 조회 성공", challengeService.findAllChallenge(member));
     }
 
     @Operation(summary = "로그인된 사용자가 도전하지 않은 챌린지 전체 조회")
