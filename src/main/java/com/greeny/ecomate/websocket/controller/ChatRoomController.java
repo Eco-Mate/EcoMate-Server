@@ -54,4 +54,12 @@ public class ChatRoomController {
         return ApiUtil.success("채팅방 생성 후 멤버 초대 성공", chatRoomService.addMemberToChatRoom(chatRoomId, dto, memberId));
     }
 
+    @Operation(summary = "채팅방 나가기", description = "account token이 필요합니다.")
+    @ApiResponse(description = "채팅방 나가기")
+    @DeleteMapping("/{chatRoomId}")
+    public ApiUtil.ApiSuccessResult<String> leaveChatRoom(@PathVariable Long chatRoomId, HttpServletRequest req) {
+        Long memberId = (Long) req.getAttribute("memberId");
+        return ApiUtil.success("채팅방 나가기 성공", chatRoomService.leaveChatRoom(chatRoomId, memberId));
+    }
+
 }

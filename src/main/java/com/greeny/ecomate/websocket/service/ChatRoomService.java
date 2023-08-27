@@ -1,6 +1,7 @@
 package com.greeny.ecomate.websocket.service;
 
 import com.greeny.ecomate.exception.NotFoundException;
+import com.greeny.ecomate.exception.UnauthorizedAccessException;
 import com.greeny.ecomate.member.entity.Member;
 import com.greeny.ecomate.member.repository.MemberRepository;
 import com.greeny.ecomate.websocket.dto.ChatRoomResponseDto;
@@ -81,7 +82,7 @@ public class ChatRoomService {
                 .orElseThrow(() -> new NotFoundException("존재하지 않는 사용자입니다."));
 
         ChatJoin chatJoin = chatJoinRepository.findChatJoinByMemberAndChatRoom(member, chatRoom)
-                .orElseThrow(() -> new IllegalArgumentException("멤버 초대 권한이 없습니다."));
+                .orElseThrow(() -> new UnauthorizedAccessException("멤버 초대 권한이 없습니다."));
 
         List<Member> originMemberList = chatJoinRepository.findChatJoinsByChatRoom_RoomId(chatRoomId).stream().map(ChatJoin::getMember).toList();
         List<String> originMemberNicknameList = originMemberList.stream().map(Member::getNickname).toList();
@@ -100,6 +101,21 @@ public class ChatRoomService {
         }
 
         return chatRoomId;
+    }
+
+    @Transactional
+    public String leaveChatRoom(Long chatRoomId, Long memberId) {
+        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId)
+                .orElseThrow(() -> new NotFoundException("존재하지 않는 채팅방입니다."));
+
+        Member member = memberRepository.findByMemberId(memberId)
+                .orElseThrow(() -> new NotFoundException("존재하지 않는 사용자입니다."));
+
+        ChatJoin chatJoin = chatJoinRepository.findChatJoinByMemberAndChatRoom(member, chatRoom)
+                .orElseThrow(() -> new NotFoundException("해당 채팅방에 존재하지 않는 사용자입니다."));
+
+        chatJoinRepository.delete(chatJoin);
+        return "채팅방 나가기 성공";
     }
 
 }
