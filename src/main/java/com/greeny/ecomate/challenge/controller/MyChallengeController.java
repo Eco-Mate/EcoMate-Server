@@ -73,8 +73,15 @@ public class MyChallengeController {
     @Operation(summary = "memberId에 해당하는 사용자의 진행 중인 챌린지 전체 조회")
     @ApiResponse(description = "memberId에 해당하는 사용자의 진행 중인 챌린지 전체 조회")
     @GetMapping("/member/{memberId}/proceeding")
-    public ApiUtil.ApiSuccessResult<List<MyChallengeDto>> getAllMyChallengeProceedingByMemberId(@PathVariable Long memberId) {
+    public ApiUtil.ApiSuccessResult<List<MyChallengeDto>> getAllMyChallengesProceedingByMemberId(@PathVariable Long memberId) {
         return ApiUtil.success("해당 사용자의 진행 중인 챌린지 전제 조회 성공", myChallengeService.getAllMyChallengeProceedingByMemberId(memberId));
+    }
+
+    @Operation(summary = "memberId에 해당하는 사용자의 진행 중이거나 완료한 챌린지 전체 조회")
+    @ApiResponse(description = "memberId에 해당하는 사용자의 진행 중이거나 완료한 챌린지 전체 조회")
+    @GetMapping("/member/{memberId}/all")
+    public ApiUtil.ApiSuccessResult<List<MyChallengeDto>> getAllMyChallengesByMemberId(@PathVariable Long memberId) {
+        return ApiUtil.success("해당 사용자의 진행 중이거나 완료한 챌린지 전체 조회 성공", myChallengeService.getAllMyChallengeByMemberId(memberId));
     }
 
     @Operation(summary = "myChallengeId로 도전 챌린지 단일 조회")
