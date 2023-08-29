@@ -84,13 +84,13 @@ public class MyChallengeController {
         return ApiUtil.success("도전 챌린지 단일 조회 성공", myChallengeService.getMyChallengeById(myChallengeId));
     }
 
-    @Operation(summary = "myChallengeId로 해당 챌린지 도전에 대한 인증 횟수 수정", description = "account token이 필요합니다.")
-    @ApiResponse(description = "myChallengeId로 해당 챌린지 도전에 대한 인증 횟수 수정")
-    @PutMapping("/{myChallengeId}")
-    public ApiUtil.ApiSuccessResult<String> updateMyChallengeDoneCnt(@PathVariable Long myChallengeId,
+    @Operation(summary = "challengeId로 해당 챌린지 도전에 대한 인증 횟수 수정", description = "account token이 필요합니다.")
+    @ApiResponse(description = "challengeId로 해당 챌린지 도전에 대한 인증 횟수 수정")
+    @PutMapping("/{challengeId}")
+    public ApiUtil.ApiSuccessResult<String> updateMyChallengeDoneCnt(@PathVariable Long challengeId,
                                                                      HttpServletRequest req) {
         Long memberId = (Long) req.getAttribute("memberId");
-        String message = myChallengeService.updateMyChallengeDoneCnt(myChallengeId, memberId);
+        String message = myChallengeService.updateMyChallengeDoneCnt(challengeId, memberId);
         return ApiUtil.success("챌린지 도전에 대한 인증 횟수 수정 성공", message);
     }
 

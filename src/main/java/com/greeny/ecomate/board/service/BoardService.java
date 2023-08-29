@@ -9,6 +9,7 @@ import com.greeny.ecomate.board.repository.BoardRepository;
 import com.greeny.ecomate.boardSave.repository.BoardSaveRepository;
 import com.greeny.ecomate.challenge.entity.Challenge;
 import com.greeny.ecomate.challenge.repository.ChallengeRepository;
+import com.greeny.ecomate.challenge.service.MyChallengeService;
 import com.greeny.ecomate.exception.NotFoundException;
 import com.greeny.ecomate.like.repository.LikeRepository;
 import com.greeny.ecomate.s3.service.AwsS3Service;
@@ -43,14 +44,16 @@ public class BoardService {
    private final ChallengeRepository challengeRepository;
    private final LikeRepository likeRepository;
    private final BoardSaveRepository saveLogRepository;
+
    private final AwsS3Service awsS3Service;
+   private final MyChallengeService myChallengeService;
 
    @Transactional
    public Board createBoard(CreateBoardRequestDto createDto, MultipartFile file, Long memberId) {
       Member member = memberRepository.findById(memberId)
               .orElseThrow(() -> new NotFoundException("존재하지 않는 사용자입니다."));
-      validateChallenge(createDto.getChallengeId());
 
+      challengeCntUpdate(createDto.getChallengeId(), memberId);
       String fileName = uploadImage(file);
       Board board = Board.builder()
               .member(member)
@@ -105,12 +108,12 @@ public class BoardService {
       boardRepository.delete(board);
    }
 
-   private void validateChallenge(Long challengeId) {
+   private void challengeCntUpdate(Long challengeId, Long memberId) {
       // challengeId == 0 : challenge 미등록
-      if (challengeId != 0) {
-         challengeRepository.findById(challengeId)
-                 .orElseThrow(() -> new NotFoundException("존재하지 않는 챌린지입니다."));
+      if (challengeId == 0) {
+         return;
       }
+      myChallengeService.updateMyChallengeDoneCnt(challengeId, memberId);
    }
 
    private void validateAuth(Board board, Long memberId) {
