@@ -4,11 +4,9 @@ import com.greeny.ecomate.auth.dto.SignInForm;
 import com.greeny.ecomate.auth.dto.SignUpForm;
 import com.greeny.ecomate.exception.NotAuthenticatedException;
 import com.greeny.ecomate.exception.NotFoundException;
-import com.greeny.ecomate.member.entity.Level;
 import com.greeny.ecomate.member.entity.Member;
 import com.greeny.ecomate.member.entity.Role;
 import com.greeny.ecomate.member.repository.MemberRepository;
-import com.greeny.ecomate.member.service.MemberService;
 import com.greeny.ecomate.utils.redis.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,8 +22,6 @@ public class AuthService {
 
     private final RedisUtil redisUtil;
     private final PasswordEncoder passwordEncoder;
-
-    private final MemberService memberService;
     private final MemberRepository memberRepository;
 
     private final String VERIFIED_PREFIX = "vf::";
@@ -57,7 +53,7 @@ public class AuthService {
 
         Member member = Member.builder()
                 .role(Role.ROLE_USER)
-                .level(Level.TREE)
+                .level("Seed1")
                 .totalTreePoint(0L)
                 .name(form.getName())
                 .password(passwordEncoder.encode(form.getPassword()))
