@@ -7,6 +7,7 @@ import com.greeny.ecomate.challenge.entity.Challenge;
 import com.greeny.ecomate.challenge.entity.MyChallenge;
 import com.greeny.ecomate.challenge.repository.ChallengeRepository;
 import com.greeny.ecomate.challenge.repository.MyChallengeRepository;
+import com.greeny.ecomate.exception.NotFoundException;
 import com.greeny.ecomate.member.entity.Member;
 import com.greeny.ecomate.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -117,15 +118,15 @@ public class MyChallengeService {
     }
 
     @Transactional
-    public String updateMyChallengeDoneCnt(Long myChallengeId, Long memberId) {
-        MyChallenge myChallenge = myChallengeRepository.findById(myChallengeId)
+    public String updateMyChallengeDoneCnt(Long challengeId, Long memberId) {
+        MyChallenge myChallenge = myChallengeRepository.findByChallengeIdAndMemberIdAndAchieveType(challengeId, memberId, AchieveType.PROCEEDING)
                 .orElseThrow(() -> new IllegalArgumentException("도전하고 있지 않는 챌린지입니다."));
 
         if(!myChallenge.getMember().getMemberId().equals(memberId))
             throw new IllegalStateException("수정 권한이 없습니다.");
 
-        if(myChallenge.getAchieveType() == AchieveType.FINISH) {
-            return "이미 달성한 챌린지 입니다.";
+        if(myChallenge.getAchieveType() != AchieveType.PROCEEDING) {
+            throw new IllegalStateException("진행 중인 챌린지가 아닙니다.");
         }
 
         if(myChallenge.getDoneCnt()+1 < myChallenge.getChallenge().getGoalCnt()) {
@@ -137,7 +138,8 @@ public class MyChallengeService {
             myChallenge.updateAchieveType(AchieveType.FINISH);
 
             Long userId = myChallenge.getMember().getMemberId();
-            Member member = memberRepository.findById(userId).get();
+            Member member = memberRepository.findById(userId)
+                    .orElseThrow(() -> new NotFoundException("존재하지 않는 사용자입니다."));
             member.updateTotalTreePoint(member.getTotalTreePoint() + myChallenge.getAchievePoint());
 
             return "챌린지를 달성 완료하여 트리포인트가 적립되었습니다. 축하드립니다!";

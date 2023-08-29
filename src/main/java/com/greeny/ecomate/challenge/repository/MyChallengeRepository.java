@@ -24,4 +24,6 @@ public interface MyChallengeRepository extends JpaRepository<MyChallenge, Long> 
 
     Long countMyChallengesByChallenge_ChallengeIdAndAchieveType(Long challengeId, AchieveType achieveType);
 
+    @Query("SELECT mc FROM MyChallenge mc join fetch mc.member where mc.challenge.challengeId = :challengeId and mc.member.memberId = :memberId and mc.achieveType = :achieveType")
+    Optional<MyChallenge> findByChallengeIdAndMemberIdAndAchieveType(Long challengeId, Long memberId, AchieveType achieveType);
 }
