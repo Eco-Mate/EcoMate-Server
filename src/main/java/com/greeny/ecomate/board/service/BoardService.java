@@ -15,6 +15,7 @@ import com.greeny.ecomate.like.repository.LikeRepository;
 import com.greeny.ecomate.s3.service.AwsS3Service;
 import com.greeny.ecomate.member.entity.Member;
 import com.greeny.ecomate.member.repository.MemberRepository;
+import com.greeny.ecomate.utils.imageUtil.ImageUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.AccessDeniedException;
@@ -47,6 +48,7 @@ public class BoardService {
 
    private final AwsS3Service awsS3Service;
    private final MyChallengeService myChallengeService;
+   private final ImageUtil imageUtil;
 
    @Transactional
    public Board createBoard(CreateBoardRequestDto createDto, MultipartFile file, Long memberId) {
@@ -126,17 +128,15 @@ public class BoardService {
    }
 
    private BoardDto createBoardDto(Board board, Long memberId) {
-      String imageUrl = s3Url + "/" + boardDirectory;
-      String profileImageUrl = s3Url + "/" + profileImageDirectory;
       Boolean liked = likeRepository.findByBoardAndMemberId(board, memberId).isPresent();
 
       Long challengeId = board.getChallengeId();
       if (challengeId != 0) {
          Challenge challenge = challengeRepository.findById(challengeId)
                  .orElseThrow(() -> new NotFoundException("존재하지 않는 챌린지입니다."));
-         return new BoardDto(board, challenge.getChallengeTitle(), imageUrl, profileImageUrl, liked);
+         return new BoardDto(board, challenge.getChallengeTitle(), liked);
       }
-      return new BoardDto(board, null, imageUrl, profileImageUrl, liked);
+      return new BoardDto(board, null, liked);
    }
 
     private Board findBoardById(Long boardId) {

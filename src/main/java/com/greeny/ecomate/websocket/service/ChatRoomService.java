@@ -32,8 +32,6 @@ public class ChatRoomService {
     private final MyChallengeRepository myChallengeRepository;
     private final MemberRepository memberRepository;
 
-    private final ImageUtil imageUtil;
-
     @Transactional
     public Long createRoom(CreateChatRoomRequestDto dto, Long memberId) {
         ChatRoom chatRoom = ChatRoom.builder()
@@ -76,8 +74,7 @@ public class ChatRoomService {
 
         return memberList.stream().map(member ->
             new ChallengeStatusDto(
-                  member.getNickname(),
-                  imageUtil.getProfileImage(member.getProfileImage()),
+                  member,
                   myChallengeRepository.findAllByMember(member)
                           .stream().mapToLong(this::getTotalDoneCnt).sum()
             )
