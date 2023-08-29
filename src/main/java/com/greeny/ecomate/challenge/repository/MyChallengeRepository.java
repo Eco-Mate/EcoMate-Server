@@ -2,6 +2,7 @@ package com.greeny.ecomate.challenge.repository;
 
 import com.greeny.ecomate.challenge.entity.AchieveType;
 import com.greeny.ecomate.challenge.entity.MyChallenge;
+import com.greeny.ecomate.member.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -26,4 +27,6 @@ public interface MyChallengeRepository extends JpaRepository<MyChallenge, Long> 
 
     @Query("SELECT mc FROM MyChallenge mc join fetch mc.member where mc.challenge.challengeId = :challengeId and mc.member.memberId = :memberId and mc.achieveType = :achieveType")
     Optional<MyChallenge> findByChallengeIdAndMemberIdAndAchieveType(Long challengeId, Long memberId, AchieveType achieveType);
+
+    List<MyChallenge> findAllByMember(Member member);
 }

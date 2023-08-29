@@ -1,10 +1,7 @@
 package com.greeny.ecomate.websocket.controller;
 
 import com.greeny.ecomate.utils.api.ApiUtil;
-import com.greeny.ecomate.websocket.dto.ChatRoomResponseDto;
-import com.greeny.ecomate.websocket.dto.CreateChatRoomRequestDto;
-import com.greeny.ecomate.websocket.dto.MemberToChatRoomDto;
-import com.greeny.ecomate.websocket.dto.UpdateChatRoomRequestDto;
+import com.greeny.ecomate.websocket.dto.*;
 import com.greeny.ecomate.websocket.service.ChatRoomService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -38,6 +35,14 @@ public class ChatRoomController {
     public ApiUtil.ApiSuccessResult<List<ChatRoomResponseDto>> rooms(HttpServletRequest req) {
         Long memberId = (Long) req.getAttribute("memberId");
         return ApiUtil.success("채팅방 리스트 조회 성공", chatRoomService.findAllRoomByMemberId(memberId));
+    }
+
+    @Operation(summary = "채팅방 내 멤버들의 챌린지 현황 조회")
+    @GetMapping("/{roomId}")
+    public ApiUtil.ApiSuccessResult<ChallengeStatusListDto> getChallengeStatusByChatRoom(@PathVariable Long roomId,
+                                                                                         HttpServletRequest req) {
+        Long memberId = (Long) req.getAttribute("memberId");
+        return ApiUtil.success("채팅방 멤버들의 챌린지 현황 조회 성공", new ChallengeStatusListDto(chatRoomService.getChallengeStatusByChatRoom(roomId, memberId)));
     }
 
     @Operation(summary = "채팅방 멤버 초대 시 멤버 닉네임 검색", description = "account token이 필요합니다.")

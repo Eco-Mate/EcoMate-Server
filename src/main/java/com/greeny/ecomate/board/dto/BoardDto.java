@@ -1,6 +1,7 @@
 package com.greeny.ecomate.board.dto;
 
 import com.greeny.ecomate.board.entity.Board;
+import com.greeny.ecomate.utils.imageUtil.ImageUtil;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -20,17 +21,15 @@ public class BoardDto {
     private Boolean liked;
     private LocalDateTime createdDate;
 
-    public BoardDto(Board board, String challengeTitle, String imageUrl, String profileImageUrl, Boolean liked) {
+    public BoardDto(Board board, String challengeTitle, Boolean liked) {
         this.boardId = board.getBoardId();
         this.memberId = board.getMember().getMemberId();
         this.nickname = board.getMember().getNickname();
-        if (board.getMember().getProfileImage() != null) {
-            this.profileImage = profileImageUrl + "/" + board.getMember().getProfileImage();
-        }
+        this.profileImage = ImageUtil.getProfileImage(board.getMember().getProfileImage());
         this.challengeTitle = challengeTitle;
         this.boardTitle = board.getBoardTitle();
         this.boardContent = board.getBoardContent();
-        this.image = imageUrl + "/" + board.getImage();
+        this.image = ImageUtil.getBoardImage(board.getImage());
         this.likeCnt = board.getLikeCnt();
         this.liked = liked;
         this.createdDate = board.getCreatedDate();
