@@ -1,7 +1,9 @@
 package com.greeny.ecomate.websocket.dto;
 
 import com.greeny.ecomate.member.entity.Member;
+import com.greeny.ecomate.utils.imageUtil.ImageUtil;
 import com.greeny.ecomate.websocket.entity.Chat;
+import com.greeny.ecomate.websocket.entity.ChatType;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -10,19 +12,19 @@ import java.time.LocalDateTime;
 public class ChatDto {
     private Long chatId;
     private String message;
+    private ChatType chatType;
     private Long senderId;
     private String senderNickname;
     private String profileImage;
     private LocalDateTime createdTime;
 
-    public ChatDto(Chat chat, Member sender, String profileImageUrl) {
+    public ChatDto(Chat chat, Member sender) {
         this.chatId = chat.getChatId();
         this.message = chat.getMessage();
+        this.chatType = chat.getChatType();
         this.senderId = chat.getSenderId();
         this.senderNickname = sender.getNickname();
-        if (sender.getProfileImage() != null) {
-            this.profileImage = profileImageUrl + "/" + sender.getProfileImage();
-        }
+        this.profileImage = ImageUtil.getProfileImage(sender.getProfileImage());
         this.createdTime = chat.getCreatedDate();
     }
 }

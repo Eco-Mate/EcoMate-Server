@@ -60,21 +60,15 @@ public class ChatService {
                 .orElseThrow(() -> new NotFoundException("존재하지 않는 채팅 메시지입니다."));
         Member member = memberRepository.findById(chat.getSenderId())
                 .orElseThrow(() -> new NotFoundException("채팅 발신자가 존재하지 않는 사용자입니다."));
-        return new ChatDto(chat, member, s3Url + "/" + profileDirectory);
+        return new ChatDto(chat, member);
     }
 
     public List<ChatDto> getAllByRoom(Long roomId, Long memberId) {
-        ChatRoom chatRoom = chatRoomRepository.findById(roomId)
-                .orElseThrow(() -> new NotFoundException("존재하지 않는 채팅방입니다."));
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new NotFoundException("존재하지 않는 사용자입니다."));
-
-        if (chatJoinRepository.findChatJoinByMemberAndChatRoom(member, chatRoom).isEmpty()) {
+        if (chatJoinRepository.findChatJoinByRoomIdAndMemberId(roomId, memberId).isEmpty()) {
             throw new UnauthorizedAccessException("해당 채팅방에 접근 권한이 없습니다.");
         }
 
-        List<Chat> chatList = chatRepository.findAllByChatRoom(chatRoom);
-
+        List<Chat> chatList = chatRepository.findAllByRoomId(roomId);
         return chatList.stream().map(this::createChatDto).toList();
     }
 
@@ -112,6 +106,6 @@ public class ChatService {
         Member sender = memberRepository.findById(chat.getSenderId())
                 .orElseThrow(() -> new NotFoundException("채팅 발신자가 존재하지 않는 사용자입니다."));
 
-        return new ChatDto(chat, sender, s3Url + "/" + profileDirectory);
+        return new ChatDto(chat, sender);
     }
 }
