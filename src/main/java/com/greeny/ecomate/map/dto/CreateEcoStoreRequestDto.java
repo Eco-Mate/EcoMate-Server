@@ -14,6 +14,8 @@ public class CreateEcoStoreRequestDto {
     @NotNull
     private String storeName;
     @NotNull
+    private String description;
+    @NotNull
     private Double latitude;
     @NotNull
     private Double longitude;

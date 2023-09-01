@@ -29,6 +29,7 @@ public class EcoStoreService {
         EcoStore ecoStore = EcoStore.builder()
                 .memberId(memberId)
                 .storeName(createDto.getStoreName())
+                .description(createDto.getDescription())
                 .latitude(createDto.getLatitude())
                 .longitude(createDto.getLongitude())
                 .address(createDto.getAddress())
@@ -48,7 +49,7 @@ public class EcoStoreService {
     public Long updateEcoStore(Long storeId, UpdateEcoStoreRequestDto dto, Long memberId) {
         validateAuth(memberId);
         EcoStore ecoStore = findEcoStoreById(storeId);
-        ecoStore.update(dto.getStoreName(), dto.getLatitude(), dto.getLatitude(), dto.getAddress());
+        ecoStore.update(dto.getStoreName(), dto.getDescription(), dto.getLatitude(), dto.getLatitude(), dto.getAddress());
         return ecoStore.getStoreId();
     }
 
@@ -68,7 +69,7 @@ public class EcoStoreService {
     }
 
     private EcoStoreDto createEcoStoreDto(EcoStore ecoStore) {
-        return new EcoStoreDto(ecoStore.getStoreName(), ecoStore.getLatitude(), ecoStore.getLongitude(), ecoStore.getAddress(), ecoStore.getLikeCnt());
+        return new EcoStoreDto(ecoStore.getStoreName(), ecoStore.getDescription(), ecoStore.getLatitude(), ecoStore.getLongitude(), ecoStore.getAddress(), ecoStore.getLikeCnt());
     }
 
     private EcoStore findEcoStoreById(Long storeId) {

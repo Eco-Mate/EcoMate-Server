@@ -24,6 +24,9 @@ public class EcoStore extends BaseEntity {
     @Column(name = "store_name")
     private String storeName;
 
+    @Column(name = "description")
+    private String description;
+
     @Column(name = "latitude")
     private Double latitude; // 위도
 
@@ -37,17 +40,19 @@ public class EcoStore extends BaseEntity {
     private Long likeCnt;
 
     @Builder
-    public EcoStore(Long memberId, String storeName, Double latitude, Double longitude, String address, Long likeCnt) {
+    public EcoStore(Long memberId, String storeName, String description, Double latitude, Double longitude, String address, Long likeCnt) {
         this.memberId = memberId;
         this.storeName = storeName;
+        this.description = description;
         this.latitude = latitude;
         this.longitude = longitude;
         this.address = address;
         this.likeCnt = likeCnt;
     }
 
-    public void update(String storeName, Double latitude, Double longitude, String address) {
+    public void update(String storeName, String description, Double latitude, Double longitude, String address) {
         this.storeName = storeName;
+        this.description = description;
         this.latitude = latitude;
         this.longitude = longitude;
         this.address = address;
