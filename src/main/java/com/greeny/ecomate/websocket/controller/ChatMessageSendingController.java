@@ -1,5 +1,7 @@
 package com.greeny.ecomate.websocket.controller;
 
+import com.greeny.ecomate.fcm.controller.FCMController;
+import com.greeny.ecomate.fcm.service.FCMService;
 import com.greeny.ecomate.websocket.dto.ChatDto;
 import com.greeny.ecomate.websocket.dto.CreateChatMessageRequestDto;
 import com.greeny.ecomate.websocket.entity.Chat;
@@ -17,12 +19,15 @@ import org.springframework.stereotype.Controller;
 public class ChatMessageSendingController {
 
     private final ChatService chatService;
+    private final FCMService fcmService;
 
     @MessageMapping("/chat/{roomId}")
     @SendTo("/topic/chat/{roomId}")
     public ChatDto sendChatMessage(@Payload CreateChatMessageRequestDto request, @DestinationVariable(value = "roomId") Long roomId, SimpMessageHeaderAccessor headerAccessor) {
         Long memberId = (Long) headerAccessor.getSessionAttributes().get("memberId");
         Chat chat = chatService.createChat(request, roomId, memberId);
+
+        fcmService.sendChatAlarm(roomId, chat);
 
         return chatService.getChatById(chat.getChatId());
     }

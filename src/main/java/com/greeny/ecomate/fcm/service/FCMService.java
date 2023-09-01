@@ -36,4 +36,33 @@ public class FCMService {
         return member;
     }
 
+    @Transactional
+    public void sendChatAlarm(Long roomId, Chat chat) {
+        List<ChatJoin> chatJoinList = chatJoinRepository.findChatJoinsByChatRoomId(roomId);
+
+        chatJoinList.stream()
+                .filter(chatJoin -> !chatJoin.getActiveYn())
+                .filter(chatJoin -> chatJoin.getMember().getFcmToken() != null)
+                .forEach(chatJoin -> {
+                    try {
+                        sendAlarm(chatJoin.getMember().getFcmToken(), chat);
+                    } catch (ExecutionException | InterruptedException e) {
+                        throw new FirebaseMessageException("FCM 알림 전송에 실패했습니다.");
+                    }
+                });
+    }
+
+    private void sendAlarm(String fcmToken, Chat chat) throws ExecutionException, InterruptedException {
+        Member sender = memberRepository.findById(chat.getSenderId())
+                .orElseThrow(() -> new NotFoundException("존재하지 않는 사용자입니다."));
+
+        Message message = Message.builder()
+                .setToken(fcmToken)
+                .setNotification(new Notification(sender.getNickname(), chat.getMessage()))
+                .build();
+
+        String response = FirebaseMessaging.getInstance().sendAsync(message).get();
+
+    }
+
 }
