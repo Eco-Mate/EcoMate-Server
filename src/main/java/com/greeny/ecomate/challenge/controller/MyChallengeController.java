@@ -25,7 +25,7 @@ public class MyChallengeController {
     @PostMapping("/{challengeId}")
     public ApiUtil.ApiSuccessResult<Long> createMyChallenge(@PathVariable Long challengeId,
                                                             HttpServletRequest req) {
-        Long memberId = (Long) req.getAttribute("memberId");
+        Long memberId = getMemberId(req);
         Long myChallengeId = myChallengeService.createMyChallenge(challengeId, memberId);
         return ApiUtil.success("챌린지 도전 시작 성공", myChallengeId);
     }
@@ -34,7 +34,7 @@ public class MyChallengeController {
     @ApiResponse(description = "로그인된 사용자의 도전 챌린지 전체 조회")
     @GetMapping("/member/all")
     public ApiUtil.ApiSuccessResult<List<MyChallengeDto>> getAllMyChallenges(HttpServletRequest req) {
-        Long memberId = (Long) req.getAttribute("memberId");
+        Long memberId = getMemberId(req);
         return ApiUtil.success("로그인된 사용자의 도전 챌린지 조회 성공", myChallengeService.getAllMyChallengeByMemberId(memberId));
     }
 
@@ -42,7 +42,7 @@ public class MyChallengeController {
     @ApiResponse(description = "로그인된 사용자의 진행 중인 챌린지 전체 조회")
     @GetMapping("/member/proceeding")
     public ApiUtil.ApiSuccessResult<List<MyChallengeDto>> getAllMyChallengesProceeding(HttpServletRequest req) {
-        Long memberId = (Long) req.getAttribute("memberId");
+        Long memberId = getMemberId(req);
         return ApiUtil.success("로그인된 사용자의 진행 중인 챌린지 전체 조회 성공", myChallengeService.getAllMyChallengeProceedingByMemberId(memberId));
     }
 
@@ -50,7 +50,7 @@ public class MyChallengeController {
     @ApiResponse(description = "로그인된 사용자의 완료한 챌린지 전체 조회")
     @GetMapping("/member/finish")
     public ApiUtil.ApiSuccessResult<List<MyChallengeDto>> getAllMyChallengesDone(HttpServletRequest req) {
-        Long memberId = (Long) req.getAttribute("memberId");
+        Long memberId = getMemberId(req);
         return ApiUtil.success("로그인된 사용자의 완료한 챌린지 전체 조회 성공", myChallengeService.getAllMyChallengeFinishByMemberId(memberId));
     }
 
@@ -58,7 +58,7 @@ public class MyChallengeController {
     @ApiResponse(description = "로그인된 사용자의 진행 중인 챌린지 수 조회")
     @GetMapping("/member/proceeding/cnt")
     public ApiUtil.ApiSuccessResult<Long> getMyChallengeProceedingCnt(HttpServletRequest req) {
-        Long memberId = (Long) req.getAttribute("memberId");
+        Long memberId = getMemberId(req);
         return ApiUtil.success("로그인된 사용자가 도전 중인 챌린지 수 조회 성공", myChallengeService.getMyChallengeProceedingCntByMemberId(memberId));
     }
 
@@ -66,7 +66,7 @@ public class MyChallengeController {
     @ApiResponse(description = "로그인된 사용자의 완료한 챌린지 수 조회")
     @GetMapping("/member/finish/cnt")
     public ApiUtil.ApiSuccessResult<Long> getMyChallengeDoneCnt(HttpServletRequest req) {
-        Long memberId = (Long) req.getAttribute("memberId");
+        Long memberId = getMemberId(req);
         return ApiUtil.success("로그인된 사용자가 도전 완료한 챌린지 수 조회 성공", myChallengeService.getMyChallengeFinishCntByMemberId(memberId));
     }
 
@@ -96,7 +96,7 @@ public class MyChallengeController {
     @PutMapping("/{challengeId}")
     public ApiUtil.ApiSuccessResult<String> updateMyChallengeDoneCnt(@PathVariable Long challengeId,
                                                                      HttpServletRequest req) {
-        Long memberId = (Long) req.getAttribute("memberId");
+        Long memberId = getMemberId(req);
         String message = myChallengeService.updateMyChallengeDoneCnt(challengeId, memberId);
         return ApiUtil.success("챌린지 도전에 대한 인증 횟수 수정 성공", message);
     }
@@ -106,9 +106,13 @@ public class MyChallengeController {
     @DeleteMapping("/{myChallengeId}")
     public ApiUtil.ApiSuccessResult<String> deleteMyChallenge(@PathVariable Long myChallengeId,
                                                               HttpServletRequest req) {
-        Long memberId = (Long) req.getAttribute("memberId");
+        Long memberId = getMemberId(req);
         myChallengeService.deleteMyChallenge(myChallengeId, memberId);
         return ApiUtil.success("도전 챌린지 삭제 성공", "해당 챌린지를 포기하였습니다.");
+    }
+
+    private Long getMemberId(HttpServletRequest req) {
+        return (Long) req.getAttribute("memberId");
     }
 
 }

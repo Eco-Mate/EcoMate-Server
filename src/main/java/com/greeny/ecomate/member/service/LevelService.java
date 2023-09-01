@@ -1,6 +1,7 @@
 package com.greeny.ecomate.member.service;
 
 import com.greeny.ecomate.exception.NotFoundException;
+import com.greeny.ecomate.exception.UnauthorizedAccessException;
 import com.greeny.ecomate.member.dto.CreateLevelRequestDto;
 import com.greeny.ecomate.member.dto.LevelDto;
 import com.greeny.ecomate.member.dto.UpdateLevelRequestDto;
@@ -54,11 +55,11 @@ public class LevelService {
     }
 
     private void validateAuth(Long memberId) {
-        Member member = memberRepository.findByMemberId(memberId)
+        Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new NotFoundException("존재하지 않는 사용자입니다."));
 
         if(member.getRole() != Role.ROLE_ADMIN)
-            throw new AccessDeniedException("삭제 권한이 없습니다.");
+            throw new UnauthorizedAccessException("삭제 권한이 없습니다.");
     }
 
     private Level findLevelByLevelId(Long levelId) {
