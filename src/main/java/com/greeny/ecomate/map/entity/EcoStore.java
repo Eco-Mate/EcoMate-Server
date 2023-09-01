@@ -1,0 +1,49 @@
+package com.greeny.ecomate.map.entity;
+
+import com.greeny.ecomate.base.BaseEntity;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+
+@Entity
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class EcoStore extends BaseEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "store_id")
+    private Long storeId;
+
+    @Column(name = "member_id")
+    private Long memberId;
+
+    @Column(name = "store_name")
+    private String storeName;
+
+    @Column(name = "latitude")
+    private Double latitude; // 위도
+
+    @Column(name = "longitude")
+    private Double longitude; // 경도
+
+    @Column(name = "address")
+    private String address;
+
+    @Column(name = "like_cnt")
+    private Long likeCnt;
+
+    @Builder
+    public EcoStore(Long memberId, String storeName, Double latitude, Double longitude, String address, Long likeCnt) {
+        this.memberId = memberId;
+        this.storeName = storeName;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.address = address;
+        this.likeCnt = likeCnt;
+    }
+
+}
