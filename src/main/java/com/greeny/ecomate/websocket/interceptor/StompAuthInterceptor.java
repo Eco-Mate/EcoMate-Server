@@ -5,6 +5,7 @@ import com.greeny.ecomate.exception.websocket.IllegalWebSocketRequestException;
 import com.greeny.ecomate.member.entity.Member;
 import com.greeny.ecomate.member.repository.MemberRepository;
 import com.greeny.ecomate.security.provider.JwtProvider;
+import com.greeny.ecomate.websocket.entity.ChatJoin;
 import com.greeny.ecomate.websocket.entity.ChatRoom;
 import com.greeny.ecomate.websocket.repository.ChatJoinRepository;
 import com.greeny.ecomate.websocket.repository.ChatRoomRepository;
@@ -15,6 +16,7 @@ import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -32,6 +34,7 @@ public class StompAuthInterceptor implements ChannelInterceptor {
     private final String CHAT_PUB_PREFIX = "/pub/chat/";
 
     @Override
+    @Transactional
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(message);
         Map<String, Object> sessionAttributes = headerAccessor.getSessionAttributes();
@@ -45,6 +48,14 @@ public class StompAuthInterceptor implements ChannelInterceptor {
         }
         else if (StompCommand.SUBSCRIBE.equals(headerAccessor.getCommand())) {
             validateDestination(headerAccessor, CHAT_SUB_PREFIX);
+
+            // 웹소켓 접속 상태 업데이트
+            Long memberId = (Long) headerAccessor.getSessionAttributes().get("memberId");
+            Long reqRoomId = Long.parseLong(headerAccessor.getDestination().substring(CHAT_SUB_PREFIX.length()));
+            ChatJoin chatJoin = chatJoinRepository.findChatJoinByRoomIdAndMemberId(reqRoomId, memberId)
+                    .orElseThrow(() -> new IllegalWebSocketRequestException("올바르지 않은 요청입니다."));
+
+            chatJoin.updateActiveYn(true);
         }
         else if (StompCommand.SEND.equals(headerAccessor.getCommand())) {
             validateDestination(headerAccessor, CHAT_PUB_PREFIX);
@@ -75,13 +86,7 @@ public class StompAuthInterceptor implements ChannelInterceptor {
         }
 
         Long reqRoomId = Long.parseLong(destination.substring(chatPrefix.length()));
-
-        ChatRoom chatRoom = chatRoomRepository.findById(reqRoomId)
-                .orElseThrow(() -> new NotFoundException("존재하지 않는 채팅방입니다."));
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new NotFoundException("존재하지 않는 사용자입니다."));
-
-        if (chatJoinRepository.findChatJoinByMemberAndChatRoom(member, chatRoom).isEmpty()) {
+        if (chatJoinRepository.findChatJoinByChatRoomIdAndMemberId(reqRoomId, memberId).isEmpty()) {
             throw new IllegalWebSocketRequestException("올바르지 않은 요청입니다.");
         }
     }
