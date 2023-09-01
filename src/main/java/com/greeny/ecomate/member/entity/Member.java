@@ -19,9 +19,8 @@ public class Member extends BaseEntity {
     @Column(name = "role")
     private Role role;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "level")
-    private Level level;
+    private String level;
 
 //    @Column(name = "open_yn")
 //    private Boolean openYn;
@@ -55,7 +54,7 @@ public class Member extends BaseEntity {
 
 
     @Builder
-    public Member(Role role, Level level, Long totalTreePoint,
+    public Member(Role role, String level, Long totalTreePoint,
                   String nickname, String name, String password, String email, String statusMessage) {
         this.role = role;
         this.level = level;
@@ -72,6 +71,7 @@ public class Member extends BaseEntity {
     public void updateTotalTreePoint(Long treePoint) {
         this.totalTreePoint = treePoint;
     }
+    public void updateLevel(String levelName) { this.level = levelName; }
 
     public void updateFollowerCnt(Long cnt) { this.followerCnt = cnt; }
     public void updateFollowingCnt(Long cnt) { this.followingCnt = cnt; }

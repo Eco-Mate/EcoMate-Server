@@ -1,6 +1,5 @@
 package com.greeny.ecomate.challenge.service;
 
-import com.greeny.ecomate.challenge.dto.ChallengeDto;
 import com.greeny.ecomate.challenge.dto.MyChallengeDto;
 import com.greeny.ecomate.challenge.entity.AchieveType;
 import com.greeny.ecomate.challenge.entity.Challenge;
@@ -8,15 +7,20 @@ import com.greeny.ecomate.challenge.entity.MyChallenge;
 import com.greeny.ecomate.challenge.repository.ChallengeRepository;
 import com.greeny.ecomate.challenge.repository.MyChallengeRepository;
 import com.greeny.ecomate.exception.NotFoundException;
+import com.greeny.ecomate.exception.UnauthorizedAccessException;
+import com.greeny.ecomate.member.dto.LevelDto;
+import com.greeny.ecomate.member.entity.Level;
 import com.greeny.ecomate.member.entity.Member;
+import com.greeny.ecomate.member.repository.LevelRepository;
 import com.greeny.ecomate.member.repository.MemberRepository;
+import com.greeny.ecomate.member.service.LevelService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -31,23 +35,20 @@ public class MyChallengeService {
 
     private final MyChallengeRepository myChallengeRepository;
     private final MemberRepository memberRepository;
-
     private final ChallengeRepository challengeRepository;
+
+    private final LevelService levelService;
 
     @Transactional
     public Long createMyChallenge(Long challengeId, Long memberId) {
-        Member member = memberRepository.findByMemberId(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
-
-        Challenge challenge = challengeRepository.findById(challengeId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 챌린지입니다."));
+        Member member = findMemberById(memberId);
+        Challenge challenge = findChallengeById(challengeId);
 
         if(!challenge.getActiveYn())
-            throw new IllegalArgumentException("활성화되지 않은 챌린지 입니다.");
+            throw new AccessDeniedException("활성화되지 않은 챌린지 입니다.");
 
         // 새도전
-        Optional<MyChallenge> mc = myChallengeRepository.findMyChallengeByMember_MemberIdAndChallenge_ChallengeId(memberId, challengeId);
-        if(mc.isEmpty()) {
+        if(!myChallengeRepository.existsMyChallengeByMember_MemberIdAndChallenge_ChallengeId(memberId, challengeId)) {
             MyChallenge myChallenge = MyChallenge.builder()
                     .challenge(challenge)
                     .member(member)
@@ -60,9 +61,9 @@ public class MyChallengeService {
         }
         // 재도전
         else {
-             MyChallenge myChallenge = mc.get();
+             MyChallenge myChallenge = findMyChallengeByMemberIdAndChallengeId(memberId, challengeId);
              if(myChallenge.getAchieveType().equals(AchieveType.PROCEEDING)) {
-                 throw new IllegalArgumentException("해당 도전은 진행 중입니다. 계속 도전해보세요!");
+                 throw new IllegalStateException("해당 도전은 진행 중입니다. 계속 도전해보세요!");
              }
              else if(myChallenge.getAchieveType().equals(AchieveType.FINISH)) {
                  myChallenge.updateAchieveType(AchieveType.PROCEEDING);
@@ -72,58 +73,46 @@ public class MyChallengeService {
                  return myChallenge.getMyChallengeId();
              }
              else {
-                 throw new IllegalArgumentException("해당 도전을 시작하지 않았습니다.");
+                 throw new IllegalStateException("해당 도전을 시작하지 않았습니다.");
              }
         }
     }
 
-    private MyChallengeDto createMyChallengeDto(MyChallenge myChallenge) {
-        return new MyChallengeDto(myChallenge, s3Url, challengeDirectory);
-    }
-
     public List<MyChallengeDto> getAllMyChallengeByMemberId(Long memberId) {
         List<MyChallenge> myChallengeList = myChallengeRepository.findAllByMember_MemberId(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+                .orElseThrow(() -> new NotFoundException("해당 사용자의 도전 챌린지가 없습니다."));
         return myChallengeList.stream().map(this::createMyChallengeDto).toList();
     }
 
     public List<MyChallengeDto> getAllMyChallengeProceedingByMemberId(Long memberId) {
-        List<MyChallenge> myChallengeProceedingList = myChallengeRepository.findAllByMember_MemberIdAndAchieveType(memberId, AchieveType.PROCEEDING)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+        List<MyChallenge> myChallengeProceedingList = findAllMyChallengesByMemberIdAndAchieveType(memberId, AchieveType.PROCEEDING);
         return myChallengeProceedingList.stream().map(this::createMyChallengeDto).toList();
     }
 
     public List<MyChallengeDto> getAllMyChallengeFinishByMemberId(Long memberId) {
-        List<MyChallenge> myChallengeFinishList = myChallengeRepository.findAllByMember_MemberIdAndAchieveType(memberId, AchieveType.FINISH)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+        List<MyChallenge> myChallengeFinishList = findAllMyChallengesByMemberIdAndAchieveType(memberId, AchieveType.FINISH);
         return myChallengeFinishList.stream().map(this::createMyChallengeDto).toList();
     }
 
     public Long getMyChallengeProceedingCntByMemberId(Long memberId) {
-        Long proceedingCnt = myChallengeRepository.countMyChallengesByMember_MemberIdAndAchieveType(memberId, AchieveType.PROCEEDING)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
-        return proceedingCnt;
+        List<MyChallenge> myChallengeProceedingList = findAllMyChallengesByMemberIdAndAchieveType(memberId, AchieveType.PROCEEDING);
+        return myChallengeProceedingList.stream().count();
     }
 
     public Long getMyChallengeFinishCntByMemberId(Long memberId) {
-        Long finishCnt = myChallengeRepository.countMyChallengesByMember_MemberIdAndAchieveType(memberId, AchieveType.FINISH)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
-        return finishCnt;
+        List<MyChallenge> myChallengeFinishList = findAllMyChallengesByMemberIdAndAchieveType(memberId, AchieveType.FINISH);
+        return myChallengeFinishList.stream().count();
     }
 
     public MyChallengeDto getMyChallengeById(Long myChallengeId) {
-        MyChallenge findMyChallenge = myChallengeRepository.findMyChallengeByMyChallengeId(myChallengeId)
-                .orElseThrow(() -> new IllegalArgumentException("도전하지 않은 챌린지입니다."));
+        MyChallenge findMyChallenge = findMyChallengeById(myChallengeId);
         return createMyChallengeDto(findMyChallenge);
     }
 
     @Transactional
     public String updateMyChallengeDoneCnt(Long challengeId, Long memberId) {
-        MyChallenge myChallenge = myChallengeRepository.findByChallengeIdAndMemberIdAndAchieveType(challengeId, memberId, AchieveType.PROCEEDING)
-                .orElseThrow(() -> new IllegalArgumentException("도전하고 있지 않는 챌린지입니다."));
-
-        if(!myChallenge.getMember().getMemberId().equals(memberId))
-            throw new IllegalStateException("수정 권한이 없습니다.");
+        MyChallenge myChallenge = findMyChallengeByMemberIdAndChallengeId(memberId,challengeId);
+        validateAuth(myChallenge, memberId);
 
         if(myChallenge.getAchieveType() != AchieveType.PROCEEDING) {
             throw new IllegalStateException("진행 중인 챌린지가 아닙니다.");
@@ -137,24 +126,70 @@ public class MyChallengeService {
             myChallenge.updateDoneCnt(myChallenge.getDoneCnt() + 1);
             myChallenge.updateAchieveType(AchieveType.FINISH);
 
-            Long userId = myChallenge.getMember().getMemberId();
-            Member member = memberRepository.findById(userId)
-                    .orElseThrow(() -> new NotFoundException("존재하지 않는 사용자입니다."));
-            member.updateTotalTreePoint(member.getTotalTreePoint() + myChallenge.getAchievePoint());
-
-            return "챌린지를 달성 완료하여 트리포인트가 적립되었습니다. 축하드립니다!";
+            StringBuilder sb = new StringBuilder();
+            sb.append("챌린지를 달성 완료하여 트리포인트가 적립되었습니다. ");
+            sb.append(updateMemberLevelAndTreePoint(findMemberById(memberId), myChallenge.getAchievePoint()));
+            return sb.toString();
         }
     }
 
     @Transactional
     public void deleteMyChallenge(Long myChallengeId, Long memberId) {
-        MyChallenge myChallenge = myChallengeRepository.findMyChallengeByMyChallengeId(myChallengeId)
-                .orElseThrow(() -> new IllegalArgumentException("도전하지 않은 챌린지입니다."));
-
-        if(!myChallenge.getMember().getMemberId().equals(memberId))
-            throw new IllegalStateException("삭제 권한이 없습니다.");
-
+        MyChallenge myChallenge = findMyChallengeById(myChallengeId);
+        validateAuth(myChallenge, memberId);
         myChallengeRepository.delete(myChallenge);
+    }
+
+    private MyChallengeDto createMyChallengeDto(MyChallenge myChallenge) {
+        return new MyChallengeDto(myChallenge, s3Url, challengeDirectory);
+    }
+
+    private void validateAuth(MyChallenge myChallenge, Long memberId) {
+        if(!myChallenge.getMember().getMemberId().equals(memberId))
+            throw new UnauthorizedAccessException("권한이 없습니다.");
+    }
+
+    private MyChallenge findMyChallengeById(Long myChallengeId) {
+        return myChallengeRepository.findById(myChallengeId)
+                .orElseThrow(() -> new NotFoundException("도전하지 않은 챌린지입니다."));
+    }
+
+    private MyChallenge findMyChallengeByMemberIdAndChallengeId(Long memberId, Long challengeId) {
+        return myChallengeRepository.findMyChallengeByMember_MemberIdAndChallenge_ChallengeId(memberId, challengeId)
+                .orElseThrow(() -> new NotFoundException("도전하지 않은 챌린지입니다."));
+    }
+
+    private List<MyChallenge> findAllMyChallengesByMemberIdAndAchieveType(Long memberId, AchieveType achieveType) {
+        return myChallengeRepository.findAllByMember_MemberIdAndAchieveType(memberId, achieveType)
+                .orElseThrow(() -> new NotFoundException("조건 상태에 해당하는 도전 챌린지가 없습니다."));
+    }
+
+    private Member findMemberById(Long memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new NotFoundException("존재하지 않는 사용자입니다."));
+    }
+
+    private Challenge findChallengeById(Long challengeId) {
+        return challengeRepository.findById(challengeId)
+                .orElseThrow(() -> new NotFoundException("존재하지 않는 챌린지입니다."));
+    }
+
+    private String updateMemberLevelAndTreePoint(Member member, Long plusTreePoint) {
+        LevelDto levelDto = levelService.getLevel(member.getLevel());
+        Long nowTotalTreePoint = member.getTotalTreePoint();
+        StringBuilder sb = new StringBuilder();
+        if(nowTotalTreePoint + plusTreePoint >= levelDto.getGoalTreePoint()) {
+            member.updateLevel(levelDto.getNextLevelName());
+            sb.append(levelDto.getNextLevelName());
+            sb.append("으로 레벨업 하셨어요, 축하합니다!");
+        }
+        else {
+            sb.append("다음 레벨업까지 ");
+            sb.append(levelDto.getGoalTreePoint() - (nowTotalTreePoint + plusTreePoint));
+            sb.append("트리포인트 남았습니다.");
+        }
+        member.updateTotalTreePoint(member.getTotalTreePoint() + plusTreePoint);
+        return sb.toString();
     }
 
 }

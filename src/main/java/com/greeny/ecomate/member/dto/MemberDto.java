@@ -7,7 +7,7 @@ import com.greeny.ecomate.member.entity.Member;
 public record MemberDto(
         Long memberId,
         Role role,
-        Level level,
+        String level,
         Long totalTreePoint,
         String profileImage,
         String nickname,
