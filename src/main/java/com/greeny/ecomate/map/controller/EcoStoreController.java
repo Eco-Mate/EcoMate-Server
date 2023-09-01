@@ -2,6 +2,7 @@ package com.greeny.ecomate.map.controller;
 
 import com.greeny.ecomate.map.dto.CreateEcoStoreRequestDto;
 import com.greeny.ecomate.map.dto.EcoStoreDto;
+import com.greeny.ecomate.map.dto.MemberLocationDto;
 import com.greeny.ecomate.map.dto.UpdateEcoStoreRequestDto;
 import com.greeny.ecomate.map.service.EcoStoreService;
 import com.greeny.ecomate.utils.api.ApiUtil;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/v1/ecoStores")
@@ -30,11 +32,18 @@ public class EcoStoreController {
         return ApiUtil.success("에코 매장 생성 성공", ecoStoreService.createEcoStore(createDto, memberId));
     }
 
-    @Operation(summary = "에코 매장 생성")
-    @ApiResponse(description = "에코 매장 생성")
+    @Operation(summary = "에코 매장 조회")
+    @ApiResponse(description = "에코 매장 조회")
     @GetMapping("/{storeId}")
     public ApiUtil.ApiSuccessResult<EcoStoreDto> getEcoStoreById(@PathVariable Long storeId) {
         return ApiUtil.success("에코 매장 조회 성공", ecoStoreService.getEcoStoreById(storeId));
+    }
+
+    @Operation(summary = "사용자 위치로 에코 매장 리스트 조회")
+    @ApiResponse(description = "사용자 위치로 에코 매장 리스트 조회")
+    @GetMapping
+    public ApiUtil.ApiSuccessResult<List<EcoStoreDto>> getEcoStoresByMemberLocation(@Valid @RequestBody MemberLocationDto dto) {
+        return ApiUtil.success("사용자 위치로 에코 매장 리스트 조회 성공", ecoStoreService.getEcoStoresByMemberLocation(dto));
     }
 
     @Operation(summary = "에코 매장 수정")
