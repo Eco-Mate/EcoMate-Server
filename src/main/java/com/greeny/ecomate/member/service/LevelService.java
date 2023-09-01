@@ -11,7 +11,6 @@ import com.greeny.ecomate.member.entity.Role;
 import com.greeny.ecomate.member.repository.LevelRepository;
 import com.greeny.ecomate.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -59,7 +58,7 @@ public class LevelService {
                 .orElseThrow(() -> new NotFoundException("존재하지 않는 사용자입니다."));
 
         if(member.getRole() != Role.ROLE_ADMIN)
-            throw new UnauthorizedAccessException("삭제 권한이 없습니다.");
+            throw new UnauthorizedAccessException("권한이 없습니다.");
     }
 
     private Level findLevelByLevelId(Long levelId) {
