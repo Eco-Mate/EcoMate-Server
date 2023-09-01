@@ -4,6 +4,7 @@ import com.greeny.ecomate.exception.NotFoundException;
 import com.greeny.ecomate.exception.UnauthorizedAccessException;
 import com.greeny.ecomate.map.dto.CreateEcoStoreRequestDto;
 import com.greeny.ecomate.map.dto.EcoStoreDto;
+import com.greeny.ecomate.map.dto.MemberLocationDto;
 import com.greeny.ecomate.map.dto.UpdateEcoStoreRequestDto;
 import com.greeny.ecomate.map.entity.EcoStore;
 import com.greeny.ecomate.map.repository.EcoStoreRepository;
@@ -13,6 +14,8 @@ import com.greeny.ecomate.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -43,6 +46,11 @@ public class EcoStoreService {
     public EcoStoreDto getEcoStoreById(Long storeId) {
         EcoStore ecoStore = findEcoStoreById(storeId);
         return createEcoStoreDto(ecoStore);
+    }
+
+    public List<EcoStoreDto> getEcoStoresByMemberLocation(MemberLocationDto dto) {
+        List<EcoStore> ecoStores = ecoStoreRepository.findEcoStoresByMemberLocation(dto.getLatitude(), dto.getLongitude());
+        return ecoStores.stream().map(this::createEcoStoreDto).toList();
     }
 
     @Transactional
