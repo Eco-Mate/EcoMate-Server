@@ -52,6 +52,13 @@ public class EcoStoreService {
         return ecoStore.getStoreId();
     }
 
+    @Transactional
+    public String deleteEcoStore(Long storeId, Long memberId) {
+        validateAuth(memberId);
+        ecoStoreRepository.deleteById(storeId);
+        return "해당 에코 매장이 삭제되었습니다.";
+    }
+
     private void validateAuth(Long memberId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new NotFoundException("존재하지 않는 사용자입니다."));

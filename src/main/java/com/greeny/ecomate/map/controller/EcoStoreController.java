@@ -45,6 +45,14 @@ public class EcoStoreController {
         return ApiUtil.success("에코 매장 수정 성공", ecoStoreService.updateEcoStore(storeId, dto, memberId));
     }
 
+    @Operation(summary = "에코 매장 삭제")
+    @ApiResponse(description = "에코 매장 삭제")
+    @DeleteMapping("/{storeId}")
+    public ApiUtil.ApiSuccessResult<String> deleteEcoStore(@PathVariable Long storeId, HttpServletRequest req) {
+        Long memberId = getMemberId(req);
+        return ApiUtil.success("에코 매장 삭제 성공", ecoStoreService.deleteEcoStore(storeId, memberId));
+    }
+
     private Long getMemberId(HttpServletRequest req) {
         return (Long) req.getAttribute("memberId");
     }
