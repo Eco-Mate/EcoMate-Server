@@ -47,6 +47,7 @@ public class SecurityConfig {
                 .antMatchers("/v1/chats/**")
                 .antMatchers("/v1/follows/**")
                 .antMatchers("/v1/fcm/**")
+                .antMatchers("/v1/levels/**")
                 .and()
                 .authorizeRequests()
                 .antMatchers("/v1/challenges/**").hasAnyRole("USER", "ADMIN")
@@ -59,6 +60,7 @@ public class SecurityConfig {
                 .antMatchers("/v1/chats/**").hasAnyRole("USER", "ADMIN")
                 .antMatchers("v1/follows/**").hasAnyRole("USER", "ADMIN")
                 .antMatchers("/v1/fcm/**").hasAnyRole("USER", "ADMIN")
+                .antMatchers("v1/levels/**").hasAnyRole("USER", "ADMIN")
                 .and()
                 .addFilterAfter(jwtAuthenticationFilter(jwtProvider), JwtExceptionFilter.class)
                 .build();

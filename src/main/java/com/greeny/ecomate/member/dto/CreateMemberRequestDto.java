@@ -19,7 +19,7 @@ public class CreateMemberRequestDto {
     public Member toEntity() {
         return Member.builder()
                 .role(Role.valueOf(role))
-                .level(Level.TREE)
+                .level("Seed1")
                 .totalTreePoint(0L)
                 .nickname(nickname)
                 .name(name)
