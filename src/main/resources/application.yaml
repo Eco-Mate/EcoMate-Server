@@ -65,4 +65,7 @@ s3-directory:
   challenge: challenge
   profile: profile
 
+firebase:
+  service-key: ecomate-firebase-service-key.json
+
 logging.level.com.amazonaws.util.EC2MetadataUtils: error
