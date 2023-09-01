@@ -8,8 +8,12 @@ import com.greeny.ecomate.challenge.repository.ChallengeRepository;
 import com.greeny.ecomate.challenge.repository.MyChallengeRepository;
 import com.greeny.ecomate.exception.NotFoundException;
 import com.greeny.ecomate.exception.UnauthorizedAccessException;
+import com.greeny.ecomate.member.dto.LevelDto;
+import com.greeny.ecomate.member.entity.Level;
 import com.greeny.ecomate.member.entity.Member;
+import com.greeny.ecomate.member.repository.LevelRepository;
 import com.greeny.ecomate.member.repository.MemberRepository;
+import com.greeny.ecomate.member.service.LevelService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.AccessDeniedException;
@@ -32,6 +36,8 @@ public class MyChallengeService {
     private final MyChallengeRepository myChallengeRepository;
     private final MemberRepository memberRepository;
     private final ChallengeRepository challengeRepository;
+
+    private final LevelService levelService;
 
     @Transactional
     public Long createMyChallenge(Long challengeId, Long memberId) {
@@ -120,9 +126,10 @@ public class MyChallengeService {
             myChallenge.updateDoneCnt(myChallenge.getDoneCnt() + 1);
             myChallenge.updateAchieveType(AchieveType.FINISH);
 
-            Member member = findMemberById(memberId);
-            member.updateTotalTreePoint(member.getTotalTreePoint() + myChallenge.getAchievePoint());
-            return "챌린지를 달성 완료하여 트리포인트가 적립되었습니다. 축하드립니다!";
+            StringBuilder sb = new StringBuilder();
+            sb.append("챌린지를 달성 완료하여 트리포인트가 적립되었습니다. ");
+            sb.append(updateMemberLevelAndTreePoint(findMemberById(memberId), myChallenge.getAchievePoint()));
+            return sb.toString();
         }
     }
 
@@ -165,6 +172,24 @@ public class MyChallengeService {
     private Challenge findChallengeById(Long challengeId) {
         return challengeRepository.findById(challengeId)
                 .orElseThrow(() -> new NotFoundException("존재하지 않는 챌린지입니다."));
+    }
+
+    private String updateMemberLevelAndTreePoint(Member member, Long plusTreePoint) {
+        LevelDto levelDto = levelService.getLevel(member.getLevel());
+        Long nowTotalTreePoint = member.getTotalTreePoint();
+        StringBuilder sb = new StringBuilder();
+        if(nowTotalTreePoint + plusTreePoint >= levelDto.getGoalTreePoint()) {
+            member.updateLevel(levelDto.getNextLevelName());
+            sb.append(levelDto.getNextLevelName());
+            sb.append("으로 레벨업 하셨어요, 축하합니다!");
+        }
+        else {
+            sb.append("다음 레벨업까지 ");
+            sb.append(levelDto.getGoalTreePoint() - (nowTotalTreePoint + plusTreePoint));
+            sb.append("트리포인트 남았습니다.");
+        }
+        member.updateTotalTreePoint(member.getTotalTreePoint() + plusTreePoint);
+        return sb.toString();
     }
 
 }
