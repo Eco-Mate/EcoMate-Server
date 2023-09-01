@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Service
@@ -44,11 +45,10 @@ public class BoardService {
    private final MemberRepository memberRepository;
    private final ChallengeRepository challengeRepository;
    private final LikeRepository likeRepository;
-   private final BoardSaveRepository saveLogRepository;
+   private final BoardSaveRepository boardSaveRepository;
 
    private final AwsS3Service awsS3Service;
    private final MyChallengeService myChallengeService;
-   private final ImageUtil imageUtil;
 
    @Transactional
    public Board createBoard(CreateBoardRequestDto createDto, MultipartFile file, Long memberId) {
@@ -90,9 +90,15 @@ public class BoardService {
    }
 
    public List<BoardDto> getAllSavedBoardsByCurrentMember(Long memberId) {
-      List<BoardSave> saveLogList = saveLogRepository.findByMemberId(memberId);
+      List<BoardSave> boardSaveList =  boardSaveRepository.findByMemberId(memberId);
 
-      return saveLogList.stream().map(s -> createBoardDto(s.getBoard(), memberId)).toList();
+      return boardSaveList.stream().map(s -> createBoardDto(s.getBoard(), memberId)).toList();
+   }
+
+   public List<BoardDto> getAllBoardsBySearchWord(String searchWord, Long memberId) {
+      List<Board> boardList = boardRepository.findAllByBoardTitleContainingOrBoardContentContaining(searchWord, searchWord);
+
+      return boardList.stream().map(b -> createBoardDto(b, memberId)).toList();
    }
 
    @Transactional
