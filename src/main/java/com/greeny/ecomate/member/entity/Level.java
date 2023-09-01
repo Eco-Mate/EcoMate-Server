@@ -2,6 +2,7 @@ package com.greeny.ecomate.member.entity;
 
 import com.greeny.ecomate.base.BaseEntity;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -21,6 +22,17 @@ public class Level extends BaseEntity {
     private String levelName;
 
     @Column(name = "goal_tree_point")
-    private String goalTreePoint;
+    private Long goalTreePoint;
+
+    @Builder
+    public Level(String levelName, Long goalTreePoint) {
+        this.levelName = levelName;
+        this.goalTreePoint = goalTreePoint;
+    }
+
+    public void update(String levelName, Long goalTreePoint) {
+        this.levelName = levelName;
+        this.goalTreePoint = goalTreePoint;
+    }
 
 }
