@@ -46,4 +46,11 @@ public class EcoStore extends BaseEntity {
         this.likeCnt = likeCnt;
     }
 
+    public void update(String storeName, Double latitude, Double longitude, String address) {
+        this.storeName = storeName;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.address = address;
+    }
+
 }

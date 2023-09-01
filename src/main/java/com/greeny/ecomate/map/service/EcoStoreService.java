@@ -4,6 +4,7 @@ import com.greeny.ecomate.exception.NotFoundException;
 import com.greeny.ecomate.exception.UnauthorizedAccessException;
 import com.greeny.ecomate.map.dto.CreateEcoStoreRequestDto;
 import com.greeny.ecomate.map.dto.EcoStoreDto;
+import com.greeny.ecomate.map.dto.UpdateEcoStoreRequestDto;
 import com.greeny.ecomate.map.entity.EcoStore;
 import com.greeny.ecomate.map.repository.EcoStoreRepository;
 import com.greeny.ecomate.member.entity.Member;
@@ -41,6 +42,14 @@ public class EcoStoreService {
     public EcoStoreDto getEcoStoreById(Long storeId) {
         EcoStore ecoStore = findEcoStoreById(storeId);
         return createEcoStoreDto(ecoStore);
+    }
+
+    @Transactional
+    public Long updateEcoStore(Long storeId, UpdateEcoStoreRequestDto dto, Long memberId) {
+        validateAuth(memberId);
+        EcoStore ecoStore = findEcoStoreById(storeId);
+        ecoStore.update(dto.getStoreName(), dto.getLatitude(), dto.getLatitude(), dto.getAddress());
+        return ecoStore.getStoreId();
     }
 
     private void validateAuth(Long memberId) {
