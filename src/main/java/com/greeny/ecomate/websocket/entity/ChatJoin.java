@@ -27,10 +27,17 @@ public class ChatJoin extends BaseEntity {
     @JoinColumn(name = "room_id")
     private ChatRoom chatRoom;
 
+    @Column(name = "active_yn")
+    private Boolean activeYn;
+
     @Builder
     public ChatJoin(Member member, ChatRoom chatRoom) {
         this.member = member;
         this.chatRoom = chatRoom;
+        this.activeYn = false;
     }
 
+    public void updateActiveYn(Boolean activeYn) {
+        this.activeYn = activeYn;
+    }
 }

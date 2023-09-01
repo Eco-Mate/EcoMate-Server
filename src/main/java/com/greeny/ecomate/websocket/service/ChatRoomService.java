@@ -121,6 +121,7 @@ public class ChatRoomService {
         return chatRoomId;
     }
 
+    @Transactional
     public ChatJoin updateChatRoomName(Long roomId, Long memberId, UpdateChatRoomRequestDto updateDto) {
         ChatRoom chatRoom = chatRoomRepository.findById(roomId)
                 .orElseThrow(() -> new NotFoundException("존재하지 않는 채팅방입니다."));

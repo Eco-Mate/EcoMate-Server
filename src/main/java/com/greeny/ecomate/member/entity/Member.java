@@ -52,6 +52,9 @@ public class Member extends BaseEntity {
     @Column(name = "following_cnt")
     private Long followingCnt;
 
+    @Column(name = "fcm")
+    private String fcmToken;
+
 
     @Builder
     public Member(Role role, String level, Long totalTreePoint,
@@ -88,5 +91,9 @@ public class Member extends BaseEntity {
 
     public void deleteProfileImage() {
         this.profileImage = null;
+    }
+
+    public void updateFCMToken(String fcmToken) {
+        this.fcmToken = fcmToken;
     }
 }
