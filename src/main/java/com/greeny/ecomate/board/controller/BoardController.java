@@ -1,5 +1,6 @@
 package com.greeny.ecomate.board.controller;
 
+import com.google.protobuf.Api;
 import com.greeny.ecomate.board.dto.BoardListDto;
 import com.greeny.ecomate.board.dto.CreateBoardRequestDto;
 import com.greeny.ecomate.board.dto.UpdateBoardRequestDto;
@@ -64,6 +65,15 @@ public class BoardController {
     public ApiUtil.ApiSuccessResult<BoardListDto> getSavedBoardsByMember(HttpServletRequest req) {
         Long memberId = getMemberId(req);
         return ApiUtil.success("현재 사용자의 저장한 게시물 조회 성공", new BoardListDto(boardService.getAllSavedBoardsByCurrentMember(memberId)));
+    }
+
+    @Operation(summary = "게시물 검색")
+    @GetMapping("/search")
+    public ApiUtil.ApiSuccessResult<BoardListDto> getAllBoardsBySearchWord(@RequestParam String searchWord,
+                                                                           HttpServletRequest req) {
+        Long memberId = getMemberId(req);
+        return ApiUtil.success("게시물 검색 결과 조회 성공", new BoardListDto(boardService.getAllBoardsBySearchWord(searchWord, memberId)));
+
     }
 
     @Operation(summary = "게시물 수정", description = "boardTitle, boardContent 만 수정 가능합니다.")
