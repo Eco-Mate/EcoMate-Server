@@ -6,6 +6,7 @@ import com.greeny.ecomate.websocket.entity.ChatRoom;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,5 +19,11 @@ public interface ChatJoinRepository extends JpaRepository<ChatJoin, Long> {
 
     @Query("SELECT cj FROM ChatJoin cj where cj.chatRoom.roomId = :chatRoomId and cj.member.memberId = :memberId")
     Optional<ChatJoin> findChatJoinByChatRoomIdAndMemberId(Long chatRoomId, Long memberId);
+
+    @Query("SELECT cj FROM ChatJoin cj join fetch cj.member where cj.chatRoom.roomId = :chatRoomId")
+    List<ChatJoin> findChatJoinsByChatRoomId(Long chatRoomId);
+
+    @Query("SELECT cj FROM ChatJoin cj where cj.chatRoom.roomId = :roomId and cj.member.memberId = :memberId")
+    Optional<ChatJoin> findChatJoinByRoomIdAndMemberId(Long roomId, Long memberId);
 
 }

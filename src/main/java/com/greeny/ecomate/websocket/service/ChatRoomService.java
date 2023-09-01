@@ -1,13 +1,13 @@
 package com.greeny.ecomate.websocket.service;
 
+import com.greeny.ecomate.challenge.entity.MyChallenge;
+import com.greeny.ecomate.challenge.repository.MyChallengeRepository;
 import com.greeny.ecomate.exception.NotFoundException;
 import com.greeny.ecomate.exception.UnauthorizedAccessException;
 import com.greeny.ecomate.member.entity.Member;
 import com.greeny.ecomate.member.repository.MemberRepository;
-import com.greeny.ecomate.websocket.dto.ChatRoomResponseDto;
-import com.greeny.ecomate.websocket.dto.CreateChatRoomRequestDto;
-import com.greeny.ecomate.websocket.dto.MemberToChatRoomDto;
-import com.greeny.ecomate.websocket.dto.UpdateChatRoomRequestDto;
+import com.greeny.ecomate.utils.imageUtil.ImageUtil;
+import com.greeny.ecomate.websocket.dto.*;
 import com.greeny.ecomate.websocket.entity.ChatJoin;
 import com.greeny.ecomate.websocket.entity.ChatRoom;
 import com.greeny.ecomate.websocket.repository.ChatJoinRepository;
@@ -29,6 +29,7 @@ public class ChatRoomService {
 
     private final ChatRoomRepository chatRoomRepository;
     private final ChatJoinRepository chatJoinRepository;
+    private final MyChallengeRepository myChallengeRepository;
     private final MemberRepository memberRepository;
 
     @Transactional
@@ -62,6 +63,22 @@ public class ChatRoomService {
             chatRoomList.add(createChatRoomResponseDto(chatRoom.getRoomId(), memberNicknameList, chatRoom.getName()));
         }
         return chatRoomList;
+    }
+
+    public List<ChallengeStatusDto> getChallengeStatusByChatRoom(Long roomId, Long memberId) {
+        if (chatJoinRepository.findChatJoinByRoomIdAndMemberId(roomId, memberId).isEmpty()) {
+            throw new UnauthorizedAccessException("해당 채팅방에 대한 권한이 없습니다.");
+        }
+        List<Member> memberList = chatJoinRepository.findChatJoinsByChatRoom_RoomId(roomId)
+                .stream().map(ChatJoin::getMember).toList();
+
+        return memberList.stream().map(member ->
+            new ChallengeStatusDto(
+                  member,
+                  myChallengeRepository.findAllByMember(member)
+                          .stream().mapToLong(this::getTotalDoneCnt).sum()
+            )
+        ).toList();
     }
 
     public ChatRoomResponseDto createChatRoomResponseDto(Long roomId, List<String> memberNicknameList, String name) {
@@ -128,6 +145,10 @@ public class ChatRoomService {
 
         chatJoinRepository.delete(chatJoin);
         return "채팅방 나가기 성공";
+    }
+
+    private Long getTotalDoneCnt(MyChallenge myChallenge) {
+        return (myChallenge.getAchieveCnt() - 1) * myChallenge.getChallenge().getGoalCnt() + myChallenge.getDoneCnt();
     }
 
 }

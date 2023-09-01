@@ -22,6 +22,8 @@ public class Chat extends BaseEntity {
     @JoinColumn(name = "room_id")
     private ChatRoom chatRoom;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "chat_type", length = 10)
     private ChatType chatType;
 
     @Column(name = "sender")
