@@ -1,5 +1,6 @@
 package com.greeny.ecomate.map.controller;
 
+import com.google.protobuf.Api;
 import com.greeny.ecomate.map.dto.CreateEcoStoreRequestDto;
 import com.greeny.ecomate.map.dto.EcoStoreDto;
 import com.greeny.ecomate.map.dto.MemberLocationDto;
@@ -44,6 +45,22 @@ public class EcoStoreController {
     @GetMapping
     public ApiUtil.ApiSuccessResult<List<EcoStoreDto>> getEcoStoresByMemberLocation(@Valid @RequestBody MemberLocationDto dto) {
         return ApiUtil.success("사용자 위치로 에코 매장 리스트 조회 성공", ecoStoreService.getEcoStoresByMemberLocation(dto));
+    }
+
+    @Operation(summary = "현재 사용자가 좋아요 한 에코 매장 리스트 조회")
+    @ApiResponse(description = "현재 사용자가 좋아요 한 에코 매장 리스트 조회")
+    @GetMapping("/members/like")
+    public ApiUtil.ApiSuccessResult<List<EcoStoreDto>> getAllLikedEcoStoresByMemberId(HttpServletRequest req) {
+        Long memberId = getMemberId(req);
+        return ApiUtil.success("현재 사용자가 좋아요 한 에코 매장 조회 성공", ecoStoreService.getAllLikedEcoStoresByCurrentMember(memberId));
+    }
+
+    @Operation(summary = "현재 사용자 위치 반경 내에 있는 에코 매장 중 좋아요 한 에코 매장 리스트 조회")
+    @ApiResponse(description = "현재 사용자 위치 반경 내에 있는 에코 매장 중 좋아요 한 에코 매장 리스트 조회")
+    @GetMapping("/members/location-like")
+    public ApiUtil.ApiSuccessResult<List<EcoStoreDto>> getAllLikedEcoStoresByMemberLocation(@Valid @RequestBody MemberLocationDto dto, HttpServletRequest req) {
+        Long memberId = getMemberId(req);
+        return ApiUtil.success("현재 사용자 위치 반경 내에 있는 에코 매장 중 좋아요 한 에코 매장 리스트 조회", ecoStoreService.getAllLikedEcoStoresByCurrentMemberLocation(dto, memberId));
     }
 
     @Operation(summary = "에코 매장 수정")
