@@ -7,7 +7,9 @@ import com.greeny.ecomate.map.dto.EcoStoreDto;
 import com.greeny.ecomate.map.dto.MemberLocationDto;
 import com.greeny.ecomate.map.dto.UpdateEcoStoreRequestDto;
 import com.greeny.ecomate.map.entity.EcoStore;
+import com.greeny.ecomate.map.entity.StoreLike;
 import com.greeny.ecomate.map.repository.EcoStoreRepository;
+import com.greeny.ecomate.map.repository.StoreLikeRepository;
 import com.greeny.ecomate.member.entity.Member;
 import com.greeny.ecomate.member.entity.Role;
 import com.greeny.ecomate.member.repository.MemberRepository;
@@ -24,6 +26,7 @@ public class EcoStoreService {
 
     private final EcoStoreRepository ecoStoreRepository;
     private final MemberRepository memberRepository;
+    private final StoreLikeRepository storeLikeRepository;
 
     @Transactional
     public Long createEcoStore(CreateEcoStoreRequestDto createDto, Long memberId) {
@@ -51,6 +54,11 @@ public class EcoStoreService {
     public List<EcoStoreDto> getEcoStoresByMemberLocation(MemberLocationDto dto) {
         List<EcoStore> ecoStores = ecoStoreRepository.findEcoStoresByMemberLocation(dto.getLatitude(), dto.getLongitude());
         return ecoStores.stream().map(this::createEcoStoreDto).toList();
+    }
+
+    public List<EcoStoreDto> getAllLikedEcoStoresByCurrentMember(Long memberId) {
+        List<StoreLike> storeLikeList = storeLikeRepository.findByMemberId(memberId);
+        return storeLikeList.stream().map(s -> createEcoStoreDto(s.getEcoStore())).toList();
     }
 
     @Transactional
