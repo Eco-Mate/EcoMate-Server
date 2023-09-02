@@ -1,7 +1,7 @@
 package com.greeny.ecomate.challenge.dto;
 
 import com.greeny.ecomate.challenge.entity.Challenge;
-import lombok.AllArgsConstructor;
+import com.greeny.ecomate.utils.imageUtil.ImageUtil;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -18,12 +18,12 @@ public class ChallengeDto {
     private Long treePoint;
     private LocalDateTime createdDate;
 
-    public ChallengeDto(Challenge challenge, String s3Url, String challengeDirectory) {
+    public ChallengeDto(Challenge challenge) {
         this.challengeId = challenge.getChallengeId();
         this.activeYn = challenge.getActiveYn();
         this.challengeTitle = challenge.getChallengeTitle();
         this.description = challenge.getDescription();
-        this.image = s3Url + "/" + challengeDirectory + "/" + challenge.getImage();
+        this.image = ImageUtil.getChallengeImage(challenge.getImage());
         this.goalCnt = challenge.getGoalCnt();
         this.treePoint = challenge.getTreePoint();
         this.createdDate = challenge.getCreatedDate();

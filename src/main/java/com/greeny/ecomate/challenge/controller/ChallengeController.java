@@ -34,9 +34,8 @@ public class ChallengeController {
     public ApiUtil.ApiSuccessResult<Long> createNewChallenge(@Valid @RequestPart CreateChallengeRequestDto dto,
                                                              @RequestPart MultipartFile file,
                                                              HttpServletRequest req) {
-        Long memberId = (Long) req.getAttribute("memberId");
-        Member member = memberService.getMemberById(memberId);
-        Long challengeId = challengeService.createChallenge(dto, member, file);
+        Long memberId = getMemberId(req);
+        Long challengeId = challengeService.createChallenge(dto, memberId, file);
         return ApiUtil.success("챌린지 생성 성공", challengeId);
     }
 
@@ -51,7 +50,7 @@ public class ChallengeController {
     @ApiResponse(description = "챌린지 전체 조회")
     @GetMapping
     public ApiUtil.ApiSuccessResult<List<ChallengeDto>> getAllChallenge(HttpServletRequest req) {
-        Long memberId = (Long) req.getAttribute("memberId");
+        Long memberId = getMemberId(req);
         Member member = memberService.getMemberById(memberId);
         return ApiUtil.success("챌린지 전체 조회 성공", challengeService.findAllChallenge(member));
     }
@@ -60,7 +59,7 @@ public class ChallengeController {
     @ApiResponse(description = "로그인된 사용자가 도전하지 않은 챌린지 전체 조회")
     @GetMapping("/unchallenged")
     public ApiUtil.ApiSuccessResult<List<ChallengeDto>> getBeforeStartChallenges(HttpServletRequest req) {
-        Long memberId = (Long) req.getAttribute("memberId");
+        Long memberId = getMemberId(req);
         Member member = memberService.getMemberById(memberId);
         return ApiUtil.success("도전하지 않은 챌린지 전체 조회 성공", challengeService.findBeforeStartChallenge(member));
     }
@@ -78,9 +77,8 @@ public class ChallengeController {
     public ApiUtil.ApiSuccessResult<Long> updateChallengeActiveYn(@PathVariable Long challengeId,
                                         @RequestBody boolean activeYn,
                                         HttpServletRequest req) {
-        Long memberId = (Long) req.getAttribute("memberId");
-        Member member = memberService.getMemberById(memberId);
-        challengeService.updateChallengeActiveYn(challengeId, activeYn, member);
+        Long memberId = getMemberId(req);
+        challengeService.updateChallengeActiveYn(challengeId, activeYn, memberId);
         return ApiUtil.success("챌린지 활성화 여부 수정 성공", challengeId);
     }
 
@@ -90,19 +88,21 @@ public class ChallengeController {
     public ApiUtil.ApiSuccessResult<Long> updateChallenge(@PathVariable Long challengeId,
                                                           @Valid @RequestBody UpdateChallengeRequestDto dto,
                                                           HttpServletRequest req) {
-        Long memberId = (Long) req.getAttribute("memberId");
-        Member member = memberService.getMemberById(memberId);
-        return ApiUtil.success("챌린지 수정 성공", challengeService.updateChallenge(challengeId, dto, member));
+        Long memberId = getMemberId(req);
+        return ApiUtil.success("챌린지 수정 성공", challengeService.updateChallenge(challengeId, dto, memberId));
     }
 
     @Operation(summary = "관리자 - 챌린지 삭제", description = "account token이 필요합니다.")
     @ApiResponse(description = "(관리자) challengeId에 해당하는 챌린지 삭제")
     @DeleteMapping("/{challengeId}")
     public ApiUtil.ApiSuccessResult<String> deleteChallenge(@PathVariable Long challengeId, HttpServletRequest req) {
-        Long memberId = (Long) req.getAttribute("memberId");
-        Member member = memberService.getMemberById(memberId);
-        challengeService.deleteChallenge(challengeId, member);
+        Long memberId = getMemberId(req);
+        challengeService.deleteChallenge(challengeId, memberId);
         return ApiUtil.success("챌린지 삭제 성공", "해당 챌린지가 삭제되었습니다.");
+    }
+
+    private Long getMemberId(HttpServletRequest req) {
+        return (Long) req.getAttribute("memberId");
     }
 
 }
