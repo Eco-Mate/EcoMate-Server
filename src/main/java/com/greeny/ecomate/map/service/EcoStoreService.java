@@ -13,9 +13,12 @@ import com.greeny.ecomate.map.repository.StoreLikeRepository;
 import com.greeny.ecomate.member.entity.Member;
 import com.greeny.ecomate.member.entity.Role;
 import com.greeny.ecomate.member.repository.MemberRepository;
+import com.greeny.ecomate.s3.service.AwsS3Service;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -24,18 +27,28 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EcoStoreService {
 
+    @Value("${s3-directory.store}")
+    String storeDirectory;
+
+    @Value("${cloud.aws.s3.url}")
+    String s3Url;
+
     private final EcoStoreRepository ecoStoreRepository;
     private final MemberRepository memberRepository;
     private final StoreLikeRepository storeLikeRepository;
 
+    private final AwsS3Service awsS3Service;
+
     @Transactional
-    public Long createEcoStore(CreateEcoStoreRequestDto createDto, Long memberId) {
+    public Long createEcoStore(CreateEcoStoreRequestDto createDto, MultipartFile file, Long memberId) {
         validateAuth(memberId);
 
+        String fileName = uploadImage(file);
         EcoStore ecoStore = EcoStore.builder()
                 .memberId(memberId)
                 .storeName(createDto.getStoreName())
                 .description(createDto.getDescription())
+                .image(fileName)
                 .latitude(createDto.getLatitude())
                 .longitude(createDto.getLongitude())
                 .address(createDto.getAddress())
@@ -46,25 +59,25 @@ public class EcoStoreService {
         return ecoStore.getStoreId();
     }
 
-    public EcoStoreDto getEcoStoreById(Long storeId) {
+    public EcoStoreDto getEcoStoreById(Long storeId, Long memberId) {
         EcoStore ecoStore = findEcoStoreById(storeId);
-        return createEcoStoreDto(ecoStore);
+        return createEcoStoreDto(ecoStore, memberId);
     }
 
-    public List<EcoStoreDto> getEcoStoresByMemberLocation(MemberLocationDto dto) {
+    public List<EcoStoreDto> getEcoStoresByMemberLocation(MemberLocationDto dto, Long memberId) {
         List<EcoStore> ecoStores = ecoStoreRepository.findEcoStoresByMemberLocation(dto.getLatitude(), dto.getLongitude());
-        return ecoStores.stream().map(this::createEcoStoreDto).toList();
+        return ecoStores.stream().map(e -> createEcoStoreDto(e, memberId)).toList();
     }
 
     public List<EcoStoreDto> getAllLikedEcoStoresByCurrentMember(Long memberId) {
         List<StoreLike> storeLikeList = storeLikeRepository.findByMemberId(memberId);
-        return storeLikeList.stream().map(s -> createEcoStoreDto(s.getEcoStore())).toList();
+        return storeLikeList.stream().map(s -> createEcoStoreDto(s.getEcoStore(), memberId)).toList();
     }
 
     public List<EcoStoreDto> getAllLikedEcoStoresByCurrentMemberLocation(MemberLocationDto dto, Long memberId) {
         List<EcoStore> ecoStores = ecoStoreRepository.findEcoStoresByMemberLocation(dto.getLatitude(), dto.getLongitude());
         List<EcoStore> likeEcoStores = storeLikeRepository.findByMemberId(memberId).stream().map(StoreLike::getEcoStore).toList();
-        return ecoStores.stream().filter(likeEcoStores::contains).map(this::createEcoStoreDto).toList();
+        return ecoStores.stream().filter(likeEcoStores::contains).map(e -> createEcoStoreDto(e, memberId)).toList();
     }
 
     @Transactional
@@ -90,8 +103,11 @@ public class EcoStoreService {
             throw new UnauthorizedAccessException("권한이 없습니다.");
     }
 
-    private EcoStoreDto createEcoStoreDto(EcoStore ecoStore) {
-        return new EcoStoreDto(ecoStore.getStoreName(), ecoStore.getDescription(), ecoStore.getLatitude(), ecoStore.getLongitude(), ecoStore.getAddress(), ecoStore.getLikeCnt());
+    private String uploadImage(MultipartFile file) { return awsS3Service.upload(storeDirectory, file); }
+
+    private EcoStoreDto createEcoStoreDto(EcoStore ecoStore, Long memberId) {
+        Boolean liked = storeLikeRepository.findByEcoStoreAndMemberId(ecoStore, memberId).isPresent();
+        return new EcoStoreDto(ecoStore, liked);
     }
 
     private EcoStore findEcoStoreById(Long storeId) {

@@ -9,6 +9,8 @@ import com.greeny.ecomate.challenge.entity.AchieveType;
 import com.greeny.ecomate.challenge.entity.Challenge;
 import com.greeny.ecomate.challenge.repository.ChallengeRepository;
 import com.greeny.ecomate.challenge.repository.MyChallengeRepository;
+import com.greeny.ecomate.exception.NotFoundException;
+import com.greeny.ecomate.exception.UnauthorizedAccessException;
 import com.greeny.ecomate.member.entity.Member;
 import com.greeny.ecomate.member.entity.Role;
 import com.greeny.ecomate.member.repository.MemberRepository;
@@ -39,15 +41,9 @@ public class ChallengeService {
     private final AwsS3Service awsS3Service;
     private final MyChallengeService myChallengeService;
 
-    private String uploadImage(MultipartFile file){
-        return awsS3Service.upload(challengeDirectory, file);
-    }
-
     @Transactional
-    public Long createChallenge(CreateChallengeRequestDto dto, Member member, MultipartFile file) {
-        if(member.getRole() != Role.ROLE_ADMIN)
-            throw new IllegalStateException("챌린지 생성 권한이 없습니다.");
-
+    public Long createChallenge(CreateChallengeRequestDto dto, Long memberId, MultipartFile file) {
+        validateAuth(memberId);
         String fileName = uploadImage(file);
         Challenge challenge = Challenge.builder()
                 .activeYn(dto.getActiveYn())
@@ -61,20 +57,9 @@ public class ChallengeService {
         return challengeRepository.save(challenge).getChallengeId();
     }
 
-    private Challenge findChallengeById(Long challengeId) {
-        Challenge findChallenge = challengeRepository.findById(challengeId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 챌린지입니다."));
-        return findChallenge;
-    }
-
     public ChallengeDto getChallengeById(Long challengeId) {
-        Challenge findChallenge = challengeRepository.findById(challengeId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 챌린지입니다."));
-        return new ChallengeDto(findChallenge, s3Url, challengeDirectory);
-    }
-
-    private ChallengeDto createChallengeDto(Challenge challenge) {
-        return new ChallengeDto(challenge, s3Url, challengeDirectory);
+        Challenge findChallenge = findChallengeById(challengeId);
+        return new ChallengeDto(findChallenge);
     }
 
     public List<ChallengeDto> findAllChallenge(Member member) {
@@ -106,24 +91,16 @@ public class ChallengeService {
     }
 
     @Transactional
-    public void updateChallengeActiveYn(Long challengeId, boolean activeYn, Member member) {
-        if(member.getRole() != Role.ROLE_ADMIN)
-            throw new IllegalStateException("챌린지 활성화 수정 권한이 없습니다.");
-
-        Challenge challenge = challengeRepository.findById(challengeId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 챌린지입니다."));
-
+    public void updateChallengeActiveYn(Long challengeId, boolean activeYn, Long memberId) {
+        validateAuth(memberId);
+        Challenge challenge = findChallengeById(challengeId);
         challenge.updateActiveYn(activeYn);
     }
 
     @Transactional
-    public Long updateChallenge(Long challengeId, UpdateChallengeRequestDto dto, Member member) {
-        if(member.getRole() != Role.ROLE_ADMIN)
-            throw new IllegalStateException("챌린지 내용 수정 권한이 없습니다.");
-
-        Challenge challenge = challengeRepository.findById(challengeId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 챌린지입니다."));
-
+    public Long updateChallenge(Long challengeId, UpdateChallengeRequestDto dto, Long memberId) {
+        validateAuth(memberId);
+        Challenge challenge = findChallengeById(challengeId);
         challenge.updateTitle(dto.getChallengeTitle());
         challenge.updateDescription(dto.getDescription());
         challenge.updateGoalCnt(dto.getGoalCnt());
@@ -132,14 +109,32 @@ public class ChallengeService {
     }
 
     @Transactional
-    public void deleteChallenge(Long challengeId, Member member) {
-        if(member.getRole() != Role.ROLE_ADMIN)
-            throw new IllegalStateException("챌린지 삭제 권한이 없습니다.");
-
-        Challenge challenge = challengeRepository.findById(challengeId)
-                .orElseThrow(() -> new IllegalArgumentException("챌린지가 존재하지 않습니다."));
-
+    public void deleteChallenge(Long challengeId, Long memberId) {
+        validateAuth(memberId);
+        Challenge challenge = findChallengeById(challengeId);
         challengeRepository.delete(challenge);
+    }
+
+    private String uploadImage(MultipartFile file){
+        return awsS3Service.upload(challengeDirectory, file);
+    }
+
+    private ChallengeDto createChallengeDto(Challenge challenge) {
+        return new ChallengeDto(challenge);
+    }
+
+    private void validateAuth(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new NotFoundException("존재하지 않는 사용자입니다."));
+
+        if(member.getRole() != Role.ROLE_ADMIN)
+            throw new UnauthorizedAccessException("권한이 없습니다.");
+    }
+
+    private Challenge findChallengeById(Long challengeId) {
+        Challenge challenge = challengeRepository.findById(challengeId)
+                .orElseThrow(() -> new NotFoundException("존재하지 않는 챌린지입니다."));
+        return challenge;
     }
 
 }

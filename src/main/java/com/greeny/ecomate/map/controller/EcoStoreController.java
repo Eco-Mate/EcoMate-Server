@@ -11,7 +11,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -27,24 +29,28 @@ public class EcoStoreController {
 
     @Operation(summary = "에코 매장 생성")
     @ApiResponse(description = "에코 매장 생성")
-    @PostMapping
-    public ApiUtil.ApiSuccessResult<Long> createEcoStore(@Valid @RequestBody CreateEcoStoreRequestDto createDto, HttpServletRequest req) {
+    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    public ApiUtil.ApiSuccessResult<Long> createEcoStore(@Valid @RequestPart CreateEcoStoreRequestDto createDto,
+                                                         @RequestPart MultipartFile file,
+                                                         HttpServletRequest req) {
         Long memberId = getMemberId(req);
-        return ApiUtil.success("에코 매장 생성 성공", ecoStoreService.createEcoStore(createDto, memberId));
+        return ApiUtil.success("에코 매장 생성 성공", ecoStoreService.createEcoStore(createDto, file, memberId));
     }
 
     @Operation(summary = "에코 매장 조회")
     @ApiResponse(description = "에코 매장 조회")
     @GetMapping("/{storeId}")
-    public ApiUtil.ApiSuccessResult<EcoStoreDto> getEcoStoreById(@PathVariable Long storeId) {
-        return ApiUtil.success("에코 매장 조회 성공", ecoStoreService.getEcoStoreById(storeId));
+    public ApiUtil.ApiSuccessResult<EcoStoreDto> getEcoStoreById(@PathVariable Long storeId, HttpServletRequest req) {
+        Long memberId = getMemberId(req);
+        return ApiUtil.success("에코 매장 조회 성공", ecoStoreService.getEcoStoreById(storeId, memberId));
     }
 
     @Operation(summary = "사용자 위치로 에코 매장 리스트 조회")
     @ApiResponse(description = "사용자 위치로 에코 매장 리스트 조회")
     @GetMapping
-    public ApiUtil.ApiSuccessResult<List<EcoStoreDto>> getEcoStoresByMemberLocation(@Valid @RequestBody MemberLocationDto dto) {
-        return ApiUtil.success("사용자 위치로 에코 매장 리스트 조회 성공", ecoStoreService.getEcoStoresByMemberLocation(dto));
+    public ApiUtil.ApiSuccessResult<List<EcoStoreDto>> getEcoStoresByMemberLocation(@Valid @RequestBody MemberLocationDto dto, HttpServletRequest req) {
+        Long memberId = getMemberId(req);
+        return ApiUtil.success("사용자 위치로 에코 매장 리스트 조회 성공", ecoStoreService.getEcoStoresByMemberLocation(dto, memberId));
     }
 
     @Operation(summary = "현재 사용자가 좋아요 한 에코 매장 리스트 조회")

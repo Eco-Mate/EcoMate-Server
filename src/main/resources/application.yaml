@@ -63,6 +63,7 @@ cloud:
 s3-directory:
   board: board
   challenge: challenge
+  store: store
   profile: profile
 
 firebase:
