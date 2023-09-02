@@ -55,6 +55,14 @@ public class EcoStoreController {
         return ApiUtil.success("현재 사용자가 좋아요 한 에코 매장 조회 성공", ecoStoreService.getAllLikedEcoStoresByCurrentMember(memberId));
     }
 
+    @Operation(summary = "현재 사용자 위치 반경 내에 있는 에코 매장 중 좋아요 한 에코 매장 리스트 조회")
+    @ApiResponse(description = "현재 사용자 위치 반경 내에 있는 에코 매장 중 좋아요 한 에코 매장 리스트 조회")
+    @GetMapping("/members/location-like")
+    public ApiUtil.ApiSuccessResult<List<EcoStoreDto>> getAllLikedEcoStoresByMemberLocation(@Valid @RequestBody MemberLocationDto dto, HttpServletRequest req) {
+        Long memberId = getMemberId(req);
+        return ApiUtil.success("현재 사용자 위치 반경 내에 있는 에코 매장 중 좋아요 한 에코 매장 리스트 조회", ecoStoreService.getAllLikedEcoStoresByCurrentMemberLocation(dto, memberId));
+    }
+
     @Operation(summary = "에코 매장 수정")
     @ApiResponse(description = "에코 매장 수정")
     @PutMapping("/{storeId}")

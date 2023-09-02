@@ -61,6 +61,12 @@ public class EcoStoreService {
         return storeLikeList.stream().map(s -> createEcoStoreDto(s.getEcoStore())).toList();
     }
 
+    public List<EcoStoreDto> getAllLikedEcoStoresByCurrentMemberLocation(MemberLocationDto dto, Long memberId) {
+        List<EcoStore> ecoStores = ecoStoreRepository.findEcoStoresByMemberLocation(dto.getLatitude(), dto.getLongitude());
+        List<EcoStore> likeEcoStores = storeLikeRepository.findByMemberId(memberId).stream().map(StoreLike::getEcoStore).toList();
+        return ecoStores.stream().filter(likeEcoStores::contains).map(this::createEcoStoreDto).toList();
+    }
+
     @Transactional
     public Long updateEcoStore(Long storeId, UpdateEcoStoreRequestDto dto, Long memberId) {
         validateAuth(memberId);
