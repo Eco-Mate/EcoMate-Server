@@ -60,4 +60,6 @@ public class EcoStore extends BaseEntity {
 
     public void increaseLike() { this.likeCnt++; }
 
+    public void decreaseLike() { this.likeCnt--; }
+
 }
