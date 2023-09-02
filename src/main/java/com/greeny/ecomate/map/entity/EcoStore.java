@@ -58,4 +58,8 @@ public class EcoStore extends BaseEntity {
         this.address = address;
     }
 
+    public void increaseLike() { this.likeCnt++; }
+
+    public void decreaseLike() { this.likeCnt--; }
+
 }
