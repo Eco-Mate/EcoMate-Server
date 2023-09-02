@@ -12,6 +12,8 @@ public class ImageUtil {
 
     private static final String challengeImageDirectory = "challenge";
 
+    private static final String storeImageDirectory = "store";
+
     private static final String s3Url = "https://ecomate-s3.s3.ap-northeast-2.amazonaws.com";
 
     public static String getProfileImage(String imageName) {
@@ -25,6 +27,8 @@ public class ImageUtil {
     public static String getChallengeImage(String imageName) {
         return getImage(challengeImageDirectory, imageName);
     }
+
+    public static String getStoreImage(String imageName) { return getImage(storeImageDirectory, imageName); }
 
     private static String getImage(String directory, String imageName) {
         if (imageName == null) {
