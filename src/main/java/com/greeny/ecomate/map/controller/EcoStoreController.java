@@ -37,6 +37,14 @@ public class EcoStoreController {
         return ApiUtil.success("에코 매장 생성 성공", ecoStoreService.createEcoStore(createDto, file, memberId));
     }
 
+    @Operation(summary = "에코 매장 전체 조회")
+    @ApiResponse(description = "에코 매장 전체 조회")
+    @GetMapping("/all")
+    public ApiUtil.ApiSuccessResult<List<EcoStoreDto>> getAllEcoStores(HttpServletRequest req) {
+        Long memberId = getMemberId(req);
+        return ApiUtil.success("에코 매장 전체 조회 성공", ecoStoreService.getAllEcoStores(memberId));
+    }
+
     @Operation(summary = "에코 매장 조회")
     @ApiResponse(description = "에코 매장 조회")
     @GetMapping("/{storeId}")
