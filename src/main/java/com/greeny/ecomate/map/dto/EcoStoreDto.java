@@ -7,6 +7,7 @@ import lombok.Data;
 @Data
 public class EcoStoreDto {
 
+    private Long storeId;
     private String storeName;
     private String description;
     private String image;
@@ -17,6 +18,7 @@ public class EcoStoreDto {
     private Boolean liked;
 
     public EcoStoreDto(EcoStore ecoStore, Boolean liked) {
+        this.storeId = ecoStore.getStoreId();
         this.storeName = ecoStore.getStoreName();
         this.description = ecoStore.getDescription();
         this.image = ImageUtil.getStoreImage(ecoStore.getImage());

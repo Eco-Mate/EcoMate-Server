@@ -59,6 +59,11 @@ public class EcoStoreService {
         return ecoStore.getStoreId();
     }
 
+    public List<EcoStoreDto> getAllEcoStores(Long memberId) {
+        List<EcoStore> ecoStores = ecoStoreRepository.findAll();
+        return ecoStores.stream().map(e->createEcoStoreDto(e, memberId)).toList();
+    }
+
     public EcoStoreDto getEcoStoreById(Long storeId, Long memberId) {
         EcoStore ecoStore = findEcoStoreById(storeId);
         return createEcoStoreDto(ecoStore, memberId);
