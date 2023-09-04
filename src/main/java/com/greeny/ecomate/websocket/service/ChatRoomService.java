@@ -6,7 +6,6 @@ import com.greeny.ecomate.exception.NotFoundException;
 import com.greeny.ecomate.exception.UnauthorizedAccessException;
 import com.greeny.ecomate.member.entity.Member;
 import com.greeny.ecomate.member.repository.MemberRepository;
-import com.greeny.ecomate.utils.imageUtil.ImageUtil;
 import com.greeny.ecomate.websocket.dto.*;
 import com.greeny.ecomate.websocket.entity.ChatJoin;
 import com.greeny.ecomate.websocket.entity.ChatRoom;
@@ -37,9 +36,13 @@ public class ChatRoomService {
         ChatRoom chatRoom = ChatRoom.builder()
                 .name(dto.getName())
                 .build();
+
         Long chatRoomId = chatRoomRepository.save(chatRoom).getRoomId();
+        Member currentMember = memberRepository.findById(memberId)
+                .orElseThrow(() -> new NotFoundException("존재하지 않는 사용자입니다."));
 
         List<String> memberNicknameList = dto.getMemberNicknameList();
+        memberNicknameList.add(currentMember.getNickname());
         for(int i = 0; i < memberNicknameList.size(); i++) {
             Member member = memberRepository.findByNickname(memberNicknameList.get(i))
                     .orElseThrow(() -> new NotFoundException("존재하지 않는 사용자입니다."));
