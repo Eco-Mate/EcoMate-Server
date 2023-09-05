@@ -53,7 +53,7 @@ public class AuthService {
 
         Member member = Member.builder()
                 .role(Role.ROLE_USER)
-                .level("씨앗1")
+                .level("씨앗")
                 .totalTreePoint(0L)
                 .name(form.getName())
                 .password(passwordEncoder.encode(form.getPassword()))
