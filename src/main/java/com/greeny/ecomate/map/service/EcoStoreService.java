@@ -79,8 +79,8 @@ public class EcoStoreService {
         return storeLikeList.stream().map(s -> createEcoStoreDto(s.getEcoStore(), memberId)).toList();
     }
 
-    public List<EcoStoreDto> getAllLikedEcoStoresByCurrentMemberLocation(MemberLocationDto dto, Long memberId) {
-        List<EcoStore> ecoStores = ecoStoreRepository.findEcoStoresByMemberLocation(dto.getLatitude(), dto.getLongitude());
+    public List<EcoStoreDto> getAllLikedEcoStoresByCurrentMemberLocation(Double latitude, Double longitude, Long memberId) {
+        List<EcoStore> ecoStores = ecoStoreRepository.findEcoStoresByMemberLocation(latitude, longitude);
         List<EcoStore> likeEcoStores = storeLikeRepository.findByMemberId(memberId).stream().map(StoreLike::getEcoStore).toList();
         return ecoStores.stream().filter(likeEcoStores::contains).map(e -> createEcoStoreDto(e, memberId)).toList();
     }

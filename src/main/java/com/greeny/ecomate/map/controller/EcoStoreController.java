@@ -2,7 +2,6 @@ package com.greeny.ecomate.map.controller;
 
 import com.greeny.ecomate.map.dto.CreateEcoStoreRequestDto;
 import com.greeny.ecomate.map.dto.EcoStoreDto;
-import com.greeny.ecomate.map.dto.MemberLocationDto;
 import com.greeny.ecomate.map.dto.UpdateEcoStoreRequestDto;
 import com.greeny.ecomate.map.service.EcoStoreService;
 import com.greeny.ecomate.utils.api.ApiUtil;
@@ -71,9 +70,9 @@ public class EcoStoreController {
     @Operation(summary = "현재 사용자 위치 반경 내에 있는 에코 매장 중 좋아요 한 에코 매장 리스트 조회")
     @ApiResponse(description = "현재 사용자 위치 반경 내에 있는 에코 매장 중 좋아요 한 에코 매장 리스트 조회")
     @GetMapping("/members/location-like")
-    public ApiUtil.ApiSuccessResult<List<EcoStoreDto>> getAllLikedEcoStoresByMemberLocation(@Valid @RequestBody MemberLocationDto dto, HttpServletRequest req) {
+    public ApiUtil.ApiSuccessResult<List<EcoStoreDto>> getAllLikedEcoStoresByMemberLocation(@RequestParam Double latitude, @RequestParam Double longitude, HttpServletRequest req) {
         Long memberId = getMemberId(req);
-        return ApiUtil.success("현재 사용자 위치 반경 내에 있는 에코 매장 중 좋아요 한 에코 매장 리스트 조회", ecoStoreService.getAllLikedEcoStoresByCurrentMemberLocation(dto, memberId));
+        return ApiUtil.success("현재 사용자 위치 반경 내에 있는 에코 매장 중 좋아요 한 에코 매장 리스트 조회", ecoStoreService.getAllLikedEcoStoresByCurrentMemberLocation(latitude, longitude, memberId));
     }
 
     @Operation(summary = "에코 매장 수정")
