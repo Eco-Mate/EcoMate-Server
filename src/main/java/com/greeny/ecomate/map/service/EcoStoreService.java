@@ -69,8 +69,8 @@ public class EcoStoreService {
         return createEcoStoreDto(ecoStore, memberId);
     }
 
-    public List<EcoStoreDto> getEcoStoresByMemberLocation(MemberLocationDto dto, Long memberId) {
-        List<EcoStore> ecoStores = ecoStoreRepository.findEcoStoresByMemberLocation(dto.getLatitude(), dto.getLongitude());
+    public List<EcoStoreDto> getEcoStoresByMemberLocation(Double latitude, Double longitude, Long memberId) {
+        List<EcoStore> ecoStores = ecoStoreRepository.findEcoStoresByMemberLocation(latitude, longitude);
         return ecoStores.stream().map(e -> createEcoStoreDto(e, memberId)).toList();
     }
 

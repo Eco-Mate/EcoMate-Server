@@ -1,6 +1,5 @@
 package com.greeny.ecomate.map.controller;
 
-import com.google.protobuf.Api;
 import com.greeny.ecomate.map.dto.CreateEcoStoreRequestDto;
 import com.greeny.ecomate.map.dto.EcoStoreDto;
 import com.greeny.ecomate.map.dto.MemberLocationDto;
@@ -56,9 +55,9 @@ public class EcoStoreController {
     @Operation(summary = "사용자 위치로 에코 매장 리스트 조회")
     @ApiResponse(description = "사용자 위치로 에코 매장 리스트 조회")
     @GetMapping
-    public ApiUtil.ApiSuccessResult<List<EcoStoreDto>> getEcoStoresByMemberLocation(@Valid @RequestBody MemberLocationDto dto, HttpServletRequest req) {
+    public ApiUtil.ApiSuccessResult<List<EcoStoreDto>> getEcoStoresByMemberLocation(@RequestParam Double latitude, @RequestParam Double longitude, HttpServletRequest req) {
         Long memberId = getMemberId(req);
-        return ApiUtil.success("사용자 위치로 에코 매장 리스트 조회 성공", ecoStoreService.getEcoStoresByMemberLocation(dto, memberId));
+        return ApiUtil.success("사용자 위치로 에코 매장 리스트 조회 성공", ecoStoreService.getEcoStoresByMemberLocation(latitude, longitude, memberId));
     }
 
     @Operation(summary = "현재 사용자가 좋아요 한 에코 매장 리스트 조회")

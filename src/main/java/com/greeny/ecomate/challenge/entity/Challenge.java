@@ -21,7 +21,7 @@ public class Challenge extends BaseEntity {
     @Column(name = "challenge_title", unique = true, length = 30)
     private String challengeTitle;
 
-    @Column(name = "description", length = 100)
+    @Column(name = "description", length = 500)
     private String description;
 
     @Column(name = "image", length = 200)
