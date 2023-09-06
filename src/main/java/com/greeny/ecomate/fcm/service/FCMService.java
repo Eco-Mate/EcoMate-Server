@@ -11,6 +11,8 @@ import com.greeny.ecomate.websocket.entity.ChatJoin;
 import com.greeny.ecomate.websocket.repository.ChatJoinRepository;
 import com.greeny.ecomate.websocket.service.ChatService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +24,7 @@ import java.util.concurrent.ExecutionException;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class FCMService {
+    private final Logger LOGGER = LoggerFactory.getLogger(FCMService.class.getName());
 
     private final MemberRepository memberRepository;
     private final ChatJoinRepository chatJoinRepository;
@@ -47,6 +50,7 @@ public class FCMService {
                     try {
                         sendAlarm(chatJoin.getMember().getFcmToken(), chat);
                     } catch (ExecutionException | InterruptedException e) {
+                        LOGGER.error("fcm 전송 오류 :  " + e.getMessage());
                         throw new FirebaseMessageException("FCM 알림 전송에 실패했습니다.");
                     }
                 });
