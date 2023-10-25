@@ -81,7 +81,7 @@ public class BoardController {
     public ApiUtil.ApiSuccessResult<Long> updateBoard(@PathVariable Long boardId, @Valid @RequestBody UpdateBoardRequestDto updateDto,
                                                       HttpServletRequest req) {
         Long memberId = getMemberId(req);
-        return ApiUtil.success("게시물 수정 성공", boardService.updateBoard(boardId, memberId, updateDto));
+        return ApiUtil.success("게시물 수정 성공", boardService.updateBoard(boardId, memberId, updateDto).getBoardId());
     }
 
     @Operation(summary = "게시물 삭제")

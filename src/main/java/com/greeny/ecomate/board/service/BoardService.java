@@ -102,11 +102,11 @@ public class BoardService {
    }
 
    @Transactional
-   public Long updateBoard(Long boardId, Long memberId, UpdateBoardRequestDto updateDto) {
+   public Board updateBoard(Long boardId, Long memberId, UpdateBoardRequestDto updateDto) {
       Board board = findBoardById(boardId);
       validateAuth(board, memberId);
       board.update(updateDto.getBoardTitle(), updateDto.getBoardContent());
-      return board.getBoardId();
+      return board;
    }
 
    @Transactional
