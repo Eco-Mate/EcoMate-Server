@@ -3,16 +3,16 @@ package com.greeny.ecomate.utils.imageUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-@Component
+//@Component
 public class ImageUtil {
 
-    private static final String boardImageDirectory = "board";
+    public static final String boardImageDirectory = "board";
 
-    private static final String profileImageDirectory = "profile";
+    public static final String profileImageDirectory = "profile";
 
-    private static final String challengeImageDirectory = "challenge";
+    public static final String challengeImageDirectory = "challenge";
 
-    private static final String storeImageDirectory = "store";
+    public static final String storeImageDirectory = "store";
 
     private static final String s3Url = "https://ecomate-s3.s3.ap-northeast-2.amazonaws.com";
 
