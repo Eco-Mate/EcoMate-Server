@@ -1,26 +1,38 @@
 package com.greeny.ecomate.board.service;
 
 import com.greeny.ecomate.board.dto.BoardDto;
+import com.greeny.ecomate.board.dto.CreateBoardRequestDto;
 import com.greeny.ecomate.board.dto.UpdateBoardRequestDto;
 import com.greeny.ecomate.board.entity.Board;
 import com.greeny.ecomate.board.repository.BoardRepository;
 import com.greeny.ecomate.challenge.entity.Challenge;
 import com.greeny.ecomate.challenge.repository.ChallengeRepository;
+import com.greeny.ecomate.challenge.service.MyChallengeService;
 import com.greeny.ecomate.exception.NotFoundException;
 import com.greeny.ecomate.like.entity.Like;
 import com.greeny.ecomate.like.repository.LikeRepository;
 import com.greeny.ecomate.member.entity.Member;
 import com.greeny.ecomate.member.entity.Role;
+import com.greeny.ecomate.member.repository.MemberRepository;
+import com.greeny.ecomate.s3.service.AwsS3Service;
+import com.greeny.ecomate.utils.imageUtil.ImageUtil;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -32,6 +44,10 @@ import static org.mockito.BDDMockito.*;
 @ExtendWith(MockitoExtension.class)
 public class BoardServiceTest {
 
+    private final String imagePath = "src/test/resources/testImage.png";
+    private final String imageName = "testImage";
+    private final String contentType = "png";
+
     @InjectMocks
     private BoardService boardService;
 
@@ -39,12 +55,59 @@ public class BoardServiceTest {
     private BoardRepository boardRepository;
 
     @Mock
+    private MemberRepository memberRepository;
+
+    @Mock
     private LikeRepository likeRepository;
 
     @Mock
     private ChallengeRepository challengeRepository;
 
+    @Mock
+    private MyChallengeService myChallengeService;
 
+    @Mock
+    private AwsS3Service awsS3Service;
+
+    @DisplayName("게시물 정보를 입력하면, 게시물을 생성한다.")
+    @Test
+    void givenBoardInfo_whenSavingBoard_thenSavesBoard() throws IOException {
+         // Given
+        final Long challengeId = 2L;
+        final Long memberId = 1L;
+        final String testTitle = "title";
+        final String testContent = "content";
+        final String uuidImageTitle = UUID.randomUUID() + "." + contentType;
+
+        CreateBoardRequestDto createDto = new CreateBoardRequestDto(
+                challengeId, testTitle, testContent
+        );
+        MultipartFile image = new MockMultipartFile(
+                "image",
+                imageName + "." + contentType,
+                contentType,
+                new FileInputStream(imagePath)
+        );
+
+        given(memberRepository.findById(memberId)).willReturn(Optional.of(createMember()));
+        given(myChallengeService.updateMyChallengeDoneCnt(challengeId, memberId))
+                .willReturn("챌린지 도전 횟수가 1 증가했습니다.");
+        given(awsS3Service.upload(ImageUtil.boardImageDirectory, image)).willReturn(uuidImageTitle);
+        when(boardRepository.save(any(Board.class))).thenAnswer(args -> args.getArgument(0));
+
+
+        // When
+        Board board = boardService.createBoard(createDto, image, memberId);
+
+
+        // Then
+        assertThat(board)
+                .hasFieldOrPropertyWithValue("boardTitle", testTitle)
+                .hasFieldOrPropertyWithValue("boardContent", testContent)
+                .hasFieldOrPropertyWithValue("challengeId", challengeId)
+                .hasFieldOrPropertyWithValue("image", uuidImageTitle);
+
+    }
 
     @DisplayName("전체 게시물을 조회하면, 모든 게시물 정보를 반환한다.")
     @Test
@@ -74,7 +137,9 @@ public class BoardServiceTest {
         String updateTitle = "newTitle";
         String updateContent = "newContent";
         UpdateBoardRequestDto updateDto = createUpdateDto(updateTitle, updateContent);
-        given(boardRepository.findById(testBoardId)).willReturn(Optional.of(createBoard()));
+        Board testBoard = createBoard();
+
+        given(boardRepository.findById(testBoardId)).willReturn(Optional.of(testBoard));
 
 
         // When
@@ -83,7 +148,11 @@ public class BoardServiceTest {
         // Then
         assertThat(board)
                 .hasFieldOrPropertyWithValue("boardTitle", updateTitle)
-                .hasFieldOrPropertyWithValue("boardContent", updateContent);
+                .hasFieldOrPropertyWithValue("boardContent", updateContent)
+                .hasFieldOrPropertyWithValue("image", testBoard.getImage())
+                .hasFieldOrPropertyWithValue("challengeId", testBoard.getChallengeId())
+                .hasFieldOrPropertyWithValue("member", testBoard.getMember())
+                .hasFieldOrPropertyWithValue("likeCnt", testBoard.getLikeCnt());
     }
 
 
