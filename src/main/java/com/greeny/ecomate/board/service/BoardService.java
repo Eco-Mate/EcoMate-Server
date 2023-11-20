@@ -31,12 +31,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BoardService {
 
-   @Value("${s3-directory.board}")
-   String boardDirectory;
-
-   @Value("${s3-directory.profile}")
-   String profileImageDirectory;
-
    @Value("${cloud.aws.s3.url}")
    String s3Url;
 
@@ -102,11 +96,11 @@ public class BoardService {
    }
 
    @Transactional
-   public Long updateBoard(Long boardId, Long memberId, UpdateBoardRequestDto updateDto) {
+   public Board updateBoard(Long boardId, Long memberId, UpdateBoardRequestDto updateDto) {
       Board board = findBoardById(boardId);
       validateAuth(board, memberId);
       board.update(updateDto.getBoardTitle(), updateDto.getBoardContent());
-      return board.getBoardId();
+      return board;
    }
 
    @Transactional
@@ -130,7 +124,7 @@ public class BoardService {
    }
 
    private String uploadImage(MultipartFile file){
-      return awsS3Service.upload(boardDirectory, file);
+      return awsS3Service.upload(ImageUtil.boardImageDirectory, file);
    }
 
    private BoardDto createBoardDto(Board board, Long memberId) {
